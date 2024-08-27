@@ -1,0 +1,223 @@
+
+
+
+
+Network Modeling                                                   Q. Ma
+Internet-Draft                                                    Huawei
+Intended status: Standards Track                          27 August 2024
+Expires: 28 February 2025
+
+
+                             YANG Templates
+                  draft-ma-netmod-YANG-template-latest
+
+Abstract
+
+   TODO Abstract
+
+Discussion Venues
+
+   This note is to be removed before publishing as an RFC.
+
+   Discussion of this document takes place on the Network Modeling
+   Working Group mailing list (netmod@ietf.org), which is archived at
+   https://mailarchive.ietf.org/arch/browse/netmod/.
+
+   Source for this draft and an issue tracker can be found at
+   https://github.com/QiufangMa/template-mechanism.
+
+Status of This Memo
+
+   This Internet-Draft is submitted in full conformance with the
+   provisions of BCP 78 and BCP 79.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF).  Note that other groups may also distribute
+   working documents as Internet-Drafts.  The list of current Internet-
+   Drafts is at https://datatracker.ietf.org/drafts/current/.
+
+   Internet-Drafts are draft documents valid for a maximum of six months
+   and may be updated, replaced, or obsoleted by other documents at any
+   time.  It is inappropriate to use Internet-Drafts as reference
+   material or to cite them other than as "work in progress."
+
+   This Internet-Draft will expire on 28 February 2025.
+
+Copyright Notice
+
+   Copyright (c) 2024 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to BCP 78 and the IETF Trust's Legal
+   Provisions Relating to IETF Documents (https://trustee.ietf.org/
+   license-info) in effect on the date of publication of this document.
+   Please review these documents carefully, as they describe your rights
+   and restrictions with respect to this document.  Code Components
+   extracted from this document must include Revised BSD License text as
+   described in Section 4.e of the Trust Legal Provisions and are
+   provided without warranty as described in the Revised BSD License.
+
+Table of Contents
+
+   1.  Introduction
+   2.  Conventions and Definitions
+   3.  The "ietf-template" YANG Module
+     3.1.  Data Model Overview
+     3.2.  YANG Module
+   4.  Security Considerations
+   5.  IANA Considerations
+     5.1.  The "IETF XML" Registry
+     5.2.  The "YANG Module Names" Registry
+   6.  References
+     6.1.  Normative References
+     6.2.  Informative References
+   Acknowledgments
+   Author's Address
+
+1.  Introduction
+
+   TODO Introduction
+
+2.  Conventions and Definitions
+
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+   "OPTIONAL" in this document are to be interpreted as described in
+   BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
+   capitals, as shown here.
+
+3.  The "ietf-template" YANG Module
+
+3.1.  Data Model Overview
+
+   The following tree diagram [RFC8340] illustrates the "ietf-template"
+   module:
+
+   module: ietf-template
+     +--rw templates* [name]
+        +--rw name    string
+        +--rw data?   <anydata>
+
+3.2.  YANG Module
+
+   <CODE BEGINS> file "ietf-template@2024-08-27.yang"
+   module ietf-template {
+     yang-version 1.1;
+     namespace "urn:ietf:params:xml:ns:yang:ietf-template";
+     prefix template;
+
+     organization
+       "IETF NETMOD (Network Modeling) Working Group";
+     contact
+       "WG Web:   <https://datatracker.ietf.org/wg/netmod/>
+        WG List:  <mailto:netmod@ietf.org>
+
+        Author: Qiufang Ma
+                <mailto:maqiufang1@huawei.com>";
+     description
+       "This module defines a template.
+
+        Copyright (c) 2024 IETF Trust and the persons identified
+        as authors of the code. All rights reserved.
+
+        Redistribution and use in source and binary forms, with
+        or without modification, is permitted pursuant to, and
+        subject to the license terms contained in, the Revised
+        BSD License set forth in Section 4.c of the IETF Trust's
+        Legal Provisions Relating to IETF Documents
+        (https://trustee.ietf.org/license-info).
+
+        This version of this YANG module is part of RFC XXXX
+        (https://www.rfc-editor.org/info/rfcXXXX); see the RFC
+        itself for full legal notices.
+
+        The key words 'MUST', 'MUST NOT', 'REQUIRED', 'SHALL',
+        'SHALL NOT', 'SHOULD', 'SHOULD NOT', 'RECOMMENDED',
+        'NOT RECOMMENDED', 'MAY', and 'OPTIONAL' in this document
+        are to be interpreted as described in BCP 14 (RFC 2119)
+        (RFC 8174) when, and only when, they appear in all
+        capitals, as shown here.";
+
+      list templates {
+        key name;
+        leaf name {
+          type string;
+          description
+            "The name of the template that uniquely identifies a
+             template.";
+        }
+        anydata data {
+          description
+            "inline template content.";
+        }
+      }
+   }
+   <CODE ENDS>
+
+4.  Security Considerations
+
+   TODO Security
+
+5.  IANA Considerations
+
+5.1.  The "IETF XML" Registry
+
+   This document registers the following URI in the "IETF XML Registry"
+   [RFC3688].
+
+           URI: urn:ietf:params:xml:ns:yang:ietf-template
+           Registrant Contact: The IESG.
+           XML: N/A, the requested URI is an XML namespace.
+
+5.2.  The "YANG Module Names" Registry
+
+   This document registers the following YANG module in the "YANG Module
+   Names" registry [RFC6020].
+
+           name:               ietf-template
+           namespace:          urn:ietf:params:xml:ns:yang:ietf-template
+           prefix:             template
+           maintained by IANA? N
+           reference:          RFC XXXX
+
+6.  References
+
+6.1.  Normative References
+
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997,
+              <https://www.rfc-editor.org/rfc/rfc2119>.
+
+   [RFC3688]  Mealling, M., "The IETF XML Registry", BCP 81, RFC 3688,
+              DOI 10.17487/RFC3688, January 2004,
+              <https://www.rfc-editor.org/rfc/rfc3688>.
+
+   [RFC6020]  Bjorklund, M., Ed., "YANG - A Data Modeling Language for
+              the Network Configuration Protocol (NETCONF)", RFC 6020,
+              DOI 10.17487/RFC6020, October 2010,
+              <https://www.rfc-editor.org/rfc/rfc6020>.
+
+   [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
+              2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
+              May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
+
+6.2.  Informative References
+
+   [RFC8340]  Bjorklund, M. and L. Berger, Ed., "YANG Tree Diagrams",
+              BCP 215, RFC 8340, DOI 10.17487/RFC8340, March 2018,
+              <https://www.rfc-editor.org/rfc/rfc8340>.
+
+Acknowledgments
+
+   TODO acknowledge.
+
+Author's Address
+
+   Qiufang Ma
+   Huawei
+   101 Software Avenue, Yuhua District
+   Nanjing, Jiangsu
+   210012
+   China
+   Email: maqiufang1@huawei.com
