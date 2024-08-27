@@ -9,8 +9,8 @@ number:
 date:
 consensus: true
 v: 3
-area: AREA
-workgroup: "netmod"
+area: "Operations and Management"
+workgroup: "Network Modeling"
 keyword:
  - YANG
  - template
