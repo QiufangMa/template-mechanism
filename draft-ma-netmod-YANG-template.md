@@ -3,7 +3,7 @@ title: "YANG Templates"
 abbrev: "template"
 category: std
 
-docname: draft-ma-netmod-template-mechanism-latest
+docname: draft-ma-netmod-YANG-template-latest
 submissiontype: IETF  # also: "independent", "editorial", "IAB", or "IRTF"
 number:
 date:
