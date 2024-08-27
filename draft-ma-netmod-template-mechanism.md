@@ -1,27 +1,7 @@
 ---
-###
-# Internet-Draft Markdown Template
-#
-# Rename this file from draft-todo-yourname-protocol.md to get started.
-# Draft name format is "draft-<yourname>-<workgroup>-<name>.md".
-#
-# For initial setup, you only need to edit the first block of fields.
-# Only "title" needs to be changed; delete "abbrev" if your title is short.
-# Any other content can be edited, but be careful not to introduce errors.
-# Some fields will be set automatically during setup if they are unchanged.
-#
-# Don't include "-00" or "-latest" in the filename.
-# Labels in the form draft-<yourname>-<workgroup>-<name>-latest are used by
-# the tools to refer to the current version; see "docname" for example.
-#
-# This template uses kramdown-rfc: https://github.com/cabo/kramdown-rfc
-# You can replace the entire file if you prefer a different format.
-# Change the file extension to match the format (.xml for XML, etc...)
-#
-###
-title: "TODO - Your title"
-abbrev: "TODO - Abbreviation"
-category: info
+title: "YANG Templates"
+abbrev: "template"
+category: std
 
 docname: draft-ma-netmod-template-mechanism-latest
 submissiontype: IETF  # also: "independent", "editorial", "IAB", or "IRTF"
@@ -30,24 +10,21 @@ date:
 consensus: true
 v: 3
 area: AREA
-workgroup: WG Working Group
+workgroup: "netmod"
 keyword:
- - next generation
- - unicorn
- - sparkling distributed ledger
-venue:
-  group: WG
-  type: Working Group
-  mail: WG@example.com
-  arch: https://example.com/WG
-  github: USER/REPO
-  latest: https://example.com/LATEST
+ - YANG
+ - template
+ - NMDA
 
 author:
- -
-    fullname: Your Name Here
-    organization: Your Organization Here
-    email: your.email@example.com
+-
+   fullname: Qiufang Ma
+   organization: Huawei
+   street: 101 Software Avenue, Yuhua District
+   city: Nanjing, Jiangsu
+   code: 210012
+   country: China
+   email: maqiufang1@huawei.com
 
 normative:
 
@@ -70,6 +47,23 @@ TODO Introduction
 
 {::boilerplate bcp14-tagged}
 
+# The "ietf-template" YANG Module
+
+## Data Model Overview
+
+The following tree diagram {{?RFC8340}} illustrates the "ietf-template" module:
+
+~~~~
+{::include ./yang/ietf-template-tree.txt}
+~~~~
+
+## YANG Module
+
+~~~~
+<CODE BEGINS> file "ietf-template@2024-08-27.yang"
+{::include-fold ./yang/ietf-template.yang}
+<CODE ENDS>
+~~~~
 
 # Security Considerations
 
@@ -78,7 +72,28 @@ TODO Security
 
 # IANA Considerations
 
-This document has no IANA actions.
+##  The "IETF XML" Registry
+
+   This document registers the following URI in the "IETF XML Registry" {{!RFC3688}}.
+
+~~~~
+        URI: urn:ietf:params:xml:ns:yang:ietf-template
+        Registrant Contact: The IESG.
+        XML: N/A, the requested URI is an XML namespace.
+~~~~
+
+##  The "YANG Module Names" Registry
+
+   This document registers the following YANG module in the "YANG Module Names"
+   registry {{!RFC6020}}.
+
+~~~~
+        name:               ietf-template
+        namespace:          urn:ietf:params:xml:ns:yang:ietf-template
+        prefix:             template
+        maintained by IANA? N
+        reference:          RFC XXXX
+~~~~
 
 
 --- back

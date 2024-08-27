@@ -1,0 +1,4 @@
+module: ietf-template
+  +--rw templates* [name]
+     +--rw name    string
+     +--rw data?   <anydata>
