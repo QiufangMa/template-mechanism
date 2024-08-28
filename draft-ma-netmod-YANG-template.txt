@@ -3,9 +3,9 @@
 
 
 Network Modeling                                                   Q. Ma
-Internet-Draft                                                    Huawei
-Intended status: Standards Track                          27 August 2024
-Expires: 28 February 2025
+Internet-Draft                                                     Z. Wu
+Intended status: Standards Track                                  Huawei
+Expires: 1 March 2025                                     28 August 2024
 
 
                              YANG Templates
@@ -41,7 +41,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 28 February 2025.
+   This Internet-Draft will expire on 1 March 2025.
 
 Copyright Notice
 
@@ -61,18 +61,35 @@ Table of Contents
 
    1.  Introduction
    2.  Conventions and Definitions
-   3.  The "ietf-template" YANG Module
-     3.1.  Data Model Overview
-     3.2.  YANG Module
-   4.  Security Considerations
-   5.  IANA Considerations
-     5.1.  The "IETF XML" Registry
-     5.2.  The "YANG Module Names" Registry
-   6.  References
-     6.1.  Normative References
-     6.2.  Informative References
+   3.  Hierarchical Template Overview
+   4.  Creating Templates
+     4.1.  Variables
+   5.  Inheriting Templates
+     5.1.  The "stmt-extend" Metadata
+   6.  Overriding Templates
+     6.1.  Creation
+     6.2.  Modification
+     6.3.  Deletion
+     6.4.  List/leaflists Reordering
+       6.4.1.  Position_first
+       6.4.2.  Position_last
+       6.4.3.  Position_before
+       6.4.4.  Position_after
+     6.5.  Applying Templates
+     6.6.  Expanding Templates
+       6.6.1.  The "get-template-expansion" RPC
+   7.  The "ietf-template" YANG Module
+     7.1.  Data Model Overview
+     7.2.  YANG Module
+   8.  Security Considerations
+   9.  IANA Considerations
+     9.1.  The "IETF XML" Registry
+     9.2.  The "YANG Module Names" Registry
+   10. References
+     10.1.  Normative References
+     10.2.  Informative References
    Acknowledgments
-   Author's Address
+   Authors' Addresses
 
 1.  Introduction
 
@@ -86,19 +103,63 @@ Table of Contents
    BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
    capitals, as shown here.
 
-3.  The "ietf-template" YANG Module
+3.  Hierarchical Template Overview
 
-3.1.  Data Model Overview
+4.  Creating Templates
+
+4.1.  Variables
+
+5.  Inheriting Templates
+
+5.1.  The "stmt-extend" Metadata
+
+6.  Overriding Templates
+
+6.1.  Creation
+
+6.2.  Modification
+
+6.3.  Deletion
+
+6.4.  List/leaflists Reordering
+
+6.4.1.  Position_first
+
+6.4.2.  Position_last
+
+6.4.3.  Position_before
+
+6.4.4.  Position_after
+
+6.5.  Applying Templates
+
+6.6.  Expanding Templates
+
+6.6.1.  The "get-template-expansion" RPC
+
+7.  The "ietf-template" YANG Module
+
+7.1.  Data Model Overview
 
    The following tree diagram [RFC8340] illustrates the "ietf-template"
    module:
 
    module: ietf-template
-     +--rw templates* [name]
-        +--rw name    string
-        +--rw data?   <anydata>
+     +--rw templates
+        +--rw template* [id]
+           +--rw id               string
+           +--rw description?     string
+           +--rw content?         <anydata>
+           +--rw last-modified?   yang:timestamp
 
-3.2.  YANG Module
+     rpcs:
+       +---x get-template-expansion
+          +---w input
+          |  +---w template-id?   -> /templates/template/id
+          +--ro output
+             +--ro data?   <anydata>
+
+7.2.  YANG Module
 
    <CODE BEGINS> file "ietf-template@2024-08-27.yang"
    module ietf-template {
@@ -106,16 +167,24 @@ Table of Contents
      namespace "urn:ietf:params:xml:ns:yang:ietf-template";
      prefix template;
 
+     import ietf-yang-types {
+       prefix yang;
+       reference
+         "RFC 6991: Common YANG Data Types";
+     }
+
      organization
        "IETF NETMOD (Network Modeling) Working Group";
      contact
        "WG Web:   <https://datatracker.ietf.org/wg/netmod/>
         WG List:  <mailto:netmod@ietf.org>
-
         Author: Qiufang Ma
-                <mailto:maqiufang1@huawei.com>";
+                <mailto:maqiufang1@huawei.com>
+                Zhan Wu
+                <mailto:wuzhan1@huawei.com>";
      description
-       "This module defines a template.
+       "This module defines a template list with a RPC to expand
+        the template.
 
         Copyright (c) 2024 IETF Trust and the persons identified
         as authors of the code. All rights reserved.
@@ -138,29 +207,71 @@ Table of Contents
         (RFC 8174) when, and only when, they appear in all
         capitals, as shown here.";
 
-      list templates {
-        key name;
-        leaf name {
-          type string;
+      revision 2024-08-27 {
+        description
+          "Initial revision.";
+        reference
+          "RFC XXXX: YANG Templates";
+      }
+
+      container templates {
+        description
+          "Specifies the template parameters.";
+        list template {
+          key id;
           description
-            "The name of the template that uniquely identifies a
-             template.";
-        }
-        anydata data {
-          description
-            "inline template content.";
+            "The list of templates managed on this device.";
+          leaf id {
+            type string;
+            description
+              "The identifier of the template that uniquely identifies a
+               template.";
+          }
+          leaf description {
+            type string;
+            description
+              "A textual description of the template.";
+          }
+          anydata content {
+            description
+              "inline template content.";
+          }
+          leaf last-modified {
+            type yang:timestamp;
+            description
+              "Timestamp when the template is modified last time.";
+          }
         }
       }
+      rpc get-template-expansion {
+        description
+          "Expand a specified configuration template.";
+        input {
+          leaf template-id {
+            type leafref {
+              path "/templates/template/id";
+            }
+            description
+              "The template identifier that needs to be expanded.";
+          }
+        }
+        output {
+          anydata data {
+            description
+              "Configuration data block after template expansions.";
+          }
+        }
+     }
    }
    <CODE ENDS>
 
-4.  Security Considerations
+8.  Security Considerations
 
    TODO Security
 
-5.  IANA Considerations
+9.  IANA Considerations
 
-5.1.  The "IETF XML" Registry
+9.1.  The "IETF XML" Registry
 
    This document registers the following URI in the "IETF XML Registry"
    [RFC3688].
@@ -169,7 +280,7 @@ Table of Contents
            Registrant Contact: The IESG.
            XML: N/A, the requested URI is an XML namespace.
 
-5.2.  The "YANG Module Names" Registry
+9.2.  The "YANG Module Names" Registry
 
    This document registers the following YANG module in the "YANG Module
    Names" registry [RFC6020].
@@ -180,9 +291,9 @@ Table of Contents
            maintained by IANA? N
            reference:          RFC XXXX
 
-6.  References
+10.  References
 
-6.1.  Normative References
+10.1.  Normative References
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -202,7 +313,7 @@ Table of Contents
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
 
-6.2.  Informative References
+10.2.  Informative References
 
    [RFC8340]  Bjorklund, M. and L. Berger, Ed., "YANG Tree Diagrams",
               BCP 215, RFC 8340, DOI 10.17487/RFC8340, March 2018,
@@ -212,7 +323,7 @@ Acknowledgments
 
    TODO acknowledge.
 
-Author's Address
+Authors' Addresses
 
    Qiufang Ma
    Huawei
@@ -221,3 +332,8 @@ Author's Address
    210012
    China
    Email: maqiufang1@huawei.com
+
+
+   Zhan Wu
+   Huawei
+   Email: wuzhan1@huawei.com
