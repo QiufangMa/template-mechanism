@@ -25,6 +25,10 @@ author:
    code: 210012
    country: China
    email: maqiufang1@huawei.com
+-
+  fullname: Zhan Wu
+  organization: Huawei
+  email: wuzhan1@huawei.com
 
 normative:
 
@@ -46,6 +50,40 @@ TODO Introduction
 # Conventions and Definitions
 
 {::boilerplate bcp14-tagged}
+
+# Hierarchical Template Overview
+
+# Creating Templates
+
+## Variables
+
+# Inheriting Templates
+
+## The "stmt-extend" Metadata
+
+# Overriding Templates
+
+## Creation
+
+## Modification
+
+## Deletion
+
+## List/leaflists Reordering
+
+### Position_first
+
+### Position_last
+
+### Position_before
+
+### Position_after
+
+## Applying Templates
+
+## Expanding Templates
+
+### The "get-template-expansion" RPC
 
 # The "ietf-template" YANG Module
 

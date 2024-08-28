@@ -3,16 +3,24 @@ module ietf-template {
   namespace "urn:ietf:params:xml:ns:yang:ietf-template";
   prefix template;
 
+  import ietf-yang-types {
+    prefix yang;
+    reference
+      "RFC 6991: Common YANG Data Types";    
+  }
+  
   organization
     "IETF NETMOD (Network Modeling) Working Group";
   contact
     "WG Web:   <https://datatracker.ietf.org/wg/netmod/>
      WG List:  <mailto:netmod@ietf.org>
-
      Author: Qiufang Ma
-             <mailto:maqiufang1@huawei.com>";
+             <mailto:maqiufang1@huawei.com>          
+             Zhan Wu
+             <mailto:wuzhan1@huawei.com>";
   description
-    "This module defines a template.
+    "This module defines a template list with a RPC to expand
+     the template.
 
      Copyright (c) 2024 IETF Trust and the persons identified
      as authors of the code. All rights reserved.
@@ -33,19 +41,61 @@ module ietf-template {
      'NOT RECOMMENDED', 'MAY', and 'OPTIONAL' in this document
      are to be interpreted as described in BCP 14 (RFC 2119)
      (RFC 8174) when, and only when, they appear in all
-     capitals, as shown here.";    
-
-   list templates {
-     key name;
-     leaf name {
-       type string;
+     capitals, as shown here.";
+   
+   revision 2024-08-27 {
+     description
+       "Initial revision.";
+     reference
+       "RFC XXXX: YANG Templates";
+   }   
+   
+   container templates {
+     description
+       "Specifies the template parameters.";
+     list template {
+       key id;
        description
-         "The name of the template that uniquely identifies a
-          template.";
-     }
-     anydata data {
-       description
-         "inline template content.";
+         "The list of templates managed on this device.";
+       leaf id {
+         type string;
+         description
+           "The identifier of the template that uniquely identifies a
+            template.";
+       }
+       leaf description {
+         type string;
+         description
+           "A textual description of the template.";
+       }
+       anydata content {
+         description
+           "inline template content.";
+       }
+       leaf last-modified {
+         type yang:timestamp;
+         description
+           "Timestamp when the template is modified last time.";
+       }
      }
    }
-}  
+   rpc get-template-expansion {
+     description
+       "Expand a specified configuration template.";
+     input {
+       leaf template-id {
+         type leafref {
+           path "/templates/template/id";
+         }
+         description
+           "The template identifier that needs to be expanded.";
+       }
+     }
+     output {
+       anydata data {
+         description
+           "Configuration data block after template expansions.";
+       }
+     }
+  }
+}
