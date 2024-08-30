@@ -1,0 +1,43 @@
+module example-network-systime {
+  yang-version 1.1;
+  namespace "urn:example:network-system-time";
+  prefix "ex-nesyst";
+
+  import ietf-inet-types {
+    prefix "inet";
+  }
+  
+  list network-device {
+    key device-id;
+    leaf device-id {
+      type string;
+    }
+    container ntp {
+      leaf enabled {
+        type boolean;
+        default true;
+      }
+      list server {
+        key name;
+        leaf name {
+          type string;
+        }
+        leaf-list alias {
+          type string;
+        }
+        leaf address {
+          type inet:host;
+          mandatory true;
+        }
+        leaf port {
+          type inet:port-number;
+          default 123;
+        }
+        leaf prefer {
+          type boolean;
+          default false;
+        }
+      }
+    }
+  }
+}

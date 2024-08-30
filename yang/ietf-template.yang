@@ -74,8 +74,30 @@ module ietf-template {
        }
        leaf last-modified {
          type yang:timestamp;
+         config false;
          description
            "Timestamp when the template is modified last time.";
+       }
+       leaf parent-template {
+         type leafref {
+           path "../../template/id";
+         }
+         config false;
+         description
+           "The identifier of the template that this template is 
+            inherited from.";
+       }
+       leaf-list inherited-by {
+         type union {
+           type instance-identifier;
+           type leafref {
+             path "../../template/id";
+           }
+         }
+         config false;
+         description
+           "The data tree node or an identifier of the template that
+            inherits this template.";
        }
      }
    }

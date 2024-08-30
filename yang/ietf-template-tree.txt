@@ -1,10 +1,12 @@
 module: ietf-template
   +--rw templates
      +--rw template* [id]
-        +--rw id               string
-        +--rw description?     string
-        +--rw content?         <anydata>
-        +--rw last-modified?   yang:timestamp
+        +--rw id                 string
+        +--rw description?       string
+        +--rw content?           <anydata>
+        +--ro last-modified?     yang:timestamp
+        +--ro parent-template?   -> ../../template/id
+        +--ro inherited-by*      union
 
   rpcs:
     +---x get-template-expansion
