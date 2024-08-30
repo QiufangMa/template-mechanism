@@ -57,8 +57,8 @@ policies/templates in the design of every data model that could benefit from the
 There is a desire to make use of common YANG-based templates without relying on
 specific definition in YANG data models.
 
-NMDA {{?RFC8342}} allows the configuration templates to be defined in <running>
-and expanded in <intended>, but it does not specify details about how configuration
+NMDA {{?RFC8342}} allows the configuration templates to be defined in \<running\>
+and expanded in \<intended\>, but it does not specify details about how configuration
 templates could be created and reused.
 
 This document defines the use of configuration templates in the context of YANG-driven
@@ -92,7 +92,7 @@ parent template:
 # Hierarchical Template Overview
 
 > Editor's Note: Why we'd call Hierarchical Template?
-> Editor's Note: The RPC may not be needed as operator can refer to the expansion by querying <intended>.
+> Editor's Note: The RPC may not be needed as operator can refer to the expansion by querying \<intended\>.
 
 The configuration template may be created, modified, and deleted by management operations
 via NETCONF and RESTCONF protocols. By defining additional metadata, this document
