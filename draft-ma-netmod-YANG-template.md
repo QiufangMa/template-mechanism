@@ -130,7 +130,7 @@ Device-level template can only be applied to specific network devices.
 Templates are defined as needed, for example, when it needs
 to deliver some identical configuration to multiple network elements.
 
-{{creation}} provides an example of template creation.
+{{template-creation}} provides an example of template creation.
 
 ## Variables
 
@@ -239,7 +239,7 @@ network model is inspired by the device model defined in {{?RFC7317}}.
 {::include-fold ./yang/example-network-systime.yang}
 ~~~~
 
-## Creating Templates {#creation}
+## Creating Templates {#template-creation}
 
 The NTP configuration on multiple network devices may be consistent.
 
