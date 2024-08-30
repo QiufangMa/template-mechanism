@@ -5,7 +5,7 @@
 Network Modeling                                                   Q. Ma
 Internet-Draft                                                     Z. Wu
 Intended status: Standards Track                                  Huawei
-Expires: 1 March 2025                                     28 August 2024
+Expires: 3 March 2025                                     30 August 2024
 
 
                              YANG Templates
@@ -13,7 +13,10 @@ Expires: 1 March 2025                                     28 August 2024
 
 Abstract
 
-   TODO Abstract
+   NETCONF and RESTCONF protocols provide programmatic operation
+   interfaces for accessing configuration data modeled by YANG.  This
+   document defines the use of YANG-based configuration template so that
+   the configuration data could be delivered in a more efficient manner.
 
 Discussion Venues
 
@@ -41,7 +44,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 1 March 2025.
+   This Internet-Draft will expire on 3 March 2025.
 
 Copyright Notice
 
@@ -62,38 +65,68 @@ Table of Contents
    1.  Introduction
    2.  Conventions and Definitions
    3.  Hierarchical Template Overview
+     3.1.  Validity of Templates
+     3.2.  Network-level Templates VS.  Device-level Templates
    4.  Creating Templates
      4.1.  Variables
    5.  Inheriting Templates
      5.1.  The "stmt-extend" Metadata
-   6.  Overriding Templates
-     6.1.  Creation
-     6.2.  Modification
-     6.3.  Deletion
-     6.4.  List/leaflists Reordering
-       6.4.1.  Position_first
-       6.4.2.  Position_last
-       6.4.3.  Position_before
-       6.4.4.  Position_after
-     6.5.  Applying Templates
-     6.6.  Expanding Templates
-       6.6.1.  The "get-template-expansion" RPC
-   7.  The "ietf-template" YANG Module
-     7.1.  Data Model Overview
-     7.2.  YANG Module
-   8.  Security Considerations
-   9.  IANA Considerations
-     9.1.  The "IETF XML" Registry
-     9.2.  The "YANG Module Names" Registry
-   10. References
-     10.1.  Normative References
-     10.2.  Informative References
+   6.  Composing templates
+     6.1.  The "stmt-compose" Metadata
+   7.  Overriding Templates
+     7.1.  Creation
+     7.2.  Modification
+     7.3.  Deletion
+     7.4.  List/leaflists Reordering
+       7.4.1.  Position_first
+       7.4.2.  Position_last
+       7.4.3.  Position_before
+       7.4.4.  Position_after
+     7.5.  Expanding Templates
+       7.5.1.  The "get-template-expansion" RPC
+     7.6.  Applying Templates
+   8.  The "ietf-template" YANG Module
+     8.1.  Data Model Overview
+     8.2.  YANG Module
+   9.  Security Considerations
+   10. IANA Considerations
+     10.1.  The "IETF XML" Registry
+     10.2.  The "YANG Module Names" Registry
+   11. References
+     11.1.  Normative References
+     11.2.  Informative References
+   Appendix A.  Usage Examples
+     A.1.  Creating Templates
+     A.2.  Inheriting An Existing Template
+     A.3.  Overriding An Existing Template
+     A.4.  Expanding Templates
+     A.5.  Applying Templates
    Acknowledgments
    Authors' Addresses
 
 1.  Introduction
 
-   TODO Introduction
+   It is not unusual for the YANG data model [RFC7950] to define some
+   shared profiles that could be referenced in order to simplify the
+   configuration of network services or functionalities.  For example,
+   [I-D.ietf-opsawg-ntw-attachment-circuit] defines a set of profiles at
+   the network level which could be referred to under the node level to
+   factorize some common configuration shared by a group of ACs.
+
+   However, it is not trivial to always take care of the definition of
+   shared profiles/ policies/templates in the design of every data model
+   that could benefit from them.  There is a desire to make use of
+   common YANG-based templates without relying on specific definition in
+   YANG data models.
+
+   NMDA [RFC8342] allows the configuration templates to be defined in
+   <running> and expanded in <intended>, but it does not specify details
+   about how configuration templates could be created and reused.
+
+   This document defines the use of configuration templates in the
+   context of YANG-driven network management protocols such as NETCONF
+   [RFC6241] and RESTCONF [RFC8040].  Template data could be created
+   based on any existing YANG data models.
 
 2.  Conventions and Definitions
 
@@ -103,43 +136,121 @@ Table of Contents
    BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
    capitals, as shown here.
 
+   The meanings of the symbols in tree diagrams are defined in
+   [RFC8340].
+
+   This document uses the YANG terminology defined in Section 3 of
+   [RFC7950].
+
+   Besides, this document defines the following terminology:
+
+   configuration template:  A chunk of reusable configuration data that
+      could be applied to the configuration of network devices
+      repeatedly, in order to simplify the delivery of network
+      configuration and ensure the consistency of it.  A configuration
+      template can also be called "template" for short.
+
+   inherited template:  A configuration template that is applied in the
+      configuration of network devices or other templates.
+
+   parent template:  A configuration template that is inherited by
+      configuration or other templates.
+
 3.  Hierarchical Template Overview
+
+      Editor's Note: Why we'd call Hierarchical Template?  Editor's
+      Note: The RPC may not be needed as operator can refer to the
+      expansion by querying <intended>.
+
+   The configuration template may be created, modified, and deleted by
+   management operations via NETCONF and RESTCONF protocols.  By
+   defining additional metadata, this document allows configuration
+   templates to be inherited, composed, and overridden by configuration
+   explicitly provided by the client or new templates.  In addition,
+   this document also defines a RPC called "get-template-expansion" to
+   allow the client to retrieve the expansion result of a specific
+   configuration template.
+
+   The YANG data model is defined in Section 8.
+
+3.1.  Validity of Templates
+
+   The contents of the template alone do not always follow the
+   constraints (as per Section 8.1 of [RFC7950]) of the data model.
+   Some constraints may depend on configuration outside of the templates
+   to satisfy, e.g., a list may contain a mandatory leaf node which is
+   not defined in the template but explicitly provided by the client.
+   However, servers should parse the template and enforce the
+   constraints if possible during the processing of template creation,
+   e.g., type constraints for the leaf, including those defined in the
+   type's "range", "length", and "pattern" properties.
+
+   The results of inherited template merging with configuration
+   explicitly provided by the client MUST always be a valid
+   configuration data tree.
+
+3.2.  Network-level Templates VS.  Device-level Templates
+
+      Editor's Note: This section may not be needed.
+
+   The configuration templates may be network-level or device-level,
+   depending on whether it is maintained at the network controller or
+   network elements.  A network-level template can be shared across
+   multiple network devices.  Device-level template can only be applied
+   to specific network devices.
 
 4.  Creating Templates
 
+   Templates are defined as needed, for example, when it needs to
+   deliver some identical configuration to multiple network elements.
+
+   Appendix A.1 provides an example of template creation.
+
 4.1.  Variables
+
+   In some cases, there are some customized configuration that varies.
 
 5.  Inheriting Templates
 
+   A template is inherited if it is intended to be applied in the
+   configuration of the device or other templates.  If a configuration
+   template is inherited, it is called a "parent template".  Any
+   modification to it also applies somewhere inherits the template.
+   Care MUST be taken when making changes to the parent templates.
+
 5.1.  The "stmt-extend" Metadata
 
-6.  Overriding Templates
+6.  Composing templates
 
-6.1.  Creation
+6.1.  The "stmt-compose" Metadata
 
-6.2.  Modification
+7.  Overriding Templates
 
-6.3.  Deletion
+7.1.  Creation
 
-6.4.  List/leaflists Reordering
+7.2.  Modification
 
-6.4.1.  Position_first
+7.3.  Deletion
 
-6.4.2.  Position_last
+7.4.  List/leaflists Reordering
 
-6.4.3.  Position_before
+7.4.1.  Position_first
 
-6.4.4.  Position_after
+7.4.2.  Position_last
 
-6.5.  Applying Templates
+7.4.3.  Position_before
 
-6.6.  Expanding Templates
+7.4.4.  Position_after
 
-6.6.1.  The "get-template-expansion" RPC
+7.5.  Expanding Templates
 
-7.  The "ietf-template" YANG Module
+7.5.1.  The "get-template-expansion" RPC
 
-7.1.  Data Model Overview
+7.6.  Applying Templates
+
+8.  The "ietf-template" YANG Module
+
+8.1.  Data Model Overview
 
    The following tree diagram [RFC8340] illustrates the "ietf-template"
    module:
@@ -147,10 +258,12 @@ Table of Contents
    module: ietf-template
      +--rw templates
         +--rw template* [id]
-           +--rw id               string
-           +--rw description?     string
-           +--rw content?         <anydata>
-           +--rw last-modified?   yang:timestamp
+           +--rw id                 string
+           +--rw description?       string
+           +--rw content?           <anydata>
+           +--ro last-modified?     yang:timestamp
+           +--ro parent-template?   -> ../../template/id
+           +--ro inherited-by*      union
 
      rpcs:
        +---x get-template-expansion
@@ -159,7 +272,7 @@ Table of Contents
           +--ro output
              +--ro data?   <anydata>
 
-7.2.  YANG Module
+8.2.  YANG Module
 
    <CODE BEGINS> file "ietf-template@2024-08-27.yang"
    module ietf-template {
@@ -238,8 +351,30 @@ Table of Contents
           }
           leaf last-modified {
             type yang:timestamp;
+            config false;
             description
               "Timestamp when the template is modified last time.";
+          }
+          leaf parent-template {
+            type leafref {
+              path "../../template/id";
+            }
+            config false;
+            description
+              "The identifier of the template that this template is
+               inherited from.";
+          }
+          leaf-list inherited-by {
+            type union {
+              type instance-identifier;
+              type leafref {
+                path "../../template/id";
+              }
+            }
+            config false;
+            description
+              "The data tree node or an identifier of the template that
+               inherits this template.";
           }
         }
       }
@@ -265,13 +400,13 @@ Table of Contents
    }
    <CODE ENDS>
 
-8.  Security Considerations
+9.  Security Considerations
 
    TODO Security
 
-9.  IANA Considerations
+10.  IANA Considerations
 
-9.1.  The "IETF XML" Registry
+10.1.  The "IETF XML" Registry
 
    This document registers the following URI in the "IETF XML Registry"
    [RFC3688].
@@ -280,7 +415,7 @@ Table of Contents
            Registrant Contact: The IESG.
            XML: N/A, the requested URI is an XML namespace.
 
-9.2.  The "YANG Module Names" Registry
+10.2.  The "YANG Module Names" Registry
 
    This document registers the following YANG module in the "YANG Module
    Names" registry [RFC6020].
@@ -291,9 +426,9 @@ Table of Contents
            maintained by IANA? N
            reference:          RFC XXXX
 
-10.  References
+11.  References
 
-10.1.  Normative References
+11.1.  Normative References
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -309,15 +444,108 @@ Table of Contents
               DOI 10.17487/RFC6020, October 2010,
               <https://www.rfc-editor.org/rfc/rfc6020>.
 
+   [RFC6241]  Enns, R., Ed., Bjorklund, M., Ed., Schoenwaelder, J., Ed.,
+              and A. Bierman, Ed., "Network Configuration Protocol
+              (NETCONF)", RFC 6241, DOI 10.17487/RFC6241, June 2011,
+              <https://www.rfc-editor.org/rfc/rfc6241>.
+
+   [RFC7950]  Bjorklund, M., Ed., "The YANG 1.1 Data Modeling Language",
+              RFC 7950, DOI 10.17487/RFC7950, August 2016,
+              <https://www.rfc-editor.org/rfc/rfc7950>.
+
+   [RFC8040]  Bierman, A., Bjorklund, M., and K. Watsen, "RESTCONF
+              Protocol", RFC 8040, DOI 10.17487/RFC8040, January 2017,
+              <https://www.rfc-editor.org/rfc/rfc8040>.
+
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
 
-10.2.  Informative References
+11.2.  Informative References
+
+   [I-D.ietf-opsawg-ntw-attachment-circuit]
+              Boucadair, M., Roberts, R., de Dios, O. G., Barguil, S.,
+              and B. Wu, "A Network YANG Data Model for Attachment
+              Circuits", Work in Progress, Internet-Draft, draft-ietf-
+              opsawg-ntw-attachment-circuit-12, 24 July 2024,
+              <https://datatracker.ietf.org/doc/html/draft-ietf-opsawg-
+              ntw-attachment-circuit-12>.
+
+   [RFC7317]  Bierman, A. and M. Bjorklund, "A YANG Data Model for
+              System Management", RFC 7317, DOI 10.17487/RFC7317, August
+              2014, <https://www.rfc-editor.org/rfc/rfc7317>.
 
    [RFC8340]  Bjorklund, M. and L. Berger, Ed., "YANG Tree Diagrams",
               BCP 215, RFC 8340, DOI 10.17487/RFC8340, March 2018,
               <https://www.rfc-editor.org/rfc/rfc8340>.
+
+   [RFC8342]  Bjorklund, M., Schoenwaelder, J., Shafer, P., Watsen, K.,
+              and R. Wilton, "Network Management Datastore Architecture
+              (NMDA)", RFC 8342, DOI 10.17487/RFC8342, March 2018,
+              <https://www.rfc-editor.org/rfc/rfc8342>.
+
+Appendix A.  Usage Examples
+
+   This section provides some examples to show the use of templates.
+   JSON encoding is used only for illustration purposes.  The fictional
+   data model used throughout this section is as follows.  This network
+   model is inspired by the device model defined in [RFC7317].
+
+   module example-network-systime {
+     yang-version 1.1;
+     namespace "urn:example:network-system-time";
+     prefix "ex-nesyst";
+
+     import ietf-inet-types {
+       prefix "inet";
+     }
+
+     list network-device {
+       key device-id;
+       leaf device-id {
+         type string;
+       }
+       container ntp {
+         leaf enabled {
+           type boolean;
+           default true;
+         }
+         list server {
+           key name;
+           leaf name {
+             type string;
+           }
+           leaf-list alias {
+             type string;
+           }
+           leaf address {
+             type inet:host;
+             mandatory true;
+           }
+           leaf port {
+             type inet:port-number;
+             default 123;
+           }
+           leaf prefer {
+             type boolean;
+             default false;
+           }
+         }
+       }
+     }
+   }
+
+A.1.  Creating Templates
+
+   The NTP configuration on multiple network devices may be consistent.
+
+A.2.  Inheriting An Existing Template
+
+A.3.  Overriding An Existing Template
+
+A.4.  Expanding Templates
+
+A.5.  Applying Templates
 
 Acknowledgments
 

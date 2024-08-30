@@ -8,7 +8,10 @@
 <meta content="Qiufang Ma" name="author">
 <meta content="Zhan Wu" name="author">
 <meta content="
-       TODO Abstract 
+       NETCONF and RESTCONF protocols provide programmatic operation interfaces for accessing
+configuration data modeled by YANG. This document defines the use of YANG-based
+configuration template so that the configuration data could be delivered in a more
+efficient manner. 
     " name="description">
 <meta content="xml2rfc 3.23.0" name="generator">
 <meta content="YANG" name="keyword">
@@ -1031,7 +1034,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Ma &amp; Wu</td>
-<td class="center">Expires 1 March 2025</td>
+<td class="center">Expires 3 March 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1044,12 +1047,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ma-netmod-YANG-template-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2024-08-28" class="published">28 August 2024</time>
+<time datetime="2024-08-30" class="published">30 August 2024</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-03-01">1 March 2025</time></dd>
+<dd class="expires"><time datetime="2025-03-03">3 March 2025</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1066,7 +1069,10 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <h1 id="title">YANG Templates</h1>
 <section id="section-abstract">
       <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
-<p id="section-abstract-1">TODO Abstract<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+<p id="section-abstract-1">NETCONF and RESTCONF protocols provide programmatic operation interfaces for accessing
+configuration data modeled by YANG. This document defines the use of YANG-based
+configuration template so that the configuration data could be delivered in a more
+efficient manner.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
 </section>
 <section class="note rfcEditorRemove" id="section-note.1">
       <h2 id="name-discussion-venues">
@@ -1098,7 +1104,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 1 March 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 3 March 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1134,7 +1140,15 @@ svg :is([fill="white"], [fill^="#fff"]) {
             <p id="section-toc.1-1.2.1" class="keepWithNext"><a href="#section-2" class="auto internal xref">2</a>.  <a href="#name-conventions-and-definitions" class="internal xref">Conventions and Definitions</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3">
-            <p id="section-toc.1-1.3.1" class="keepWithNext"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-hierarchical-template-overv" class="internal xref">Hierarchical Template Overview</a></p>
+            <p id="section-toc.1-1.3.1"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-hierarchical-template-overv" class="internal xref">Hierarchical Template Overview</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.1">
+                <p id="section-toc.1-1.3.2.1.1" class="keepWithNext"><a href="#section-3.1" class="auto internal xref">3.1</a>.  <a href="#name-validity-of-templates" class="internal xref">Validity of Templates</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.2">
+                <p id="section-toc.1-1.3.2.2.1"><a href="#section-3.2" class="auto internal xref">3.2</a>.  <a href="#name-network-level-templates-vs-" class="internal xref">Network-level Templates VS. Device-level Templates</a></p>
+</li>
+            </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4">
             <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>.  <a href="#name-creating-templates" class="internal xref">Creating Templates</a></p>
@@ -1153,88 +1167,116 @@ svg :is([fill="white"], [fill^="#fff"]) {
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6">
-            <p id="section-toc.1-1.6.1"><a href="#section-6" class="auto internal xref">6</a>.  <a href="#name-overriding-templates" class="internal xref">Overriding Templates</a></p>
+            <p id="section-toc.1-1.6.1"><a href="#section-6" class="auto internal xref">6</a>.  <a href="#name-composing-templates" class="internal xref">Composing templates</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.1">
-                <p id="section-toc.1-1.6.2.1.1"><a href="#section-6.1" class="auto internal xref">6.1</a>.  <a href="#name-creation" class="internal xref">Creation</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.2">
-                <p id="section-toc.1-1.6.2.2.1"><a href="#section-6.2" class="auto internal xref">6.2</a>.  <a href="#name-modification" class="internal xref">Modification</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.3">
-                <p id="section-toc.1-1.6.2.3.1"><a href="#section-6.3" class="auto internal xref">6.3</a>.  <a href="#name-deletion" class="internal xref">Deletion</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.4">
-                <p id="section-toc.1-1.6.2.4.1"><a href="#section-6.4" class="auto internal xref">6.4</a>.  <a href="#name-list-leaflists-reordering" class="internal xref">List/leaflists Reordering</a></p>
-<ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.4.2.1">
-                    <p id="section-toc.1-1.6.2.4.2.1.1"><a href="#section-6.4.1" class="auto internal xref">6.4.1</a>.  <a href="#name-position_first" class="internal xref">Position_first</a></p>
-</li>
-                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.4.2.2">
-                    <p id="section-toc.1-1.6.2.4.2.2.1"><a href="#section-6.4.2" class="auto internal xref">6.4.2</a>.  <a href="#name-position_last" class="internal xref">Position_last</a></p>
-</li>
-                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.4.2.3">
-                    <p id="section-toc.1-1.6.2.4.2.3.1"><a href="#section-6.4.3" class="auto internal xref">6.4.3</a>.  <a href="#name-position_before" class="internal xref">Position_before</a></p>
-</li>
-                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.4.2.4">
-                    <p id="section-toc.1-1.6.2.4.2.4.1"><a href="#section-6.4.4" class="auto internal xref">6.4.4</a>.  <a href="#name-position_after" class="internal xref">Position_after</a></p>
-</li>
-                </ul>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.5">
-                <p id="section-toc.1-1.6.2.5.1"><a href="#section-6.5" class="auto internal xref">6.5</a>.  <a href="#name-applying-templates" class="internal xref">Applying Templates</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.6">
-                <p id="section-toc.1-1.6.2.6.1"><a href="#section-6.6" class="auto internal xref">6.6</a>.  <a href="#name-expanding-templates" class="internal xref">Expanding Templates</a></p>
-<ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.6.2.1">
-                    <p id="section-toc.1-1.6.2.6.2.1.1"><a href="#section-6.6.1" class="auto internal xref">6.6.1</a>.  <a href="#name-the-get-template-expansion-" class="internal xref">The "get-template-expansion" RPC</a></p>
-</li>
-                </ul>
+                <p id="section-toc.1-1.6.2.1.1"><a href="#section-6.1" class="auto internal xref">6.1</a>.  <a href="#name-the-stmt-compose-metadata" class="internal xref">The "stmt-compose" Metadata</a></p>
 </li>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7">
-            <p id="section-toc.1-1.7.1"><a href="#section-7" class="auto internal xref">7</a>.  <a href="#name-the-ietf-template-yang-modu" class="internal xref">The "ietf-template" YANG Module</a></p>
+            <p id="section-toc.1-1.7.1"><a href="#section-7" class="auto internal xref">7</a>.  <a href="#name-overriding-templates" class="internal xref">Overriding Templates</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.1">
-                <p id="section-toc.1-1.7.2.1.1"><a href="#section-7.1" class="auto internal xref">7.1</a>.  <a href="#name-data-model-overview" class="internal xref">Data Model Overview</a></p>
+                <p id="section-toc.1-1.7.2.1.1"><a href="#section-7.1" class="auto internal xref">7.1</a>.  <a href="#name-creation" class="internal xref">Creation</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.2">
-                <p id="section-toc.1-1.7.2.2.1"><a href="#section-7.2" class="auto internal xref">7.2</a>.  <a href="#name-yang-module" class="internal xref">YANG Module</a></p>
+                <p id="section-toc.1-1.7.2.2.1"><a href="#section-7.2" class="auto internal xref">7.2</a>.  <a href="#name-modification" class="internal xref">Modification</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.3">
+                <p id="section-toc.1-1.7.2.3.1"><a href="#section-7.3" class="auto internal xref">7.3</a>.  <a href="#name-deletion" class="internal xref">Deletion</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.4">
+                <p id="section-toc.1-1.7.2.4.1"><a href="#section-7.4" class="auto internal xref">7.4</a>.  <a href="#name-list-leaflists-reordering" class="internal xref">List/leaflists Reordering</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.4.2.1">
+                    <p id="section-toc.1-1.7.2.4.2.1.1"><a href="#section-7.4.1" class="auto internal xref">7.4.1</a>.  <a href="#name-position_first" class="internal xref">Position_first</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.4.2.2">
+                    <p id="section-toc.1-1.7.2.4.2.2.1"><a href="#section-7.4.2" class="auto internal xref">7.4.2</a>.  <a href="#name-position_last" class="internal xref">Position_last</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.4.2.3">
+                    <p id="section-toc.1-1.7.2.4.2.3.1"><a href="#section-7.4.3" class="auto internal xref">7.4.3</a>.  <a href="#name-position_before" class="internal xref">Position_before</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.4.2.4">
+                    <p id="section-toc.1-1.7.2.4.2.4.1"><a href="#section-7.4.4" class="auto internal xref">7.4.4</a>.  <a href="#name-position_after" class="internal xref">Position_after</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.5">
+                <p id="section-toc.1-1.7.2.5.1"><a href="#section-7.5" class="auto internal xref">7.5</a>.  <a href="#name-expanding-templates" class="internal xref">Expanding Templates</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.5.2.1">
+                    <p id="section-toc.1-1.7.2.5.2.1.1"><a href="#section-7.5.1" class="auto internal xref">7.5.1</a>.  <a href="#name-the-get-template-expansion-" class="internal xref">The "get-template-expansion" RPC</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.6">
+                <p id="section-toc.1-1.7.2.6.1"><a href="#section-7.6" class="auto internal xref">7.6</a>.  <a href="#name-applying-templates" class="internal xref">Applying Templates</a></p>
 </li>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8">
-            <p id="section-toc.1-1.8.1"><a href="#section-8" class="auto internal xref">8</a>.  <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
-</li>
-          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9">
-            <p id="section-toc.1-1.9.1"><a href="#section-9" class="auto internal xref">9</a>.  <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
+            <p id="section-toc.1-1.8.1"><a href="#section-8" class="auto internal xref">8</a>.  <a href="#name-the-ietf-template-yang-modu" class="internal xref">The "ietf-template" YANG Module</a></p>
 <ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.1">
-                <p id="section-toc.1-1.9.2.1.1"><a href="#section-9.1" class="auto internal xref">9.1</a>.  <a href="#name-the-ietf-xml-registry" class="internal xref">The "IETF XML" Registry</a></p>
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.1">
+                <p id="section-toc.1-1.8.2.1.1"><a href="#section-8.1" class="auto internal xref">8.1</a>.  <a href="#name-data-model-overview" class="internal xref">Data Model Overview</a></p>
 </li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.2">
-                <p id="section-toc.1-1.9.2.2.1"><a href="#section-9.2" class="auto internal xref">9.2</a>.  <a href="#name-the-yang-module-names-regis" class="internal xref">The "YANG Module Names" Registry</a></p>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.2">
+                <p id="section-toc.1-1.8.2.2.1"><a href="#section-8.2" class="auto internal xref">8.2</a>.  <a href="#name-yang-module" class="internal xref">YANG Module</a></p>
 </li>
             </ul>
 </li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9">
+            <p id="section-toc.1-1.9.1"><a href="#section-9" class="auto internal xref">9</a>.  <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
+</li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10">
-            <p id="section-toc.1-1.10.1"><a href="#section-10" class="auto internal xref">10</a>. <a href="#name-references" class="internal xref">References</a></p>
+            <p id="section-toc.1-1.10.1"><a href="#section-10" class="auto internal xref">10</a>. <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.1">
-                <p id="section-toc.1-1.10.2.1.1"><a href="#section-10.1" class="auto internal xref">10.1</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
+                <p id="section-toc.1-1.10.2.1.1"><a href="#section-10.1" class="auto internal xref">10.1</a>.  <a href="#name-the-ietf-xml-registry" class="internal xref">The "IETF XML" Registry</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.2">
-                <p id="section-toc.1-1.10.2.2.1"><a href="#section-10.2" class="auto internal xref">10.2</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
+                <p id="section-toc.1-1.10.2.2.1"><a href="#section-10.2" class="auto internal xref">10.2</a>.  <a href="#name-the-yang-module-names-regis" class="internal xref">The "YANG Module Names" Registry</a></p>
 </li>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11">
-            <p id="section-toc.1-1.11.1"><a href="#appendix-A" class="auto internal xref"></a><a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
+            <p id="section-toc.1-1.11.1"><a href="#section-11" class="auto internal xref">11</a>. <a href="#name-references" class="internal xref">References</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.1">
+                <p id="section-toc.1-1.11.2.1.1"><a href="#section-11.1" class="auto internal xref">11.1</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.2">
+                <p id="section-toc.1-1.11.2.2.1"><a href="#section-11.2" class="auto internal xref">11.2</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
+</li>
+            </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12">
-            <p id="section-toc.1-1.12.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
+            <p id="section-toc.1-1.12.1"><a href="#appendix-A" class="auto internal xref">Appendix A</a>.  <a href="#name-usage-examples" class="internal xref">Usage Examples</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.1">
+                <p id="section-toc.1-1.12.2.1.1"><a href="#appendix-A.1" class="auto internal xref">A.1</a>.  <a href="#name-creating-templates-2" class="internal xref">Creating Templates</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.2">
+                <p id="section-toc.1-1.12.2.2.1"><a href="#appendix-A.2" class="auto internal xref">A.2</a>.  <a href="#name-inheriting-an-existing-temp" class="internal xref">Inheriting An Existing Template</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.3">
+                <p id="section-toc.1-1.12.2.3.1"><a href="#appendix-A.3" class="auto internal xref">A.3</a>.  <a href="#name-overriding-an-existing-temp" class="internal xref">Overriding An Existing Template</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.4">
+                <p id="section-toc.1-1.12.2.4.1"><a href="#appendix-A.4" class="auto internal xref">A.4</a>.  <a href="#name-expanding-templates-2" class="internal xref">Expanding Templates</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.5">
+                <p id="section-toc.1-1.12.2.5.1"><a href="#appendix-A.5" class="auto internal xref">A.5</a>.  <a href="#name-applying-templates-2" class="internal xref">Applying Templates</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13">
+            <p id="section-toc.1-1.13.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14">
+            <p id="section-toc.1-1.14.1"><a href="#appendix-C" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
 </li>
         </ul>
 </nav>
@@ -1245,7 +1287,21 @@ svg :is([fill="white"], [fill^="#fff"]) {
       <h2 id="name-introduction">
 <a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
       </h2>
-<p id="section-1-1">TODO Introduction<a href="#section-1-1" class="pilcrow">¶</a></p>
+<p id="section-1-1">It is not unusual for the YANG data model <span>[<a href="#RFC7950" class="cite xref">RFC7950</a>]</span> to define some shared profiles that could
+be referenced in order to simplify the configuration of network services or functionalities.
+For example, <span>[<a href="#I-D.ietf-opsawg-ntw-attachment-circuit" class="cite xref">I-D.ietf-opsawg-ntw-attachment-circuit</a>]</span> defines a set of profiles
+at the network level which could be referred to under the node level to factorize
+some common configuration shared by a group of ACs.<a href="#section-1-1" class="pilcrow">¶</a></p>
+<p id="section-1-2">However, it is not trivial to always take care of the definition of shared profiles/
+policies/templates in the design of every data model that could benefit from them.
+There is a desire to make use of common YANG-based templates without relying on
+specific definition in YANG data models.<a href="#section-1-2" class="pilcrow">¶</a></p>
+<p id="section-1-3">NMDA <span>[<a href="#RFC8342" class="cite xref">RFC8342</a>]</span> allows the configuration templates to be defined in &lt;running&gt;
+and expanded in &lt;intended&gt;, but it does not specify details about how configuration
+templates could be created and reused.<a href="#section-1-3" class="pilcrow">¶</a></p>
+<p id="section-1-4">This document defines the use of configuration templates in the context of YANG-driven
+network management protocols such as NETCONF <span>[<a href="#RFC6241" class="cite xref">RFC6241</a>]</span> and RESTCONF <span>[<a href="#RFC8040" class="cite xref">RFC8040</a>]</span>.
+Template data could be created based on any existing YANG data models.<a href="#section-1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="conventions-and-definitions">
@@ -1257,13 +1313,83 @@ svg :is([fill="white"], [fill^="#fff"]) {
 "<span class="bcp14">MAY</span>", and "<span class="bcp14">OPTIONAL</span>" in this document are to be interpreted as
 described in BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="cite xref">RFC8174</a>]</span> when, and only when, they
 appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶</a></p>
+<p id="section-2-2">The meanings of the symbols in tree diagrams are defined in
+<span>[<a href="#RFC8340" class="cite xref">RFC8340</a>]</span>.<a href="#section-2-2" class="pilcrow">¶</a></p>
+<p id="section-2-3">This document uses the YANG terminology defined in <span><a href="https://rfc-editor.org/rfc/rfc7950#section-3" class="relref">Section 3</a> of [<a href="#RFC7950" class="cite xref">RFC7950</a>]</span>.<a href="#section-2-3" class="pilcrow">¶</a></p>
+<p id="section-2-4">Besides, this document defines the following terminology:<a href="#section-2-4" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-2-5">
+        <dt id="section-2-5.1">configuration template:</dt>
+        <dd style="margin-left: 1.5em" id="section-2-5.2">
+          <p id="section-2-5.2.1">A chunk of reusable configuration data that could be applied to the configuration
+of network devices repeatedly, in order to simplify the delivery of network configuration and
+ensure the consistency of it. A configuration template can also be called
+"template" for short.<a href="#section-2-5.2.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-2-5.3">inherited template:</dt>
+        <dd style="margin-left: 1.5em" id="section-2-5.4">
+          <p id="section-2-5.4.1">A configuration template that is applied in the configuration of network
+devices or other templates.<a href="#section-2-5.4.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-2-5.5">parent template:</dt>
+        <dd style="margin-left: 1.5em" id="section-2-5.6">
+          <p id="section-2-5.6.1">A configuration template that is inherited by configuration or other templates.<a href="#section-2-5.6.1" class="pilcrow">¶</a></p>
+</dd>
+      <dd class="break"></dd>
+</dl>
 </section>
 </div>
 <div id="hierarchical-template-overview">
 <section id="section-3">
       <h2 id="name-hierarchical-template-overv">
 <a href="#section-3" class="section-number selfRef">3. </a><a href="#name-hierarchical-template-overv" class="section-name selfRef">Hierarchical Template Overview</a>
-    </h2>
+      </h2>
+<ul class="normal ulEmpty">
+<li class="normal ulEmpty" id="section-3-1.1">
+          <p id="section-3-1.1.1">Editor's Note: Why we'd call Hierarchical Template?
+Editor's Note: The RPC may not be needed as operator can refer to the expansion by querying &lt;intended&gt;.<a href="#section-3-1.1.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<p id="section-3-2">The configuration template may be created, modified, and deleted by management operations
+via NETCONF and RESTCONF protocols. By defining additional metadata, this document
+allows configuration templates to be inherited, composed, and overridden by
+configuration explicitly provided by the client or new templates. In addition,
+this document also defines a RPC called "get-template-expansion" to allow the
+client to retrieve the expansion result of a specific configuration template.<a href="#section-3-2" class="pilcrow">¶</a></p>
+<p id="section-3-3">The YANG data model is defined in <a href="#template-yang" class="auto internal xref">Section 8</a>.<a href="#section-3-3" class="pilcrow">¶</a></p>
+<div id="validity-of-templates">
+<section id="section-3.1">
+        <h3 id="name-validity-of-templates">
+<a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-validity-of-templates" class="section-name selfRef">Validity of Templates</a>
+        </h3>
+<p id="section-3.1-1">The contents of the template alone do not always follow the constraints (as per <span><a href="https://rfc-editor.org/rfc/rfc7950#section-8.1" class="relref">Section 8.1</a> of [<a href="#RFC7950" class="cite xref">RFC7950</a>]</span>)
+of the data model. Some constraints may depend on configuration outside of the
+templates to satisfy, e.g., a list may contain a mandatory leaf node which is not
+defined in the template but explicitly provided by the client. However, servers
+should parse the template and enforce the constraints if possible during the
+processing of template creation, e.g., type constraints for the leaf,
+including those defined in the type's "range", "length", and "pattern" properties.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.1-2">The results of inherited template merging with configuration explicitly provided by the client <span class="bcp14">MUST</span>
+always be a valid configuration data tree.<a href="#section-3.1-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="network-level-templates-vs-device-level-templates">
+<section id="section-3.2">
+        <h3 id="name-network-level-templates-vs-">
+<a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-network-level-templates-vs-" class="section-name selfRef">Network-level Templates VS. Device-level Templates</a>
+        </h3>
+<ul class="normal ulEmpty">
+<li class="normal ulEmpty" id="section-3.2-1.1">
+            <p id="section-3.2-1.1.1">Editor's Note: This section may not be needed.<a href="#section-3.2-1.1.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-3.2-2">The configuration templates may be network-level or device-level, depending on
+whether it is maintained at the network controller or network elements.
+A network-level template can be shared across multiple network devices.
+Device-level template can only be applied to specific network devices.<a href="#section-3.2-2" class="pilcrow">¶</a></p>
+</section>
+</div>
 </section>
 </div>
 <div id="creating-templates">
@@ -1271,11 +1397,15 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
       <h2 id="name-creating-templates">
 <a href="#section-4" class="section-number selfRef">4. </a><a href="#name-creating-templates" class="section-name selfRef">Creating Templates</a>
       </h2>
+<p id="section-4-1">Templates are defined as needed, for example, when it needs
+to deliver some identical configuration to multiple network elements.<a href="#section-4-1" class="pilcrow">¶</a></p>
+<p id="section-4-2"><a href="#template-creation" class="auto internal xref">Appendix A.1</a> provides an example of template creation.<a href="#section-4-2" class="pilcrow">¶</a></p>
 <div id="variables">
 <section id="section-4.1">
         <h3 id="name-variables">
 <a href="#section-4.1" class="section-number selfRef">4.1. </a><a href="#name-variables" class="section-name selfRef">Variables</a>
-      </h3>
+        </h3>
+<p id="section-4.1-1">In some cases, there are some customized configuration that varies.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -1285,6 +1415,11 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
       <h2 id="name-inheriting-templates">
 <a href="#section-5" class="section-number selfRef">5. </a><a href="#name-inheriting-templates" class="section-name selfRef">Inheriting Templates</a>
       </h2>
+<p id="section-5-1">A template is inherited if it is intended to be applied in the configuration of
+the device or other templates.
+If a configuration template is inherited, it is called a "parent template".
+Any modification to it also applies somewhere inherits the template.
+Care <span class="bcp14">MUST</span> be taken when making changes to the parent templates.<a href="#section-5-1" class="pilcrow">¶</a></p>
 <div id="the-stmt-extend-metadata">
 <section id="section-5.1">
         <h3 id="name-the-stmt-extend-metadata">
@@ -1294,110 +1429,126 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 </div>
 </section>
 </div>
-<div id="overriding-templates">
+<div id="composing-templates">
 <section id="section-6">
+      <h2 id="name-composing-templates">
+<a href="#section-6" class="section-number selfRef">6. </a><a href="#name-composing-templates" class="section-name selfRef">Composing templates</a>
+      </h2>
+<div id="the-stmt-compose-metadata">
+<section id="section-6.1">
+        <h3 id="name-the-stmt-compose-metadata">
+<a href="#section-6.1" class="section-number selfRef">6.1. </a><a href="#name-the-stmt-compose-metadata" class="section-name selfRef">The "stmt-compose" Metadata</a>
+      </h3>
+</section>
+</div>
+</section>
+</div>
+<div id="overriding-templates">
+<section id="section-7">
       <h2 id="name-overriding-templates">
-<a href="#section-6" class="section-number selfRef">6. </a><a href="#name-overriding-templates" class="section-name selfRef">Overriding Templates</a>
+<a href="#section-7" class="section-number selfRef">7. </a><a href="#name-overriding-templates" class="section-name selfRef">Overriding Templates</a>
       </h2>
 <div id="creation">
-<section id="section-6.1">
+<section id="section-7.1">
         <h3 id="name-creation">
-<a href="#section-6.1" class="section-number selfRef">6.1. </a><a href="#name-creation" class="section-name selfRef">Creation</a>
+<a href="#section-7.1" class="section-number selfRef">7.1. </a><a href="#name-creation" class="section-name selfRef">Creation</a>
       </h3>
 </section>
 </div>
 <div id="modification">
-<section id="section-6.2">
+<section id="section-7.2">
         <h3 id="name-modification">
-<a href="#section-6.2" class="section-number selfRef">6.2. </a><a href="#name-modification" class="section-name selfRef">Modification</a>
+<a href="#section-7.2" class="section-number selfRef">7.2. </a><a href="#name-modification" class="section-name selfRef">Modification</a>
       </h3>
 </section>
 </div>
 <div id="deletion">
-<section id="section-6.3">
+<section id="section-7.3">
         <h3 id="name-deletion">
-<a href="#section-6.3" class="section-number selfRef">6.3. </a><a href="#name-deletion" class="section-name selfRef">Deletion</a>
+<a href="#section-7.3" class="section-number selfRef">7.3. </a><a href="#name-deletion" class="section-name selfRef">Deletion</a>
       </h3>
 </section>
 </div>
 <div id="listleaflists-reordering">
-<section id="section-6.4">
+<section id="section-7.4">
         <h3 id="name-list-leaflists-reordering">
-<a href="#section-6.4" class="section-number selfRef">6.4. </a><a href="#name-list-leaflists-reordering" class="section-name selfRef">List/leaflists Reordering</a>
+<a href="#section-7.4" class="section-number selfRef">7.4. </a><a href="#name-list-leaflists-reordering" class="section-name selfRef">List/leaflists Reordering</a>
         </h3>
 <div id="positionfirst">
-<section id="section-6.4.1">
+<section id="section-7.4.1">
           <h4 id="name-position_first">
-<a href="#section-6.4.1" class="section-number selfRef">6.4.1. </a><a href="#name-position_first" class="section-name selfRef">Position_first</a>
+<a href="#section-7.4.1" class="section-number selfRef">7.4.1. </a><a href="#name-position_first" class="section-name selfRef">Position_first</a>
         </h4>
 </section>
 </div>
 <div id="positionlast">
-<section id="section-6.4.2">
+<section id="section-7.4.2">
           <h4 id="name-position_last">
-<a href="#section-6.4.2" class="section-number selfRef">6.4.2. </a><a href="#name-position_last" class="section-name selfRef">Position_last</a>
+<a href="#section-7.4.2" class="section-number selfRef">7.4.2. </a><a href="#name-position_last" class="section-name selfRef">Position_last</a>
         </h4>
 </section>
 </div>
 <div id="positionbefore">
-<section id="section-6.4.3">
+<section id="section-7.4.3">
           <h4 id="name-position_before">
-<a href="#section-6.4.3" class="section-number selfRef">6.4.3. </a><a href="#name-position_before" class="section-name selfRef">Position_before</a>
+<a href="#section-7.4.3" class="section-number selfRef">7.4.3. </a><a href="#name-position_before" class="section-name selfRef">Position_before</a>
         </h4>
 </section>
 </div>
 <div id="positionafter">
-<section id="section-6.4.4">
+<section id="section-7.4.4">
           <h4 id="name-position_after">
-<a href="#section-6.4.4" class="section-number selfRef">6.4.4. </a><a href="#name-position_after" class="section-name selfRef">Position_after</a>
+<a href="#section-7.4.4" class="section-number selfRef">7.4.4. </a><a href="#name-position_after" class="section-name selfRef">Position_after</a>
+        </h4>
+</section>
+</div>
+</section>
+</div>
+<div id="expanding-templates">
+<section id="section-7.5">
+        <h3 id="name-expanding-templates">
+<a href="#section-7.5" class="section-number selfRef">7.5. </a><a href="#name-expanding-templates" class="section-name selfRef">Expanding Templates</a>
+        </h3>
+<div id="the-get-template-expansion-rpc">
+<section id="section-7.5.1">
+          <h4 id="name-the-get-template-expansion-">
+<a href="#section-7.5.1" class="section-number selfRef">7.5.1. </a><a href="#name-the-get-template-expansion-" class="section-name selfRef">The "get-template-expansion" RPC</a>
         </h4>
 </section>
 </div>
 </section>
 </div>
 <div id="applying-templates">
-<section id="section-6.5">
+<section id="section-7.6">
         <h3 id="name-applying-templates">
-<a href="#section-6.5" class="section-number selfRef">6.5. </a><a href="#name-applying-templates" class="section-name selfRef">Applying Templates</a>
+<a href="#section-7.6" class="section-number selfRef">7.6. </a><a href="#name-applying-templates" class="section-name selfRef">Applying Templates</a>
       </h3>
 </section>
 </div>
-<div id="expanding-templates">
-<section id="section-6.6">
-        <h3 id="name-expanding-templates">
-<a href="#section-6.6" class="section-number selfRef">6.6. </a><a href="#name-expanding-templates" class="section-name selfRef">Expanding Templates</a>
-        </h3>
-<div id="the-get-template-expansion-rpc">
-<section id="section-6.6.1">
-          <h4 id="name-the-get-template-expansion-">
-<a href="#section-6.6.1" class="section-number selfRef">6.6.1. </a><a href="#name-the-get-template-expansion-" class="section-name selfRef">The "get-template-expansion" RPC</a>
-        </h4>
 </section>
 </div>
-</section>
-</div>
-</section>
-</div>
-<div id="the-ietf-template-yang-module">
-<section id="section-7">
+<div id="template-yang">
+<section id="section-8">
       <h2 id="name-the-ietf-template-yang-modu">
-<a href="#section-7" class="section-number selfRef">7. </a><a href="#name-the-ietf-template-yang-modu" class="section-name selfRef">The "ietf-template" YANG Module</a>
+<a href="#section-8" class="section-number selfRef">8. </a><a href="#name-the-ietf-template-yang-modu" class="section-name selfRef">The "ietf-template" YANG Module</a>
       </h2>
 <div id="data-model-overview">
-<section id="section-7.1">
+<section id="section-8.1">
         <h3 id="name-data-model-overview">
-<a href="#section-7.1" class="section-number selfRef">7.1. </a><a href="#name-data-model-overview" class="section-name selfRef">Data Model Overview</a>
+<a href="#section-8.1" class="section-number selfRef">8.1. </a><a href="#name-data-model-overview" class="section-name selfRef">Data Model Overview</a>
         </h3>
-<p id="section-7.1-1">The following tree diagram <span>[<a href="#RFC8340" class="cite xref">RFC8340</a>]</span> illustrates the "ietf-template" module:<a href="#section-7.1-1" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-7.1-2">
+<p id="section-8.1-1">The following tree diagram <span>[<a href="#RFC8340" class="cite xref">RFC8340</a>]</span> illustrates the "ietf-template" module:<a href="#section-8.1-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-8.1-2">
 <pre>
 module: ietf-template
   +--rw templates
      +--rw template* [id]
-        +--rw id               string
-        +--rw description?     string
-        +--rw content?         &lt;anydata&gt;
-        +--rw last-modified?   yang:timestamp
+        +--rw id                 string
+        +--rw description?       string
+        +--rw content?           &lt;anydata&gt;
+        +--ro last-modified?     yang:timestamp
+        +--ro parent-template?   -&gt; ../../template/id
+        +--ro inherited-by*      union
 
   rpcs:
     +---x get-template-expansion
@@ -1405,16 +1556,16 @@ module: ietf-template
        |  +---w template-id?   -&gt; /templates/template/id
        +--ro output
           +--ro data?   &lt;anydata&gt;
-</pre><a href="#section-7.1-2" class="pilcrow">¶</a>
+</pre><a href="#section-8.1-2" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
 <div id="yang-module">
-<section id="section-7.2">
+<section id="section-8.2">
         <h3 id="name-yang-module">
-<a href="#section-7.2" class="section-number selfRef">7.2. </a><a href="#name-yang-module" class="section-name selfRef">YANG Module</a>
+<a href="#section-8.2" class="section-number selfRef">8.2. </a><a href="#name-yang-module" class="section-name selfRef">YANG Module</a>
         </h3>
-<div class="breakable sourcecode" id="section-7.2-1">
+<div class="breakable sourcecode" id="section-8.2-1">
 <pre>&lt;CODE BEGINS&gt; file "ietf-template@2024-08-27.yang"
 
 module ietf-template {
@@ -1493,8 +1644,30 @@ module ietf-template {
        }
        leaf last-modified {
          type yang:timestamp;
+         config false;
          description
            "Timestamp when the template is modified last time.";
+       }
+       leaf parent-template {
+         type leafref {
+           path "../../template/id";
+         }
+         config false;
+         description
+           "The identifier of the template that this template is
+            inherited from.";
+       }
+       leaf-list inherited-by {
+         type union {
+           type instance-identifier;
+           type leafref {
+             path "../../template/id";
+           }
+         }
+         config false;
+         description
+           "The data tree node or an identifier of the template that
+            inherits this template.";
        }
      }
    }
@@ -1519,69 +1692,69 @@ module ietf-template {
   }
 }
 
-&lt;CODE ENDS&gt;</pre><a href="#section-7.2-1" class="pilcrow">¶</a>
+&lt;CODE ENDS&gt;</pre><a href="#section-8.2-1" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
 </section>
 </div>
 <div id="security-considerations">
-<section id="section-8">
+<section id="section-9">
       <h2 id="name-security-considerations">
-<a href="#section-8" class="section-number selfRef">8. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
+<a href="#section-9" class="section-number selfRef">9. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
       </h2>
-<p id="section-8-1">TODO Security<a href="#section-8-1" class="pilcrow">¶</a></p>
+<p id="section-9-1">TODO Security<a href="#section-9-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="iana-considerations">
-<section id="section-9">
+<section id="section-10">
       <h2 id="name-iana-considerations">
-<a href="#section-9" class="section-number selfRef">9. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
+<a href="#section-10" class="section-number selfRef">10. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
       </h2>
 <div id="the-ietf-xml-registry">
-<section id="section-9.1">
+<section id="section-10.1">
         <h3 id="name-the-ietf-xml-registry">
-<a href="#section-9.1" class="section-number selfRef">9.1. </a><a href="#name-the-ietf-xml-registry" class="section-name selfRef">The "IETF XML" Registry</a>
+<a href="#section-10.1" class="section-number selfRef">10.1. </a><a href="#name-the-ietf-xml-registry" class="section-name selfRef">The "IETF XML" Registry</a>
         </h3>
-<p id="section-9.1-1">This document registers the following URI in the "IETF XML Registry" <span>[<a href="#RFC3688" class="cite xref">RFC3688</a>]</span>.<a href="#section-9.1-1" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-9.1-2">
+<p id="section-10.1-1">This document registers the following URI in the "IETF XML Registry" <span>[<a href="#RFC3688" class="cite xref">RFC3688</a>]</span>.<a href="#section-10.1-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-10.1-2">
 <pre>
         URI: urn:ietf:params:xml:ns:yang:ietf-template
         Registrant Contact: The IESG.
         XML: N/A, the requested URI is an XML namespace.
-</pre><a href="#section-9.1-2" class="pilcrow">¶</a>
+</pre><a href="#section-10.1-2" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
 <div id="the-yang-module-names-registry">
-<section id="section-9.2">
+<section id="section-10.2">
         <h3 id="name-the-yang-module-names-regis">
-<a href="#section-9.2" class="section-number selfRef">9.2. </a><a href="#name-the-yang-module-names-regis" class="section-name selfRef">The "YANG Module Names" Registry</a>
+<a href="#section-10.2" class="section-number selfRef">10.2. </a><a href="#name-the-yang-module-names-regis" class="section-name selfRef">The "YANG Module Names" Registry</a>
         </h3>
-<p id="section-9.2-1">This document registers the following YANG module in the "YANG Module Names"
-   registry <span>[<a href="#RFC6020" class="cite xref">RFC6020</a>]</span>.<a href="#section-9.2-1" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-9.2-2">
+<p id="section-10.2-1">This document registers the following YANG module in the "YANG Module Names"
+   registry <span>[<a href="#RFC6020" class="cite xref">RFC6020</a>]</span>.<a href="#section-10.2-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-10.2-2">
 <pre>
         name:               ietf-template
         namespace:          urn:ietf:params:xml:ns:yang:ietf-template
         prefix:             template
         maintained by IANA? N
         reference:          RFC XXXX
-</pre><a href="#section-9.2-2" class="pilcrow">¶</a>
+</pre><a href="#section-10.2-2" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
 </section>
 </div>
 <div id="sec-combined-references">
-<section id="section-10">
+<section id="section-11">
       <h2 id="name-references">
-<a href="#section-10" class="section-number selfRef">10. </a><a href="#name-references" class="section-name selfRef">References</a>
+<a href="#section-11" class="section-number selfRef">11. </a><a href="#name-references" class="section-name selfRef">References</a>
       </h2>
 <div id="sec-normative-references">
-<section id="section-10.1">
+<section id="section-11.1">
         <h3 id="name-normative-references">
-<a href="#section-10.1" class="section-number selfRef">10.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
+<a href="#section-11.1" class="section-number selfRef">11.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
         </h3>
 <dl class="references">
 <dt id="RFC2119">[RFC2119]</dt>
@@ -1596,6 +1769,18 @@ module ietf-template {
         <dd>
 <span class="refAuthor">Bjorklund, M., Ed.</span>, <span class="refTitle">"YANG - A Data Modeling Language for the Network Configuration Protocol (NETCONF)"</span>, <span class="seriesInfo">RFC 6020</span>, <span class="seriesInfo">DOI 10.17487/RFC6020</span>, <time datetime="2010-10" class="refDate">October 2010</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6020">https://www.rfc-editor.org/rfc/rfc6020</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="RFC6241">[RFC6241]</dt>
+        <dd>
+<span class="refAuthor">Enns, R., Ed.</span>, <span class="refAuthor">Bjorklund, M., Ed.</span>, <span class="refAuthor">Schoenwaelder, J., Ed.</span>, and <span class="refAuthor">A. Bierman, Ed.</span>, <span class="refTitle">"Network Configuration Protocol (NETCONF)"</span>, <span class="seriesInfo">RFC 6241</span>, <span class="seriesInfo">DOI 10.17487/RFC6241</span>, <time datetime="2011-06" class="refDate">June 2011</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6241">https://www.rfc-editor.org/rfc/rfc6241</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC7950">[RFC7950]</dt>
+        <dd>
+<span class="refAuthor">Bjorklund, M., Ed.</span>, <span class="refTitle">"The YANG 1.1 Data Modeling Language"</span>, <span class="seriesInfo">RFC 7950</span>, <span class="seriesInfo">DOI 10.17487/RFC7950</span>, <time datetime="2016-08" class="refDate">August 2016</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7950">https://www.rfc-editor.org/rfc/rfc7950</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8040">[RFC8040]</dt>
+        <dd>
+<span class="refAuthor">Bierman, A.</span>, <span class="refAuthor">Bjorklund, M.</span>, and <span class="refAuthor">K. Watsen</span>, <span class="refTitle">"RESTCONF Protocol"</span>, <span class="seriesInfo">RFC 8040</span>, <span class="seriesInfo">DOI 10.17487/RFC8040</span>, <time datetime="2017-01" class="refDate">January 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8040">https://www.rfc-editor.org/rfc/rfc8040</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="RFC8174">[RFC8174]</dt>
       <dd>
 <span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05" class="refDate">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8174">https://www.rfc-editor.org/rfc/rfc8174</a>&gt;</span>. </dd>
@@ -1604,30 +1789,136 @@ module ietf-template {
 </section>
 </div>
 <div id="sec-informative-references">
-<section id="section-10.2">
+<section id="section-11.2">
         <h3 id="name-informative-references">
-<a href="#section-10.2" class="section-number selfRef">10.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
+<a href="#section-11.2" class="section-number selfRef">11.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
         </h3>
 <dl class="references">
+<dt id="I-D.ietf-opsawg-ntw-attachment-circuit">[I-D.ietf-opsawg-ntw-attachment-circuit]</dt>
+        <dd>
+<span class="refAuthor">Boucadair, M.</span>, <span class="refAuthor">Roberts, R.</span>, <span class="refAuthor">de Dios, O. G.</span>, <span class="refAuthor">Barguil, S.</span>, and <span class="refAuthor">B. Wu</span>, <span class="refTitle">"A Network YANG Data Model for Attachment Circuits"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-opsawg-ntw-attachment-circuit-12</span>, <time datetime="2024-07-24" class="refDate">24 July 2024</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-opsawg-ntw-attachment-circuit-12">https://datatracker.ietf.org/doc/html/draft-ietf-opsawg-ntw-attachment-circuit-12</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC7317">[RFC7317]</dt>
+        <dd>
+<span class="refAuthor">Bierman, A.</span> and <span class="refAuthor">M. Bjorklund</span>, <span class="refTitle">"A YANG Data Model for System Management"</span>, <span class="seriesInfo">RFC 7317</span>, <span class="seriesInfo">DOI 10.17487/RFC7317</span>, <time datetime="2014-08" class="refDate">August 2014</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7317">https://www.rfc-editor.org/rfc/rfc7317</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="RFC8340">[RFC8340]</dt>
-      <dd>
+        <dd>
 <span class="refAuthor">Bjorklund, M.</span> and <span class="refAuthor">L. Berger, Ed.</span>, <span class="refTitle">"YANG Tree Diagrams"</span>, <span class="seriesInfo">BCP 215</span>, <span class="seriesInfo">RFC 8340</span>, <span class="seriesInfo">DOI 10.17487/RFC8340</span>, <time datetime="2018-03" class="refDate">March 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8340">https://www.rfc-editor.org/rfc/rfc8340</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8342">[RFC8342]</dt>
+      <dd>
+<span class="refAuthor">Bjorklund, M.</span>, <span class="refAuthor">Schoenwaelder, J.</span>, <span class="refAuthor">Shafer, P.</span>, <span class="refAuthor">Watsen, K.</span>, and <span class="refAuthor">R. Wilton</span>, <span class="refTitle">"Network Management Datastore Architecture (NMDA)"</span>, <span class="seriesInfo">RFC 8342</span>, <span class="seriesInfo">DOI 10.17487/RFC8342</span>, <time datetime="2018-03" class="refDate">March 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8342">https://www.rfc-editor.org/rfc/rfc8342</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 </dl>
 </section>
 </div>
 </section>
 </div>
-<div id="acknowledgments">
+<div id="usage-examples">
 <section id="appendix-A">
+      <h2 id="name-usage-examples">
+<a href="#appendix-A" class="section-number selfRef">Appendix A. </a><a href="#name-usage-examples" class="section-name selfRef">Usage Examples</a>
+      </h2>
+<p id="appendix-A-1">This section provides some examples to show the use of templates.
+JSON encoding is used only for illustration purposes.
+The fictional data model used throughout this section is as follows. This
+network model is inspired by the device model defined in <span>[<a href="#RFC7317" class="cite xref">RFC7317</a>]</span>.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="appendix-A-2">
+<pre>
+module example-network-systime {
+  yang-version 1.1;
+  namespace "urn:example:network-system-time";
+  prefix "ex-nesyst";
+
+  import ietf-inet-types {
+    prefix "inet";
+  }
+
+  list network-device {
+    key device-id;
+    leaf device-id {
+      type string;
+    }
+    container ntp {
+      leaf enabled {
+        type boolean;
+        default true;
+      }
+      list server {
+        key name;
+        leaf name {
+          type string;
+        }
+        leaf-list alias {
+          type string;
+        }
+        leaf address {
+          type inet:host;
+          mandatory true;
+        }
+        leaf port {
+          type inet:port-number;
+          default 123;
+        }
+        leaf prefer {
+          type boolean;
+          default false;
+        }
+      }
+    }
+  }
+}
+</pre><a href="#appendix-A-2" class="pilcrow">¶</a>
+</div>
+<div id="template-creation">
+<section id="appendix-A.1">
+        <h3 id="name-creating-templates-2">
+<a href="#appendix-A.1" class="section-number selfRef">A.1. </a><a href="#name-creating-templates-2" class="section-name selfRef">Creating Templates</a>
+        </h3>
+<p id="appendix-A.1-1">The NTP configuration on multiple network devices may be consistent.<a href="#appendix-A.1-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="inheriting-an-existing-template">
+<section id="appendix-A.2">
+        <h3 id="name-inheriting-an-existing-temp">
+<a href="#appendix-A.2" class="section-number selfRef">A.2. </a><a href="#name-inheriting-an-existing-temp" class="section-name selfRef">Inheriting An Existing Template</a>
+      </h3>
+</section>
+</div>
+<div id="overriding-an-existing-template">
+<section id="appendix-A.3">
+        <h3 id="name-overriding-an-existing-temp">
+<a href="#appendix-A.3" class="section-number selfRef">A.3. </a><a href="#name-overriding-an-existing-temp" class="section-name selfRef">Overriding An Existing Template</a>
+      </h3>
+</section>
+</div>
+<div id="expanding-templates-1">
+<section id="appendix-A.4">
+        <h3 id="name-expanding-templates-2">
+<a href="#appendix-A.4" class="section-number selfRef">A.4. </a><a href="#name-expanding-templates-2" class="section-name selfRef">Expanding Templates</a>
+      </h3>
+</section>
+</div>
+<div id="applying-templates-1">
+<section id="appendix-A.5">
+        <h3 id="name-applying-templates-2">
+<a href="#appendix-A.5" class="section-number selfRef">A.5. </a><a href="#name-applying-templates-2" class="section-name selfRef">Applying Templates</a>
+      </h3>
+</section>
+</div>
+</section>
+</div>
+<div id="acknowledgments">
+<section id="appendix-B">
       <h2 id="name-acknowledgments">
 <a href="#name-acknowledgments" class="section-name selfRef">Acknowledgments</a>
       </h2>
-<p id="appendix-A-1">TODO acknowledge.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
+<p id="appendix-B-1">TODO acknowledge.<a href="#appendix-B-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="authors-addresses">
-<section id="appendix-B">
+<section id="appendix-C">
       <h2 id="name-authors-addresses">
 <a href="#name-authors-addresses" class="section-name selfRef">Authors' Addresses</a>
       </h2>
