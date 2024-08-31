@@ -188,7 +188,7 @@ For example, a client may configure a physically present interface "eth0"
 by inheriting the template defined in {{temp-ex}}:
 
 ~~~~
-<interfaces xmlns:template="urn:ietf:params:xml:ns:yang:ietf-template">  
+<interfaces xmlns:template="urn:ietf:params:xml:ns:yang:ietf-template">
   <interface template:stmt-extend="eth-mtu">
     <name>eth0</name>
   </interface>
