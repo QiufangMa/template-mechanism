@@ -201,7 +201,7 @@ in {{Section 5 of ?RFC7952}}.
 
 For example, a client may configure a physically present interface "eth0"
 by inheriting the template defined in {{temp-ex-interface}}, the following shows the NETCONF
-"<edit-config>" operation example:
+"\<edit-config\>" operation example:
 
 ~~~~
 <rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="101">
