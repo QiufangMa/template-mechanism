@@ -240,6 +240,11 @@ the "stmt-extend" metadata object.
 
 # Overriding Templates
 
+It may be desired to override some configuration in an existing template when it is interited.
+This may be achieved by directly editing the configuration template that is inherited,
+however, the parent template may have been inherited by other instance nodes or
+templates, and direct modification of the parent template may yield unexpected results.
+
 ## Creation
 
 ## Modification
