@@ -63,7 +63,12 @@ templates could be created and reused.
 
 This document defines the use of configuration templates in the context of YANG-driven
 network management protocols such as NETCONF {{!RFC6241}} and RESTCONF {{!RFC8040}}.
-Template data could be created based on any existing YANG data models.
+By defining a common set of nodes as a configuration template and applying the
+configuration template repeatedly, it avoids the redundant definition of identical
+configuration and also ensures consistency of it. Configuration template could
+be used based on any existing YANG data models, this document doesn't make any
+assumption on the YANG data model design, i.e., does not rely on the shared profile/group
+defined in the YANG data model.
 
 ## Editorial Note (To be removed by RFC Editor)
 
@@ -92,33 +97,39 @@ Besides, this document defines the following terminology:
 
 configuration template:
 : A chunk of reusable configuration data that could be applied to the configuration
-  of network devices repeatedly, in order to simplify the delivery of network configuration and
-  ensure the consistency of it. A configuration template can also be called
-  "template" for short.
+  repeatedly, in order to simplify the delivery of network configuration and
+  ensure the consistency of it. Configuration templates can be applied at different
+  levels of the data tree, a configuration template can also be called
+  "hierarchical template", or "template" for short.
 
 inherited template:
 : A configuration template that is applied in the configuration of network
-  devices or other templates.
+  devices or reused by other templates.
 
 parent template:
-: A configuration template that is inherited by configuration or other templates.
+: A configuration template that is an inherited template.
 
 # Hierarchical Template Overview
 
 > Editor's Note: The RPC may not be needed as operator can refer to the expansion by querying \<intended\>.
 
-The configuration template may be created, modified, and deleted by management operations
-via NETCONF and RESTCONF protocols. By defining additional metadata, this document
-allows configuration templates to be inherited, composed, and overridden by
-configuration explicitly provided by the client or new templates. In addition,
-this document also defines a RPC called "get-template-expansion" to allow the
-client to retrieve the expansion result of a specific configuration template.
+A configuration template must first be defined before it can be applied. The creation,
+modification, and deletion of configuration templates can be achieved by network
+management operations via NETCONF or RESTCONF protocols. The content of the configuration
+template must be an instantiated chunk of data. For example, {{temp-ex}} provides
+an interface configuration template that MTU is set as 1500 for Ethernet interfaces:
 
-The YANG data model is defined in {{template-yang}}.
+~~~~
+<type>ianaift:ethernetCsmacd<type>
+<mtu>1500<mtu>
+{: #temp-ex title="Example of An Interface template 'eth-mtu'"}
+~~~~
+
+The YANG data model of configuration templates is defined in {{template-yang}}.
 
 ## Validity of Templates
 
-The contents of the template alone do not always follow the constraints (as per {{Section 8.1 of !RFC7950}})
+The contents of the template alone do not always follow the constraints
 of the data model. Some constraints may depend on configuration outside of the
 templates to satisfy, e.g., a list may contain a mandatory leaf node which is not
 defined in the template but explicitly provided by the client. However, servers
@@ -126,44 +137,64 @@ should parse the template and enforce the constraints if possible during the
 processing of template creation, e.g., type constraints for the leaf,
 including those defined in the type's "range", "length", and "pattern" properties.
 
-The results of inherited template merging with configuration explicitly provided by the client MUST
-always be a valid configuration data tree.
+That said, if a template is applied in the data tree, the results of the template
+configuration merging with configuration explicitly provided by the client MUST
+always be a valid configuration data tree, as defined in {{Section 8.1 of !RFC7950}}.
 
-## Network-level Templates VS. Device-level Templates
+## Different Levels of Templates
 
-> Editor's Note: This section may not be needed.
-
-The configuration templates may be network-level or device-level, depending on
-whether it is maintained at the network controller or network elements.
-A network-level template can be shared across multiple network devices.
-Device-level template can only be applied to specific network devices.
-
-# Creating Templates
-
-Templates are defined as needed, for example, when it needs
-to deliver some identical configuration to multiple network elements.
-
-{{template-creation}} provides an example of template creation.
-
-## Variables
-
-In some cases, there are some customized configuration that varies.
+The configuration templates may be at different levels, depending on
+where it is used and maintained.
+For exmaple, A network-level template maintained by the software-defined networking
+(SDN) {{?RFC7149}} {{?RFC7426}} controller defines configuration that may be shared
+by multiple network devices. While device-level template maintained by the network
+element defines configuration that can only be applied to specific network devices.
+Refer to {{appendix-network}} for examples of network-level templates.
 
 # Inheriting Templates
 
-Template inheritance is flagged by adding the metadata object called "stmt-extend"
-as the top level of the configuration or templates.
+This document allows configuration templates to be inherited by
+configuration nodes in the data tree or new templates.
 
-Any modification to it also applies somewhere inherits the template.
+If a configuration template is inherited by a node in the data tree, it acts as
+if the configuration defined in the template is contained as the child configuration
+of that node and merged with the configuration at the corresponding level in the data tree.
+
+If a configuration template is inherited by another new template,
+the configuration of the new template is the merging result of configuration defined
+in both templates with the new template takes precedence over its parent template.
+This is useful when some additional configuration is intended to be defined on the
+basis of the parent template.
+
+Any modification to the parent template also applies somewhere inherits the template.
 Care MUST be taken when making changes to the parent templates.
 
 ## The "stmt-extend" Metadata
 
-The "stmt-extend" metadata MUST have a value to specify the only one parent template
-id that is inherited. The encoding of "stmt-extend" metadata follows the way defined
-in {{!RFC7952}}.
+Template inheritance is flagged by declaring the metadata object called "stmt-extend".
+If the template is inherited by a node in the data tree, the metadata object is added
+to that specific node. A instance node inherits at most one configuration template.
 
-{{template-inherits}} provides examples of inheriting an existing template by indicating
+If the template is inherited by another template, the metadata
+object is added to the "/ietf-template:templates/ietf-template:template" instance node that specifies the template contents.
+Similarly, a template inherits at most one configuration template.
+
+The "stmt-extend" metadata MUST have only one value to specify the parent template
+identifier that is inherited. The encoding of "stmt-extend" metadata object follows the way defined
+in {{Section 5 of ?RFC7952}}.
+
+For example, a client may configure a physically present interface "eth0"
+by inheriting the template defined in {{temp-ex}}:
+
+~~~~
+<interfaces xmlns:template="urn:ietf:params:xml:ns:yang:ietf-template">  
+  <interface template:stmt-extend="eth-mtu">
+    <name>eth0</name>
+  </interface>
+</interfaces>
+~~~~
+
+{{template-inherits}} provides more examples of inheriting an existing template by indicating
 the "stmt-extend" metadata object.
 
 # Composing templates
@@ -188,13 +219,26 @@ the "stmt-extend" metadata object.
 
 ### Position_after
 
-## Expanding Templates
+## Interaction with NMDA datastores
 
-### The "get-template-expansion" RPC
+Some implementation may have predefined configuration templates for the convenience
+of clients, which are present in <system> (if implemented, see {{?I-D.ietf-netmod-system-config}}).
+In addition, clients can always define their own templates in <running>.
+However, configuration template data defined by "ietf-template" YANG data model
+should not be visible in <operational> until being inherited by a node in the data tree.
+
+If a node in the data tree inherits a configuration template, the configuration
+template does not expand in <running>, a read back of <running> returns what is
+sent by the client with the "stmt-extend" metadata attached to the specific node.
+Configuration template which is inherited or overridden by the node instance MUST be expanded in <intended>.
+
+> Editor's Note: The read-back of <running> might break legacy clients doesn't
+understand template?
+
+
+## The "get-template-expansion" RPC
 
 ## Applying Templates
-
-
 
 
 # The "ietf-template" YANG Module {#template-yang}
@@ -248,7 +292,7 @@ TODO Security
 
 --- back
 
-# Usage Examples
+# Usage Examples {{#appendix-network}}
 
 This section provides some examples to show the use of templates.
 Both NETCONF and RESTCONF protocol operations and different encodings are used
