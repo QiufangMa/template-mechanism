@@ -222,17 +222,17 @@ the "stmt-extend" metadata object.
 ## Interaction with NMDA datastores
 
 Some implementation may have predefined configuration templates for the convenience
-of clients, which are present in <system> (if implemented, see {{?I-D.ietf-netmod-system-config}}).
-In addition, clients can always define their own templates in <running>.
+of clients, which are present in \<system\> (if implemented, see {{?I-D.ietf-netmod-system-config}}).
+In addition, clients can always define their own templates in \<running\>.
 However, configuration template data defined by "ietf-template" YANG data model
-should not be visible in <operational> until being inherited by a node in the data tree.
+should not be visible in \<operational\> until being inherited by a node in the data tree.
 
 If a node in the data tree inherits a configuration template, the configuration
-template does not expand in <running>, a read back of <running> returns what is
+template does not expand in \<running\>, a read back of \<running\> returns what is
 sent by the client with the "stmt-extend" metadata attached to the specific node.
-Configuration template which is inherited or overridden by the node instance MUST be expanded in <intended>.
+Configuration template which is inherited or overridden by the node instance MUST be expanded in \<intended\>.
 
-> Editor's Note: The read-back of <running> might break legacy clients doesn't
+> Editor's Note: The read-back of \<running\> might break legacy clients doesn't
 understand template?
 
 
