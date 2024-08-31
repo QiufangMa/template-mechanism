@@ -116,15 +116,28 @@ parent template:
 A configuration template must first be defined before it can be applied. The creation,
 modification, and deletion of configuration templates can be achieved by network
 management operations via NETCONF or RESTCONF protocols. The content of the configuration
-template must be an instantiated chunk of data. For example, {{temp-ex}} provides
-an interface configuration template that MTU is set as 1500 for Ethernet interfaces:
+template must be an instantiated chunk of data. For example, {{temp-ex-interface}} provides
+an interface configuration template named "interface-type-mtu" that sets MTU as 1500 for Ethernet interfaces:
 
 ~~~~
-<type>ianaift:ethernetCsmacd<type>
-<mtu>1500<mtu>
+<interfaces>
+  <interface>
+    <type>ianaift:ethernetCsmacd</type>
+    <mtu>1500</mtu>
+  </interface>
+</interfaces>
 ~~~~
-{: #temp-ex title="Example of An Interface template 'eth-mtu'"}
+{: #temp-ex-interface title="Example of An Interface template"}
 
+
+It may also be defined as the template named "type-mtu" for example, with only leafs
+"type" and "mtu" being specified in {{temp-ex}}:
+
+~~~~
+<type>ianaift:ethernetCsmacd</type>
+<mtu>1500</mtu>
+~~~~
+{: #temp-ex title="Example of An Interface template"}
 
 The YANG data model of configuration templates is defined in {{template-yang}}.
 
@@ -159,7 +172,9 @@ configuration nodes in the data tree or new templates.
 
 If a configuration template is inherited by a node in the data tree, it acts as
 if the configuration defined in the template is contained as the child configuration
-of that node and merged with the configuration at the corresponding level in the data tree.
+merged with the configuration at the corresponding level in the data tree.
+
+> Editor's Note: what if the template configuration is defined from the top level configuration?
 
 If a configuration template is inherited by another new template,
 the configuration of the new template is the merging result of configuration defined
@@ -185,11 +200,32 @@ identifier that is inherited. The encoding of "stmt-extend" metadata object foll
 in {{Section 5 of ?RFC7952}}.
 
 For example, a client may configure a physically present interface "eth0"
-by inheriting the template defined in {{temp-ex}}:
+by inheriting the template defined in {{temp-ex-interface}}, the following shows the NETCONF
+"<edit-config>" operation example:
+
+~~~~
+<rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="101">
+  <edit-data
+    xmlns="urn:ietf:params:xml:ns:yang:ietf-netconf-nmda"
+    xmlns:ds="urn:ietf:params:xml:ns:yang:ietf-datastores">
+    <datastore>ds:running</datastore>
+    <config xmlns:template="urn:ietf:params:xml:ns:yang:ietf-template"
+            template:stmt-extend="interface-type-mtu">
+      <interfaces xmlns="http://example.com/schema/1.2/config">
+        <interface>
+          <name>eth0</name>
+        </interface>
+      </interfaces>
+    </config>
+  </edit-data>
+</rpc>
+~~~~
+
+And the equivalent configuration but inheriting the template defined in {{temp-ex}}:
 
 ~~~~
 <interfaces xmlns:template="urn:ietf:params:xml:ns:yang:ietf-template">
-  <interface template:stmt-extend="eth-mtu">
+  <interface template:stmt-extend="type-mtu">
     <name>eth0</name>
   </interface>
 </interfaces>
