@@ -122,8 +122,9 @@ an interface configuration template that MTU is set as 1500 for Ethernet interfa
 ~~~~
 <type>ianaift:ethernetCsmacd<type>
 <mtu>1500<mtu>
-{: #temp-ex title="Example of An Interface template 'eth-mtu'"}
 ~~~~
+{: #temp-ex title="Example of An Interface template 'eth-mtu'"}
+
 
 The YANG data model of configuration templates is defined in {{template-yang}}.
 
@@ -292,7 +293,7 @@ TODO Security
 
 --- back
 
-# Usage Examples {{#appendix-network}}
+# Usage Examples {#appendix-network}
 
 This section provides some examples to show the use of templates.
 Both NETCONF and RESTCONF protocol operations and different encodings are used
