@@ -522,7 +522,7 @@ An operation request to expand the "template-ntp2" template in {{template-inheri
         <name>ntp-service-secondary-2</name>
         <alias>secondary</alias>
         <address>ntp.service.backup.com</address>
-      </server>     
+      </server>
     </ntp>
   </data>
 </rpc-reply>
