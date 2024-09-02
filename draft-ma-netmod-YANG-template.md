@@ -125,6 +125,7 @@ an interface configuration template that sets MTU as 1500 for Ethernet interface
   <interface>
     <type>ianaift:ethernetCsmacd</type>
     <mtu>1500</mtu>
+    <description>MTU value is set by template</description>
   </interface>
 </interfaces>
 ~~~~
@@ -211,11 +212,13 @@ And it is equivalent to the following:
     <name>eth0</name>
     <type>ianaift:ethernetCsmacd</type>
     <mtu>1500</mtu>
+    <description>MTU value is set by template</description>
   </interface>
   <interface>
     <name>eth1</name>
     <type>ianaift:ethernetCsmacd</type>
     <mtu>1500</mtu>
+    <description>MTU value is set by template</description>
   </interface>
 </interfaces>
 ~~~~
@@ -241,7 +244,7 @@ or configuration explicitly provided by the client.
 
 If there is some configuration data that needs to be created, it can be provided
 at the corresponding level when inheriting the configuration template. For example,
-the client may want to define another template and provide "enabled" leaf value
+the client may want to define another template and provide an additional "enabled" leaf value
 on the basis of template defined in {{temp-ex-interface}}:
 
 ~~~~
@@ -257,8 +260,8 @@ on the basis of template defined in {{temp-ex-interface}}:
 If there is some configuration values that need to be modified, the desired value
 can be provided at the corresponding level when inheriting the configuation template.
 For example, a client may configure physically present interfaces "eth0" and "eth1"
-inheriting the template defined in {{temp-ex-interface}}, but the MTU value of "eth1"
-needs to be 9122:
+inheriting the template defined in {{temp-ex-interface}}, but the "mtu" value of "eth1"
+needs to be 9122, and the "description" value also needs to be modified accordingly:
 
 ~~~~
 <interfaces template:stmt-extend="interface-type-mtu">
@@ -268,23 +271,66 @@ needs to be 9122:
   <interface>
     <name>eth1</name>
     <mtu>9122</mtu>
+    <description>MTU value is set explicitly</description>
   </interface>
 </interfaces>
 ~~~~
 
-## Deletion
 
-If there is some configuration data that needs to be deleted,
+### Deletion (The "operation-tag" Metadata with "delete" Value)
 
-## List/leaflists Reordering
+The deletion of configuration data is flagged by declaring the metadata object
+called "operation-tag" with a value "delete". When some node instance defined in the configuration template
+is intended to be deleted in the configuration explicitly by the client or by new
+templates, if the node is at a top level, the metadata object is added to that
+specific node. Servers MUST ignore this
+metadata if the configuration identified currently does not exist in the configuration
+template.
 
-### Position_first
+For example, a client may want to delete the "description" node instance defined
+in {{temp-ex-interface}} for interface "eth1", and the following shows the example
+configuration:
 
-### Position_last
+~~~~
+<interfaces template:stmt-extend="interface-type-mtu">
+  <interface>
+    <name>eth0</name>
+  </interface>
+  <interface>
+    <name>eth1</name>
+    <mtu>9122</mtu>
+    <description template:operation-tag="delete">MTU value is set by template</description>
+  </interface>
+</interfaces>
+~~~~
 
-### Position_before
+And it is equivalent to the following:
 
-### Position_after
+~~~~
+<interfaces>
+  <interface>
+    <name>eth0</name>
+    <type>ianaift:ethernetCsmacd</type>
+    <mtu>1500</mtu>
+    <description>MTU value is set by template</description>
+  </interface>
+  <interface>
+    <name>eth1</name>
+    <type>ianaift:ethernetCsmacd</type>
+    <mtu>9122</mtu>
+  </interface>
+</interfaces>
+~~~~
+
+### List/leaflists Reordering
+
+#### Position_first (The "operation-tag" Metadata with "Position_first" Value)
+
+#### Position_last (The "operation-tag" Metadata with "Position_last" Value)
+
+#### Position_before (The "operation-tag" Metadata with "Position_before" Value)
+
+#### Position_after (The "operation-tag" Metadata with "Position_after" Value)
 
 ## Interaction with NMDA datastores
 
