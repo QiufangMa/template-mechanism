@@ -39,8 +39,9 @@ informative:
 
 NETCONF and RESTCONF protocols provide programmatic operation interfaces for accessing
 configuration data modeled by YANG. This document defines the use of YANG-based
-configuration template so that the configuration data could be delivered in a more
-efficient manner.
+configuration template mechanism so that the configuration data could be defined as template
+and applied repeatedly to avoid the redundant definition of identical Configuration
+and ensure consistency of it.
 
 --- middle
 
@@ -59,7 +60,7 @@ specific definition in YANG data models.
 
 NMDA {{?RFC8342}} allows the configuration templates to be defined in \<running\>
 and expanded in \<intended\>, but it does not specify details about how configuration
-templates could be created and reused.
+templates could be created and applied.
 
 This document defines the use of configuration templates in the context of YANG-driven
 network management protocols such as NETCONF {{!RFC6241}} and RESTCONF {{!RFC8040}}.
@@ -116,8 +117,8 @@ parent template:
 A configuration template must first be defined before it can be applied. The creation,
 modification, and deletion of configuration templates can be achieved by network
 management operations via NETCONF or RESTCONF protocols. The content of the configuration
-template must be an instantiated chunk of data. For example, {{temp-ex-interface}} provides
-an interface configuration template named "interface-type-mtu" that sets MTU as 1500 for Ethernet interfaces:
+template must be an instantiated chunk of data starting from at least one top-level node in the module hierarchies. For example, {{temp-ex-interface}} provides
+an interface configuration template that sets MTU as 1500 for Ethernet interfaces:
 
 ~~~~
 <interfaces>
@@ -127,23 +128,13 @@ an interface configuration template named "interface-type-mtu" that sets MTU as 
   </interface>
 </interfaces>
 ~~~~
-{: #temp-ex-interface title="Example of An Interface template"}
-
-
-It may also be defined as the template named "type-mtu" for example, with only leafs
-"type" and "mtu" being specified in {{temp-ex}}:
-
-~~~~
-<type>ianaift:ethernetCsmacd</type>
-<mtu>1500</mtu>
-~~~~
-{: #temp-ex title="Example of An Interface template"}
+{: #temp-ex-interface title="Example of An Interface template 'interface-type-mtu' "}
 
 The YANG data model of configuration templates is defined in {{template-yang}}.
 
 ## Validity of Templates
 
-The contents of the template alone do not always follow the constraints
+The contents of the template alone is not always sufficient to enforce the constraints
 of the data model. Some constraints may depend on configuration outside of the
 templates to satisfy, e.g., a list may contain a mandatory leaf node which is not
 defined in the template but explicitly provided by the client. However, servers
@@ -157,7 +148,7 @@ always be a valid configuration data tree, as defined in {{Section 8.1 of !RFC79
 
 ## Different Levels of Templates
 
-The configuration templates may be at different levels, depending on
+The configuration templates may be defined at different levels, depending on
 where it is used and maintained.
 For exmaple, A network-level template maintained by the software-defined networking
 (SDN) {{?RFC7149}} {{?RFC7426}} controller defines configuration that may be shared
@@ -170,11 +161,10 @@ Refer to {{appendix-network}} for examples of network-level templates.
 This document allows configuration templates to be inherited by
 configuration nodes in the data tree or new templates.
 
-If a configuration template is inherited by a node in the data tree, it acts as
-if the configuration defined in the template is contained as the child configuration
-merged with the configuration at the corresponding level in the data tree.
-
-> Editor's Note: what if the template configuration is defined from the top level configuration?
+If a configuration template is inherited by a top-level node in the data tree, it acts as
+if the configuration defined in the template is contained and
+merged with the configuration provided explicitly at the corresponding level in the data tree
+with the later takes precedence.
 
 If a configuration template is inherited by another new template,
 the configuration of the new template is the merging result of configuration defined
@@ -199,34 +189,33 @@ The "stmt-extend" metadata MUST have only one value to specify the parent templa
 identifier that is inherited. The encoding of "stmt-extend" metadata object follows the way defined
 in {{Section 5 of ?RFC7952}}.
 
-For example, a client may configure a physically present interface "eth0"
-by inheriting the template defined in {{temp-ex-interface}}, the following shows the NETCONF
-"\<edit-config\>" operation example:
+For example, a client may configure physically present interfaces "eth0" and "eth1"
+with the container node "interfaces" inheriting the template defined in {{temp-ex-interface}}:
 
 ~~~~
-<rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="101">
-  <edit-data
-    xmlns="urn:ietf:params:xml:ns:yang:ietf-netconf-nmda"
-    xmlns:ds="urn:ietf:params:xml:ns:yang:ietf-datastores">
-    <datastore>ds:running</datastore>
-    <config xmlns:template="urn:ietf:params:xml:ns:yang:ietf-template"
-            template:stmt-extend="interface-type-mtu">
-      <interfaces xmlns="http://example.com/schema/1.2/config">
-        <interface>
-          <name>eth0</name>
-        </interface>
-      </interfaces>
-    </config>
-  </edit-data>
-</rpc>
-~~~~
-
-And the equivalent configuration but inheriting the template defined in {{temp-ex}}:
-
-~~~~
-<interfaces xmlns:template="urn:ietf:params:xml:ns:yang:ietf-template">
-  <interface template:stmt-extend="type-mtu">
+<interfaces template:stmt-extend="interface-type-mtu">
+  <interface>
     <name>eth0</name>
+  </interface>
+  <interface>
+    <name>eth1</name>
+  </interface>
+</interfaces>
+~~~~
+
+And it is equivalent to the following:
+
+~~~~
+<interfaces>
+  <interface>
+    <name>eth0</name>
+    <type>ianaift:ethernetCsmacd</type>
+    <mtu>1500</mtu>
+  </interface>
+  <interface>
+    <name>eth1</name>
+    <type>ianaift:ethernetCsmacd</type>
+    <mtu>1500</mtu>
   </interface>
 </interfaces>
 ~~~~
@@ -242,14 +231,50 @@ the "stmt-extend" metadata object.
 
 It may be desired to override some configuration in an existing template when it is interited.
 This may be achieved by directly editing the configuration template that is inherited,
-however, the parent template may have been inherited by other instance nodes or
+however, the parent template may have also been inherited by other instance nodes or
 templates, and direct modification of the parent template may yield unexpected results.
+
+This document allows a configuration template to be overridden by other templates
+or configuration explicitly provided by the client.
 
 ## Creation
 
+If there is some configuration data that needs to be created, it can be provided
+at the corresponding level when inheriting the configuration template. For example,
+the client may want to define another template and provide "enabled" leaf value
+on the basis of template defined in {{temp-ex-interface}}:
+
+~~~~
+<interfaces template:stmt-extend="interface-type-mtu">
+  <interface>
+    <enabled>true</enabled>
+  </interface>
+</interfaces>
+~~~~
+
 ## Modification
 
+If there is some configuration values that need to be modified, the desired value
+can be provided at the corresponding level when inheriting the configuation template.
+For example, a client may configure physically present interfaces "eth0" and "eth1"
+inheriting the template defined in {{temp-ex-interface}}, but the MTU value of "eth1"
+needs to be 9122:
+
+~~~~
+<interfaces template:stmt-extend="interface-type-mtu">
+  <interface>
+    <name>eth0</name>
+  </interface>
+  <interface>
+    <name>eth1</name>
+    <mtu>9122</mtu>
+  </interface>
+</interfaces>
+~~~~
+
 ## Deletion
+
+If there is some configuration data that needs to be deleted,
 
 ## List/leaflists Reordering
 
