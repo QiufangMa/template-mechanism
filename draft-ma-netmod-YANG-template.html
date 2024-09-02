@@ -10,8 +10,9 @@
 <meta content="
        NETCONF and RESTCONF protocols provide programmatic operation interfaces for accessing
 configuration data modeled by YANG. This document defines the use of YANG-based
-configuration template so that the configuration data could be delivered in a more
-efficient manner. 
+configuration template mechanism so that the configuration data could be defined as template
+and applied repeatedly to avoid the redundant definition of identical Configuration
+and ensure consistency of it. 
     " name="description">
 <meta content="xml2rfc 3.23.0" name="generator">
 <meta content="YANG" name="keyword">
@@ -1030,11 +1031,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">template</td>
-<td class="right">August 2024</td>
+<td class="right">September 2024</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Ma &amp; Wu</td>
-<td class="center">Expires 4 March 2025</td>
+<td class="center">Expires 6 March 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1047,12 +1048,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ma-netmod-YANG-template-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2024-08-31" class="published">31 August 2024</time>
+<time datetime="2024-09-02" class="published">2 September 2024</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-03-04">4 March 2025</time></dd>
+<dd class="expires"><time datetime="2025-03-06">6 March 2025</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1071,8 +1072,9 @@ svg :is([fill="white"], [fill^="#fff"]) {
       <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
 <p id="section-abstract-1">NETCONF and RESTCONF protocols provide programmatic operation interfaces for accessing
 configuration data modeled by YANG. This document defines the use of YANG-based
-configuration template so that the configuration data could be delivered in a more
-efficient manner.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+configuration template mechanism so that the configuration data could be defined as template
+and applied repeatedly to avoid the redundant definition of identical Configuration
+and ensure consistency of it.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
 </section>
 <section class="note rfcEditorRemove" id="section-note.1">
       <h2 id="name-discussion-venues">
@@ -1104,7 +1106,7 @@ efficient manner.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 4 March 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 6 March 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1293,7 +1295,7 @@ There is a desire to make use of common YANG-based templates without relying on
 specific definition in YANG data models.<a href="#section-1-2" class="pilcrow">¶</a></p>
 <p id="section-1-3">NMDA <span>[<a href="#RFC8342" class="cite xref">RFC8342</a>]</span> allows the configuration templates to be defined in &lt;running&gt;
 and expanded in &lt;intended&gt;, but it does not specify details about how configuration
-templates could be created and reused.<a href="#section-1-3" class="pilcrow">¶</a></p>
+templates could be created and applied.<a href="#section-1-3" class="pilcrow">¶</a></p>
 <p id="section-1-4">This document defines the use of configuration templates in the context of YANG-driven
 network management protocols such as NETCONF <span>[<a href="#RFC6241" class="cite xref">RFC6241</a>]</span> and RESTCONF <span>[<a href="#RFC8040" class="cite xref">RFC8040</a>]</span>.
 By defining a common set of nodes as a configuration template and applying the
@@ -1375,8 +1377,8 @@ devices or reused by other templates.<a href="#section-2-5.4.1" class="pilcrow">
 <p id="section-3-2">A configuration template must first be defined before it can be applied. The creation,
 modification, and deletion of configuration templates can be achieved by network
 management operations via NETCONF or RESTCONF protocols. The content of the configuration
-template must be an instantiated chunk of data. For example, <a href="#temp-ex-interface" class="auto internal xref">Figure 1</a> provides
-an interface configuration template named "interface-type-mtu" that sets MTU as 1500 for Ethernet interfaces:<a href="#section-3-2" class="pilcrow">¶</a></p>
+template must be an instantiated chunk of data starting from at least one top-level node in the module hierarchies. For example, <a href="#temp-ex-interface" class="auto internal xref">Figure 1</a> provides
+an interface configuration template that sets MTU as 1500 for Ethernet interfaces:<a href="#section-3-2" class="pilcrow">¶</a></p>
 <span id="name-example-of-an-interface-tem"></span><div id="temp-ex-interface">
 <figure id="figure-1">
         <div class="alignLeft art-text artwork" id="section-3-3.1">
@@ -1390,30 +1392,16 @@ an interface configuration template named "interface-type-mtu" that sets MTU as 
 </pre>
 </div>
 <figcaption><a href="#figure-1" class="selfRef">Figure 1</a>:
-<a href="#name-example-of-an-interface-tem" class="selfRef">Example of An Interface template</a>
+<a href="#name-example-of-an-interface-tem" class="selfRef">Example of An Interface template 'interface-type-mtu'</a>
         </figcaption></figure>
 </div>
-<p id="section-3-4">It may also be defined as the template named "type-mtu" for example, with only leafs
-"type" and "mtu" being specified in <a href="#temp-ex" class="auto internal xref">Figure 2</a>:<a href="#section-3-4" class="pilcrow">¶</a></p>
-<span id="name-example-of-an-interface-temp"></span><div id="temp-ex">
-<figure id="figure-2">
-        <div class="alignLeft art-text artwork" id="section-3-5.1">
-<pre>
-&lt;type&gt;ianaift:ethernetCsmacd&lt;/type&gt;
-&lt;mtu&gt;1500&lt;/mtu&gt;
-</pre>
-</div>
-<figcaption><a href="#figure-2" class="selfRef">Figure 2</a>:
-<a href="#name-example-of-an-interface-temp" class="selfRef">Example of An Interface template</a>
-        </figcaption></figure>
-</div>
-<p id="section-3-6">The YANG data model of configuration templates is defined in <a href="#template-yang" class="auto internal xref">Section 7</a>.<a href="#section-3-6" class="pilcrow">¶</a></p>
+<p id="section-3-4">The YANG data model of configuration templates is defined in <a href="#template-yang" class="auto internal xref">Section 7</a>.<a href="#section-3-4" class="pilcrow">¶</a></p>
 <div id="validity-of-templates">
 <section id="section-3.1">
         <h3 id="name-validity-of-templates">
 <a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-validity-of-templates" class="section-name selfRef">Validity of Templates</a>
         </h3>
-<p id="section-3.1-1">The contents of the template alone do not always follow the constraints
+<p id="section-3.1-1">The contents of the template alone is not always sufficient to enforce the constraints
 of the data model. Some constraints may depend on configuration outside of the
 templates to satisfy, e.g., a list may contain a mandatory leaf node which is not
 defined in the template but explicitly provided by the client. However, servers
@@ -1430,7 +1418,7 @@ always be a valid configuration data tree, as defined in <span><a href="https://
         <h3 id="name-different-levels-of-templat">
 <a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-different-levels-of-templat" class="section-name selfRef">Different Levels of Templates</a>
         </h3>
-<p id="section-3.2-1">The configuration templates may be at different levels, depending on
+<p id="section-3.2-1">The configuration templates may be defined at different levels, depending on
 where it is used and maintained.
 For exmaple, A network-level template maintained by the software-defined networking
 (SDN) <span>[<a href="#RFC7149" class="cite xref">RFC7149</a>]</span> <span>[<a href="#RFC7426" class="cite xref">RFC7426</a>]</span> controller defines configuration that may be shared
@@ -1448,21 +1436,17 @@ Refer to <a href="#appendix-network" class="auto internal xref">Appendix A</a> f
       </h2>
 <p id="section-4-1">This document allows configuration templates to be inherited by
 configuration nodes in the data tree or new templates.<a href="#section-4-1" class="pilcrow">¶</a></p>
-<p id="section-4-2">If a configuration template is inherited by a node in the data tree, it acts as
-if the configuration defined in the template is contained as the child configuration
-merged with the configuration at the corresponding level in the data tree.<a href="#section-4-2" class="pilcrow">¶</a></p>
-<ul class="normal ulEmpty">
-<li class="normal ulEmpty" id="section-4-3.1">
-          <p id="section-4-3.1.1">Editor's Note: what if the template configuration is defined from the top level configuration?<a href="#section-4-3.1.1" class="pilcrow">¶</a></p>
-</li>
-      </ul>
-<p id="section-4-4">If a configuration template is inherited by another new template,
+<p id="section-4-2">If a configuration template is inherited by a top-level node in the data tree, it acts as
+if the configuration defined in the template is contained and
+merged with the configuration provided explicitly at the corresponding level in the data tree
+with the later takes precedence.<a href="#section-4-2" class="pilcrow">¶</a></p>
+<p id="section-4-3">If a configuration template is inherited by another new template,
 the configuration of the new template is the merging result of configuration defined
 in both templates with the new template takes precedence over its parent template.
 This is useful when some additional configuration is intended to be defined on the
-basis of the parent template.<a href="#section-4-4" class="pilcrow">¶</a></p>
-<p id="section-4-5">Any modification to the parent template also applies somewhere inherits the template.
-Care <span class="bcp14">MUST</span> be taken when making changes to the parent templates.<a href="#section-4-5" class="pilcrow">¶</a></p>
+basis of the parent template.<a href="#section-4-3" class="pilcrow">¶</a></p>
+<p id="section-4-4">Any modification to the parent template also applies somewhere inherits the template.
+Care <span class="bcp14">MUST</span> be taken when making changes to the parent templates.<a href="#section-4-4" class="pilcrow">¶</a></p>
 <div id="the-stmt-extend-metadata">
 <section id="section-4.1">
         <h3 id="name-the-stmt-extend-metadata">
@@ -1477,34 +1461,33 @@ Similarly, a template inherits at most one configuration template.<a href="#sect
 <p id="section-4.1-3">The "stmt-extend" metadata <span class="bcp14">MUST</span> have only one value to specify the parent template
 identifier that is inherited. The encoding of "stmt-extend" metadata object follows the way defined
 in <span><a href="https://rfc-editor.org/rfc/rfc7952#section-5" class="relref">Section 5</a> of [<a href="#RFC7952" class="cite xref">RFC7952</a>]</span>.<a href="#section-4.1-3" class="pilcrow">¶</a></p>
-<p id="section-4.1-4">For example, a client may configure a physically present interface "eth0"
-by inheriting the template defined in <a href="#temp-ex-interface" class="auto internal xref">Figure 1</a>, the following shows the NETCONF
-"&lt;edit-config&gt;" operation example:<a href="#section-4.1-4" class="pilcrow">¶</a></p>
+<p id="section-4.1-4">For example, a client may configure physically present interfaces "eth0" and "eth1"
+with the container node "interfaces" inheriting the template defined in <a href="#temp-ex-interface" class="auto internal xref">Figure 1</a>:<a href="#section-4.1-4" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-4.1-5">
 <pre>
-&lt;rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="101"&gt;
-  &lt;edit-data
-    xmlns="urn:ietf:params:xml:ns:yang:ietf-netconf-nmda"
-    xmlns:ds="urn:ietf:params:xml:ns:yang:ietf-datastores"&gt;
-    &lt;datastore&gt;ds:running&lt;/datastore&gt;
-    &lt;config xmlns:template="urn:ietf:params:xml:ns:yang:ietf-template"
-            template:stmt-extend="interface-type-mtu"&gt;
-      &lt;interfaces xmlns="http://example.com/schema/1.2/config"&gt;
-        &lt;interface&gt;
-          &lt;name&gt;eth0&lt;/name&gt;
-        &lt;/interface&gt;
-      &lt;/interfaces&gt;
-    &lt;/config&gt;
-  &lt;/edit-data&gt;
-&lt;/rpc&gt;
+&lt;interfaces template:stmt-extend="interface-type-mtu"&gt;
+  &lt;interface&gt;
+    &lt;name&gt;eth0&lt;/name&gt;
+  &lt;/interface&gt;
+  &lt;interface&gt;
+    &lt;name&gt;eth1&lt;/name&gt;
+  &lt;/interface&gt;
+&lt;/interfaces&gt;
 </pre><a href="#section-4.1-5" class="pilcrow">¶</a>
 </div>
-<p id="section-4.1-6">And the equivalent configuration but inheriting the template defined in <a href="#temp-ex" class="auto internal xref">Figure 2</a>:<a href="#section-4.1-6" class="pilcrow">¶</a></p>
+<p id="section-4.1-6">And it is equivalent to the following:<a href="#section-4.1-6" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-4.1-7">
 <pre>
-&lt;interfaces xmlns:template="urn:ietf:params:xml:ns:yang:ietf-template"&gt;
-  &lt;interface template:stmt-extend="type-mtu"&gt;
+&lt;interfaces&gt;
+  &lt;interface&gt;
     &lt;name&gt;eth0&lt;/name&gt;
+    &lt;type&gt;ianaift:ethernetCsmacd&lt;/type&gt;
+    &lt;mtu&gt;1500&lt;/mtu&gt;
+  &lt;/interface&gt;
+  &lt;interface&gt;
+    &lt;name&gt;eth1&lt;/name&gt;
+    &lt;type&gt;ianaift:ethernetCsmacd&lt;/type&gt;
+    &lt;mtu&gt;1500&lt;/mtu&gt;
   &lt;/interface&gt;
 &lt;/interfaces&gt;
 </pre><a href="#section-4.1-7" class="pilcrow">¶</a>
@@ -1536,27 +1519,61 @@ the "stmt-extend" metadata object.<a href="#section-4.1-8" class="pilcrow">¶</a
       </h2>
 <p id="section-6-1">It may be desired to override some configuration in an existing template when it is interited.
 This may be achieved by directly editing the configuration template that is inherited,
-however, the parent template may have been inherited by other instance nodes or
+however, the parent template may have also been inherited by other instance nodes or
 templates, and direct modification of the parent template may yield unexpected results.<a href="#section-6-1" class="pilcrow">¶</a></p>
+<p id="section-6-2">This document allows a configuration template to be overridden by other templates
+or configuration explicitly provided by the client.<a href="#section-6-2" class="pilcrow">¶</a></p>
 <div id="creation">
 <section id="section-6.1">
         <h3 id="name-creation">
 <a href="#section-6.1" class="section-number selfRef">6.1. </a><a href="#name-creation" class="section-name selfRef">Creation</a>
-      </h3>
+        </h3>
+<p id="section-6.1-1">If there is some configuration data that needs to be created, it can be provided
+at the corresponding level when inheriting the configuration template. For example,
+the client may want to define another template and provide "enabled" leaf value
+on the basis of template defined in <a href="#temp-ex-interface" class="auto internal xref">Figure 1</a>:<a href="#section-6.1-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-6.1-2">
+<pre>
+&lt;interfaces template:stmt-extend="interface-type-mtu"&gt;
+  &lt;interface&gt;
+    &lt;enabled&gt;true&lt;/enabled&gt;
+  &lt;/interface&gt;
+&lt;/interfaces&gt;
+</pre><a href="#section-6.1-2" class="pilcrow">¶</a>
+</div>
 </section>
 </div>
 <div id="modification">
 <section id="section-6.2">
         <h3 id="name-modification">
 <a href="#section-6.2" class="section-number selfRef">6.2. </a><a href="#name-modification" class="section-name selfRef">Modification</a>
-      </h3>
+        </h3>
+<p id="section-6.2-1">If there is some configuration values that need to be modified, the desired value
+can be provided at the corresponding level when inheriting the configuation template.
+For example, a client may configure physically present interfaces "eth0" and "eth1"
+inheriting the template defined in <a href="#temp-ex-interface" class="auto internal xref">Figure 1</a>, but the MTU value of "eth1"
+needs to be 9122:<a href="#section-6.2-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-6.2-2">
+<pre>
+&lt;interfaces template:stmt-extend="interface-type-mtu"&gt;
+  &lt;interface&gt;
+    &lt;name&gt;eth0&lt;/name&gt;
+  &lt;/interface&gt;
+  &lt;interface&gt;
+    &lt;name&gt;eth1&lt;/name&gt;
+    &lt;mtu&gt;9122&lt;/mtu&gt;
+  &lt;/interface&gt;
+&lt;/interfaces&gt;
+</pre><a href="#section-6.2-2" class="pilcrow">¶</a>
+</div>
 </section>
 </div>
 <div id="deletion">
 <section id="section-6.3">
         <h3 id="name-deletion">
 <a href="#section-6.3" class="section-number selfRef">6.3. </a><a href="#name-deletion" class="section-name selfRef">Deletion</a>
-      </h3>
+        </h3>
+<p id="section-6.3-1">If there is some configuration data that needs to be deleted,<a href="#section-6.3-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="listleaflists-reordering">
