@@ -1181,35 +1181,23 @@ and ensure consistency of it.<a href="#section-abstract-1" class="pilcrow">¶</a
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.2">
                 <p id="section-toc.1-1.6.2.2.1"><a href="#section-6.2" class="auto internal xref">6.2</a>.  <a href="#name-modification" class="internal xref">Modification</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.3">
-                <p id="section-toc.1-1.6.2.3.1"><a href="#section-6.3" class="auto internal xref">6.3</a>.  <a href="#name-deletion" class="internal xref">Deletion</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.4">
-                <p id="section-toc.1-1.6.2.4.1"><a href="#section-6.4" class="auto internal xref">6.4</a>.  <a href="#name-list-leaflists-reordering" class="internal xref">List/leaflists Reordering</a></p>
 <ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.4.2.1">
-                    <p id="section-toc.1-1.6.2.4.2.1.1"><a href="#section-6.4.1" class="auto internal xref">6.4.1</a>.  <a href="#name-position_first" class="internal xref">Position_first</a></p>
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.2.2.1">
+                    <p id="section-toc.1-1.6.2.2.2.1.1"><a href="#section-6.2.1" class="auto internal xref">6.2.1</a>.  <a href="#name-deletion-the-operation-tag-" class="internal xref">Deletion (The "operation-tag" Metadata with "delete" Value)</a></p>
 </li>
-                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.4.2.2">
-                    <p id="section-toc.1-1.6.2.4.2.2.1"><a href="#section-6.4.2" class="auto internal xref">6.4.2</a>.  <a href="#name-position_last" class="internal xref">Position_last</a></p>
-</li>
-                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.4.2.3">
-                    <p id="section-toc.1-1.6.2.4.2.3.1"><a href="#section-6.4.3" class="auto internal xref">6.4.3</a>.  <a href="#name-position_before" class="internal xref">Position_before</a></p>
-</li>
-                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.4.2.4">
-                    <p id="section-toc.1-1.6.2.4.2.4.1"><a href="#section-6.4.4" class="auto internal xref">6.4.4</a>.  <a href="#name-position_after" class="internal xref">Position_after</a></p>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.2.2.2">
+                    <p id="section-toc.1-1.6.2.2.2.2.1"><a href="#section-6.2.2" class="auto internal xref">6.2.2</a>.  <a href="#name-list-leaflists-reordering" class="internal xref">List/leaflists Reordering</a></p>
 </li>
                 </ul>
 </li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.3">
+                <p id="section-toc.1-1.6.2.3.1"><a href="#section-6.3" class="auto internal xref">6.3</a>.  <a href="#name-interaction-with-nmda-datas" class="internal xref">Interaction with NMDA datastores</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.4">
+                <p id="section-toc.1-1.6.2.4.1"><a href="#section-6.4" class="auto internal xref">6.4</a>.  <a href="#name-the-get-template-expansion-" class="internal xref">The "get-template-expansion" RPC</a></p>
+</li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.5">
-                <p id="section-toc.1-1.6.2.5.1"><a href="#section-6.5" class="auto internal xref">6.5</a>.  <a href="#name-interaction-with-nmda-datas" class="internal xref">Interaction with NMDA datastores</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.6">
-                <p id="section-toc.1-1.6.2.6.1"><a href="#section-6.6" class="auto internal xref">6.6</a>.  <a href="#name-the-get-template-expansion-" class="internal xref">The "get-template-expansion" RPC</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.7">
-                <p id="section-toc.1-1.6.2.7.1"><a href="#section-6.7" class="auto internal xref">6.7</a>.  <a href="#name-applying-templates" class="internal xref">Applying Templates</a></p>
+                <p id="section-toc.1-1.6.2.5.1"><a href="#section-6.5" class="auto internal xref">6.5</a>.  <a href="#name-applying-templates" class="internal xref">Applying Templates</a></p>
 </li>
             </ul>
 </li>
@@ -1387,6 +1375,7 @@ an interface configuration template that sets MTU as 1500 for Ethernet interface
   &lt;interface&gt;
     &lt;type&gt;ianaift:ethernetCsmacd&lt;/type&gt;
     &lt;mtu&gt;1500&lt;/mtu&gt;
+    &lt;description&gt;MTU value is set by template&lt;/description&gt;
   &lt;/interface&gt;
 &lt;/interfaces&gt;
 </pre>
@@ -1483,11 +1472,13 @@ with the container node "interfaces" inheriting the template defined in <a href=
     &lt;name&gt;eth0&lt;/name&gt;
     &lt;type&gt;ianaift:ethernetCsmacd&lt;/type&gt;
     &lt;mtu&gt;1500&lt;/mtu&gt;
+    &lt;description&gt;MTU value is set by template&lt;/description&gt;
   &lt;/interface&gt;
   &lt;interface&gt;
     &lt;name&gt;eth1&lt;/name&gt;
     &lt;type&gt;ianaift:ethernetCsmacd&lt;/type&gt;
     &lt;mtu&gt;1500&lt;/mtu&gt;
+    &lt;description&gt;MTU value is set by template&lt;/description&gt;
   &lt;/interface&gt;
 &lt;/interfaces&gt;
 </pre><a href="#section-4.1-7" class="pilcrow">¶</a>
@@ -1530,7 +1521,7 @@ or configuration explicitly provided by the client.<a href="#section-6-2" class=
         </h3>
 <p id="section-6.1-1">If there is some configuration data that needs to be created, it can be provided
 at the corresponding level when inheriting the configuration template. For example,
-the client may want to define another template and provide "enabled" leaf value
+the client may want to define another template and provide an additional "enabled" leaf value
 on the basis of template defined in <a href="#temp-ex-interface" class="auto internal xref">Figure 1</a>:<a href="#section-6.1-1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-6.1-2">
 <pre>
@@ -1551,8 +1542,8 @@ on the basis of template defined in <a href="#temp-ex-interface" class="auto int
 <p id="section-6.2-1">If there is some configuration values that need to be modified, the desired value
 can be provided at the corresponding level when inheriting the configuation template.
 For example, a client may configure physically present interfaces "eth0" and "eth1"
-inheriting the template defined in <a href="#temp-ex-interface" class="auto internal xref">Figure 1</a>, but the MTU value of "eth1"
-needs to be 9122:<a href="#section-6.2-1" class="pilcrow">¶</a></p>
+inheriting the template defined in <a href="#temp-ex-interface" class="auto internal xref">Figure 1</a>, but the "mtu" value of "eth1"
+needs to be 9122, and the "description" value also needs to be modified accordingly:<a href="#section-6.2-1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-6.2-2">
 <pre>
 &lt;interfaces template:stmt-extend="interface-type-mtu"&gt;
@@ -1562,88 +1553,130 @@ needs to be 9122:<a href="#section-6.2-1" class="pilcrow">¶</a></p>
   &lt;interface&gt;
     &lt;name&gt;eth1&lt;/name&gt;
     &lt;mtu&gt;9122&lt;/mtu&gt;
+    &lt;description&gt;MTU value is set explicitly&lt;/description&gt;
   &lt;/interface&gt;
 &lt;/interfaces&gt;
 </pre><a href="#section-6.2-2" class="pilcrow">¶</a>
 </div>
-</section>
+<div id="deletion-the-operation-tag-metadata-with-delete-value">
+<section id="section-6.2.1">
+          <h4 id="name-deletion-the-operation-tag-">
+<a href="#section-6.2.1" class="section-number selfRef">6.2.1. </a><a href="#name-deletion-the-operation-tag-" class="section-name selfRef">Deletion (The "operation-tag" Metadata with "delete" Value)</a>
+          </h4>
+<p id="section-6.2.1-1">The deletion of configuration data is flagged by declaring the metadata object
+called "operation-tag" with a value "delete". When some node instance defined in the configuration template
+is intended to be deleted in the configuration explicitly by the client or by new
+templates, if the node is at a top level, the metadata object is added to that
+specific node. Servers <span class="bcp14">MUST</span> ignore this
+metadata if the configuration identified currently does not exist in the configuration
+template.<a href="#section-6.2.1-1" class="pilcrow">¶</a></p>
+<p id="section-6.2.1-2">For example, a client may want to delete the "description" node instance defined
+in <a href="#temp-ex-interface" class="auto internal xref">Figure 1</a> for interface "eth1", and the following shows the example
+configuration:<a href="#section-6.2.1-2" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-6.2.1-3">
+<pre>
+&lt;interfaces template:stmt-extend="interface-type-mtu"&gt;
+  &lt;interface&gt;
+    &lt;name&gt;eth0&lt;/name&gt;
+  &lt;/interface&gt;
+  &lt;interface&gt;
+    &lt;name&gt;eth1&lt;/name&gt;
+    &lt;mtu&gt;9122&lt;/mtu&gt;
+    &lt;description template:operation-tag="delete"&gt;MTU value is set by template&lt;/description&gt;
+  &lt;/interface&gt;
+&lt;/interfaces&gt;
+</pre><a href="#section-6.2.1-3" class="pilcrow">¶</a>
 </div>
-<div id="deletion">
-<section id="section-6.3">
-        <h3 id="name-deletion">
-<a href="#section-6.3" class="section-number selfRef">6.3. </a><a href="#name-deletion" class="section-name selfRef">Deletion</a>
-        </h3>
-<p id="section-6.3-1">If there is some configuration data that needs to be deleted,<a href="#section-6.3-1" class="pilcrow">¶</a></p>
+<p id="section-6.2.1-4">And it is equivalent to the following:<a href="#section-6.2.1-4" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-6.2.1-5">
+<pre>
+&lt;interfaces&gt;
+  &lt;interface&gt;
+    &lt;name&gt;eth0&lt;/name&gt;
+    &lt;type&gt;ianaift:ethernetCsmacd&lt;/type&gt;
+    &lt;mtu&gt;1500&lt;/mtu&gt;
+    &lt;description&gt;MTU value is set by template&lt;/description&gt;
+  &lt;/interface&gt;
+  &lt;interface&gt;
+    &lt;name&gt;eth1&lt;/name&gt;
+    &lt;type&gt;ianaift:ethernetCsmacd&lt;/type&gt;
+    &lt;mtu&gt;9122&lt;/mtu&gt;
+  &lt;/interface&gt;
+&lt;/interfaces&gt;
+</pre><a href="#section-6.2.1-5" class="pilcrow">¶</a>
+</div>
 </section>
 </div>
 <div id="listleaflists-reordering">
-<section id="section-6.4">
-        <h3 id="name-list-leaflists-reordering">
-<a href="#section-6.4" class="section-number selfRef">6.4. </a><a href="#name-list-leaflists-reordering" class="section-name selfRef">List/leaflists Reordering</a>
-        </h3>
-<div id="positionfirst">
-<section id="section-6.4.1">
-          <h4 id="name-position_first">
-<a href="#section-6.4.1" class="section-number selfRef">6.4.1. </a><a href="#name-position_first" class="section-name selfRef">Position_first</a>
-        </h4>
+<section id="section-6.2.2">
+          <h4 id="name-list-leaflists-reordering">
+<a href="#section-6.2.2" class="section-number selfRef">6.2.2. </a><a href="#name-list-leaflists-reordering" class="section-name selfRef">List/leaflists Reordering</a>
+          </h4>
+<div id="positionfirst-the-operation-tag-metadata-with-positionfirst-value">
+<section id="section-6.2.2.1">
+            <h5 id="name-position_first-the-operatio">
+<a href="#section-6.2.2.1" class="section-number selfRef">6.2.2.1. </a><a href="#name-position_first-the-operatio" class="section-name selfRef">Position_first (The "operation-tag" Metadata with "Position_first" Value)</a>
+          </h5>
 </section>
 </div>
-<div id="positionlast">
-<section id="section-6.4.2">
-          <h4 id="name-position_last">
-<a href="#section-6.4.2" class="section-number selfRef">6.4.2. </a><a href="#name-position_last" class="section-name selfRef">Position_last</a>
-        </h4>
+<div id="positionlast-the-operation-tag-metadata-with-positionlast-value">
+<section id="section-6.2.2.2">
+            <h5 id="name-position_last-the-operation">
+<a href="#section-6.2.2.2" class="section-number selfRef">6.2.2.2. </a><a href="#name-position_last-the-operation" class="section-name selfRef">Position_last (The "operation-tag" Metadata with "Position_last" Value)</a>
+          </h5>
 </section>
 </div>
-<div id="positionbefore">
-<section id="section-6.4.3">
-          <h4 id="name-position_before">
-<a href="#section-6.4.3" class="section-number selfRef">6.4.3. </a><a href="#name-position_before" class="section-name selfRef">Position_before</a>
-        </h4>
+<div id="positionbefore-the-operation-tag-metadata-with-positionbefore-value">
+<section id="section-6.2.2.3">
+            <h5 id="name-position_before-the-operati">
+<a href="#section-6.2.2.3" class="section-number selfRef">6.2.2.3. </a><a href="#name-position_before-the-operati" class="section-name selfRef">Position_before (The "operation-tag" Metadata with "Position_before" Value)</a>
+          </h5>
 </section>
 </div>
-<div id="positionafter">
-<section id="section-6.4.4">
-          <h4 id="name-position_after">
-<a href="#section-6.4.4" class="section-number selfRef">6.4.4. </a><a href="#name-position_after" class="section-name selfRef">Position_after</a>
-        </h4>
+<div id="positionafter-the-operation-tag-metadata-with-positionafter-value">
+<section id="section-6.2.2.4">
+            <h5 id="name-position_after-the-operatio">
+<a href="#section-6.2.2.4" class="section-number selfRef">6.2.2.4. </a><a href="#name-position_after-the-operatio" class="section-name selfRef">Position_after (The "operation-tag" Metadata with "Position_after" Value)</a>
+          </h5>
+</section>
+</div>
 </section>
 </div>
 </section>
 </div>
 <div id="interaction-with-nmda-datastores">
-<section id="section-6.5">
+<section id="section-6.3">
         <h3 id="name-interaction-with-nmda-datas">
-<a href="#section-6.5" class="section-number selfRef">6.5. </a><a href="#name-interaction-with-nmda-datas" class="section-name selfRef">Interaction with NMDA datastores</a>
+<a href="#section-6.3" class="section-number selfRef">6.3. </a><a href="#name-interaction-with-nmda-datas" class="section-name selfRef">Interaction with NMDA datastores</a>
         </h3>
-<p id="section-6.5-1">Some implementation may have predefined configuration templates for the convenience
+<p id="section-6.3-1">Some implementation may have predefined configuration templates for the convenience
 of clients, which are present in &lt;system&gt; (if implemented, see <span>[<a href="#I-D.ietf-netmod-system-config" class="cite xref">I-D.ietf-netmod-system-config</a>]</span>).
 In addition, clients can always define their own templates in &lt;running&gt;.
 However, configuration template data defined by "ietf-template" YANG data model
-should not be visible in &lt;operational&gt; until being inherited by a node in the data tree.<a href="#section-6.5-1" class="pilcrow">¶</a></p>
-<p id="section-6.5-2">If a node in the data tree inherits a configuration template, the configuration
+should not be visible in &lt;operational&gt; until being inherited by a node in the data tree.<a href="#section-6.3-1" class="pilcrow">¶</a></p>
+<p id="section-6.3-2">If a node in the data tree inherits a configuration template, the configuration
 template does not expand in &lt;running&gt;, a read back of &lt;running&gt; returns what is
 sent by the client with the "stmt-extend" metadata attached to the specific node.
-Configuration template which is inherited or overridden by the node instance <span class="bcp14">MUST</span> be expanded in &lt;intended&gt;.<a href="#section-6.5-2" class="pilcrow">¶</a></p>
+Configuration template which is inherited or overridden by the node instance <span class="bcp14">MUST</span> be expanded in &lt;intended&gt;.<a href="#section-6.3-2" class="pilcrow">¶</a></p>
 <ul class="normal ulEmpty">
-<li class="normal ulEmpty" id="section-6.5-3.1">
-            <p id="section-6.5-3.1.1">Editor's Note: The read-back of &lt;running&gt; might break legacy clients doesn't
-understand template?<a href="#section-6.5-3.1.1" class="pilcrow">¶</a></p>
+<li class="normal ulEmpty" id="section-6.3-3.1">
+            <p id="section-6.3-3.1.1">Editor's Note: The read-back of &lt;running&gt; might break legacy clients doesn't
+understand template?<a href="#section-6.3-3.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
 </div>
 <div id="the-get-template-expansion-rpc">
-<section id="section-6.6">
+<section id="section-6.4">
         <h3 id="name-the-get-template-expansion-">
-<a href="#section-6.6" class="section-number selfRef">6.6. </a><a href="#name-the-get-template-expansion-" class="section-name selfRef">The "get-template-expansion" RPC</a>
+<a href="#section-6.4" class="section-number selfRef">6.4. </a><a href="#name-the-get-template-expansion-" class="section-name selfRef">The "get-template-expansion" RPC</a>
       </h3>
 </section>
 </div>
 <div id="applying-templates">
-<section id="section-6.7">
+<section id="section-6.5">
         <h3 id="name-applying-templates">
-<a href="#section-6.7" class="section-number selfRef">6.7. </a><a href="#name-applying-templates" class="section-name selfRef">Applying Templates</a>
+<a href="#section-6.5" class="section-number selfRef">6.5. </a><a href="#name-applying-templates" class="section-name selfRef">Applying Templates</a>
       </h3>
 </section>
 </div>

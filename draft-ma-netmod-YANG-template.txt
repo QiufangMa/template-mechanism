@@ -77,15 +77,12 @@ Table of Contents
    6.  Overriding Templates
      6.1.  Creation
      6.2.  Modification
-     6.3.  Deletion
-     6.4.  List/leaflists Reordering
-       6.4.1.  Position_first
-       6.4.2.  Position_last
-       6.4.3.  Position_before
-       6.4.4.  Position_after
-     6.5.  Interaction with NMDA datastores
-     6.6.  The "get-template-expansion" RPC
-     6.7.  Applying Templates
+       6.2.1.  Deletion (The "operation-tag" Metadata with "delete"
+               Value)
+       6.2.2.  List/leaflists Reordering
+     6.3.  Interaction with NMDA datastores
+     6.4.  The "get-template-expansion" RPC
+     6.5.  Applying Templates
    7.  The "ietf-template" YANG Module
      7.1.  Data Model Overview
      7.2.  YANG Module
@@ -198,6 +195,7 @@ Table of Contents
      <interface>
        <type>ianaift:ethernetCsmacd</type>
        <mtu>1500</mtu>
+       <description>MTU value is set by template</description>
      </interface>
    </interfaces>
 
@@ -293,11 +291,13 @@ Table of Contents
        <name>eth0</name>
        <type>ianaift:ethernetCsmacd</type>
        <mtu>1500</mtu>
+       <description>MTU value is set by template</description>
      </interface>
      <interface>
        <name>eth1</name>
        <type>ianaift:ethernetCsmacd</type>
        <mtu>1500</mtu>
+       <description>MTU value is set by template</description>
      </interface>
    </interfaces>
 
@@ -325,8 +325,8 @@ Table of Contents
    If there is some configuration data that needs to be created, it can
    be provided at the corresponding level when inheriting the
    configuration template.  For example, the client may want to define
-   another template and provide "enabled" leaf value on the basis of
-   template defined in Figure 1:
+   another template and provide an additional "enabled" leaf value on
+   the basis of template defined in Figure 1:
 
    <interfaces template:stmt-extend="interface-type-mtu">
      <interface>
@@ -340,8 +340,9 @@ Table of Contents
    desired value can be provided at the corresponding level when
    inheriting the configuation template.  For example, a client may
    configure physically present interfaces "eth0" and "eth1" inheriting
-   the template defined in Figure 1, but the MTU value of "eth1" needs
-   to be 9122:
+   the template defined in Figure 1, but the "mtu" value of "eth1" needs
+   to be 9122, and the "description" value also needs to be modified
+   accordingly:
 
    <interfaces template:stmt-extend="interface-type-mtu">
      <interface>
@@ -350,24 +351,67 @@ Table of Contents
      <interface>
        <name>eth1</name>
        <mtu>9122</mtu>
+       <description>MTU value is set explicitly</description>
      </interface>
    </interfaces>
 
-6.3.  Deletion
+6.2.1.  Deletion (The "operation-tag" Metadata with "delete" Value)
 
-   If there is some configuration data that needs to be deleted,
+   The deletion of configuration data is flagged by declaring the
+   metadata object called "operation-tag" with a value "delete".  When
+   some node instance defined in the configuration template is intended
+   to be deleted in the configuration explicitly by the client or by new
+   templates, if the node is at a top level, the metadata object is
+   added to that specific node.  Servers MUST ignore this metadata if
+   the configuration identified currently does not exist in the
+   configuration template.
 
-6.4.  List/leaflists Reordering
+   For example, a client may want to delete the "description" node
+   instance defined in Figure 1 for interface "eth1", and the following
+   shows the example configuration:
 
-6.4.1.  Position_first
+<interfaces template:stmt-extend="interface-type-mtu">
+  <interface>
+    <name>eth0</name>
+  </interface>
+  <interface>
+    <name>eth1</name>
+    <mtu>9122</mtu>
+    <description template:operation-tag="delete">MTU value is set by template</description>
+  </interface>
+</interfaces>
 
-6.4.2.  Position_last
+   And it is equivalent to the following:
 
-6.4.3.  Position_before
+   <interfaces>
+     <interface>
+       <name>eth0</name>
+       <type>ianaift:ethernetCsmacd</type>
+       <mtu>1500</mtu>
+       <description>MTU value is set by template</description>
+     </interface>
+     <interface>
+       <name>eth1</name>
+       <type>ianaift:ethernetCsmacd</type>
+       <mtu>9122</mtu>
+     </interface>
+   </interfaces>
 
-6.4.4.  Position_after
+6.2.2.  List/leaflists Reordering
 
-6.5.  Interaction with NMDA datastores
+6.2.2.1.  Position_first (The "operation-tag" Metadata with
+          "Position_first" Value)
+
+6.2.2.2.  Position_last (The "operation-tag" Metadata with
+          "Position_last" Value)
+
+6.2.2.3.  Position_before (The "operation-tag" Metadata with
+          "Position_before" Value)
+
+6.2.2.4.  Position_after (The "operation-tag" Metadata with
+          "Position_after" Value)
+
+6.3.  Interaction with NMDA datastores
 
    Some implementation may have predefined configuration templates for
    the convenience of clients, which are present in <system> (if
@@ -387,9 +431,9 @@ Table of Contents
       Editor's Note: The read-back of <running> might break legacy
       clients doesn't understand template?
 
-6.6.  The "get-template-expansion" RPC
+6.4.  The "get-template-expansion" RPC
 
-6.7.  Applying Templates
+6.5.  Applying Templates
 
 7.  The "ietf-template" YANG Module
 
