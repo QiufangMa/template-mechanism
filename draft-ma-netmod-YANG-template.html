@@ -6,7 +6,6 @@
 <meta content="initial-scale=1.0" name="viewport">
 <title>YANG Templates</title>
 <meta content="Qiufang Ma" name="author">
-<meta content="Zhan Wu" name="author">
 <meta content="
        NETCONF and RESTCONF protocols provide programmatic operation interfaces for accessing
 configuration data modeled by YANG. This document defines the use of YANG-based
@@ -1034,8 +1033,8 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <td class="right">September 2024</td>
 </tr></thead>
 <tfoot><tr>
-<td class="left">Ma &amp; Wu</td>
-<td class="center">Expires 6 March 2025</td>
+<td class="left">Ma</td>
+<td class="center">Expires 7 March 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1048,20 +1047,16 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ma-netmod-YANG-template-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2024-09-02" class="published">2 September 2024</time>
+<time datetime="2024-09-03" class="published">3 September 2024</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-03-06">6 March 2025</time></dd>
-<dt class="label-authors">Authors:</dt>
+<dd class="expires"><time datetime="2025-03-07">7 March 2025</time></dd>
+<dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
       <div class="author-name">Q. Ma</div>
-<div class="org">Huawei</div>
-</div>
-<div class="author">
-      <div class="author-name">Z. Wu</div>
 <div class="org">Huawei</div>
 </div>
 </dd>
@@ -1106,7 +1101,7 @@ and ensure consistency of it.<a href="#section-abstract-1" class="pilcrow">¶</a
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 6 March 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 7 March 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1181,23 +1176,15 @@ and ensure consistency of it.<a href="#section-abstract-1" class="pilcrow">¶</a
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.2">
                 <p id="section-toc.1-1.6.2.2.1"><a href="#section-6.2" class="auto internal xref">6.2</a>.  <a href="#name-modification" class="internal xref">Modification</a></p>
-<ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.2.2.1">
-                    <p id="section-toc.1-1.6.2.2.2.1.1"><a href="#section-6.2.1" class="auto internal xref">6.2.1</a>.  <a href="#name-deletion-the-operation-tag-" class="internal xref">Deletion (The "operation-tag" Metadata with "delete" Value)</a></p>
-</li>
-                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.2.2.2">
-                    <p id="section-toc.1-1.6.2.2.2.2.1"><a href="#section-6.2.2" class="auto internal xref">6.2.2</a>.  <a href="#name-list-leaflists-reordering" class="internal xref">List/leaflists Reordering</a></p>
-</li>
-                </ul>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.3">
-                <p id="section-toc.1-1.6.2.3.1"><a href="#section-6.3" class="auto internal xref">6.3</a>.  <a href="#name-interaction-with-nmda-datas" class="internal xref">Interaction with NMDA datastores</a></p>
+                <p id="section-toc.1-1.6.2.3.1"><a href="#section-6.3" class="auto internal xref">6.3</a>.  <a href="#name-deletion-the-operation-tag-" class="internal xref">Deletion (The "operation-tag" Metadata with "delete" Value)</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.4">
-                <p id="section-toc.1-1.6.2.4.1"><a href="#section-6.4" class="auto internal xref">6.4</a>.  <a href="#name-the-get-template-expansion-" class="internal xref">The "get-template-expansion" RPC</a></p>
+                <p id="section-toc.1-1.6.2.4.1"><a href="#section-6.4" class="auto internal xref">6.4</a>.  <a href="#name-list-leaf-list-reordering" class="internal xref">List/leaf-list Reordering</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.5">
-                <p id="section-toc.1-1.6.2.5.1"><a href="#section-6.5" class="auto internal xref">6.5</a>.  <a href="#name-applying-templates" class="internal xref">Applying Templates</a></p>
+                <p id="section-toc.1-1.6.2.5.1"><a href="#section-6.5" class="auto internal xref">6.5</a>.  <a href="#name-interaction-with-nmda-datas" class="internal xref">Interaction with NMDA datastores</a></p>
 </li>
             </ul>
 </li>
@@ -1253,7 +1240,7 @@ and ensure consistency of it.<a href="#section-abstract-1" class="pilcrow">¶</a
                 <p id="section-toc.1-1.11.2.4.1"><a href="#appendix-A.4" class="auto internal xref">A.4</a>.  <a href="#name-expanding-templates" class="internal xref">Expanding Templates</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.5">
-                <p id="section-toc.1-1.11.2.5.1"><a href="#appendix-A.5" class="auto internal xref">A.5</a>.  <a href="#name-applying-templates-2" class="internal xref">Applying Templates</a></p>
+                <p id="section-toc.1-1.11.2.5.1"><a href="#appendix-A.5" class="auto internal xref">A.5</a>.  <a href="#name-applying-templates" class="internal xref">Applying Templates</a></p>
 </li>
             </ul>
 </li>
@@ -1261,7 +1248,7 @@ and ensure consistency of it.<a href="#section-abstract-1" class="pilcrow">¶</a
             <p id="section-toc.1-1.12.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13">
-            <p id="section-toc.1-1.13.1"><a href="#appendix-C" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
+            <p id="section-toc.1-1.13.1"><a href="#appendix-C" class="auto internal xref"></a><a href="#name-authors-address" class="internal xref">Author's Address</a></p>
 </li>
         </ul>
 </nav>
@@ -1558,22 +1545,25 @@ needs to be 9122, and the "description" value also needs to be modified accordin
 &lt;/interfaces&gt;
 </pre><a href="#section-6.2-2" class="pilcrow">¶</a>
 </div>
+</section>
+</div>
 <div id="deletion-the-operation-tag-metadata-with-delete-value">
-<section id="section-6.2.1">
-          <h4 id="name-deletion-the-operation-tag-">
-<a href="#section-6.2.1" class="section-number selfRef">6.2.1. </a><a href="#name-deletion-the-operation-tag-" class="section-name selfRef">Deletion (The "operation-tag" Metadata with "delete" Value)</a>
-          </h4>
-<p id="section-6.2.1-1">The deletion of configuration data is flagged by declaring the metadata object
-called "operation-tag" with a value "delete". When some node instance defined in the configuration template
+<section id="section-6.3">
+        <h3 id="name-deletion-the-operation-tag-">
+<a href="#section-6.3" class="section-number selfRef">6.3. </a><a href="#name-deletion-the-operation-tag-" class="section-name selfRef">Deletion (The "operation-tag" Metadata with "delete" Value)</a>
+        </h3>
+<p id="section-6.3-1">The deletion of configuration data is flagged by declaring the metadata object
+called "operation-tag" with a value "delete". If some node instance defined in the configuration template
 is intended to be deleted in the configuration explicitly by the client or by new
-templates, if the node is at a top level, the metadata object is added to that
-specific node. Servers <span class="bcp14">MUST</span> ignore this
+templates, the metadata object is added to that specific node. Servers <span class="bcp14">MUST</span> ignore this
 metadata if the configuration identified currently does not exist in the configuration
-template.<a href="#section-6.2.1-1" class="pilcrow">¶</a></p>
-<p id="section-6.2.1-2">For example, a client may want to delete the "description" node instance defined
+template.<a href="#section-6.3-1" class="pilcrow">¶</a></p>
+<p id="section-6.3-2">The "operation-tag" metadata <span class="bcp14">MUST</span> have only one value to specify the intended operation.
+The encoding of "operation-tag" metadata object follows the way defined in <span><a href="https://rfc-editor.org/rfc/rfc7952#section-5" class="relref">Section 5</a> of [<a href="#RFC7952" class="cite xref">RFC7952</a>]</span>.<a href="#section-6.3-2" class="pilcrow">¶</a></p>
+<p id="section-6.3-3">For example, a client may want to delete the "description" node instance defined
 in <a href="#temp-ex-interface" class="auto internal xref">Figure 1</a> for interface "eth1", and the following shows the example
-configuration:<a href="#section-6.2.1-2" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-6.2.1-3">
+configuration:<a href="#section-6.3-3" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-6.3-4">
 <pre>
 &lt;interfaces template:stmt-extend="interface-type-mtu"&gt;
   &lt;interface&gt;
@@ -1585,10 +1575,10 @@ configuration:<a href="#section-6.2.1-2" class="pilcrow">¶</a></p>
     &lt;description template:operation-tag="delete"&gt;MTU value is set by template&lt;/description&gt;
   &lt;/interface&gt;
 &lt;/interfaces&gt;
-</pre><a href="#section-6.2.1-3" class="pilcrow">¶</a>
+</pre><a href="#section-6.3-4" class="pilcrow">¶</a>
 </div>
-<p id="section-6.2.1-4">And it is equivalent to the following:<a href="#section-6.2.1-4" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-6.2.1-5">
+<p id="section-6.3-5">And it is equivalent to the following:<a href="#section-6.3-5" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-6.3-6">
 <pre>
 &lt;interfaces&gt;
   &lt;interface&gt;
@@ -1603,81 +1593,183 @@ configuration:<a href="#section-6.2.1-2" class="pilcrow">¶</a></p>
     &lt;mtu&gt;9122&lt;/mtu&gt;
   &lt;/interface&gt;
 &lt;/interfaces&gt;
-</pre><a href="#section-6.2.1-5" class="pilcrow">¶</a>
+</pre><a href="#section-6.3-6" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
-<div id="listleaflists-reordering">
-<section id="section-6.2.2">
-          <h4 id="name-list-leaflists-reordering">
-<a href="#section-6.2.2" class="section-number selfRef">6.2.2. </a><a href="#name-list-leaflists-reordering" class="section-name selfRef">List/leaflists Reordering</a>
-          </h4>
-<div id="positionfirst-the-operation-tag-metadata-with-positionfirst-value">
-<section id="section-6.2.2.1">
-            <h5 id="name-position_first-the-operatio">
-<a href="#section-6.2.2.1" class="section-number selfRef">6.2.2.1. </a><a href="#name-position_first-the-operatio" class="section-name selfRef">Position_first (The "operation-tag" Metadata with "Position_first" Value)</a>
-          </h5>
-</section>
+<div id="listleaf-list-reordering">
+<section id="section-6.4">
+        <h3 id="name-list-leaf-list-reordering">
+<a href="#section-6.4" class="section-number selfRef">6.4. </a><a href="#name-list-leaf-list-reordering" class="section-name selfRef">List/leaf-list Reordering</a>
+        </h3>
+<p id="section-6.4-1">There is a desire to reorder some existing list/leaf-list entries defined in an
+existing template, or specify the ordering of new instances when they are created.
+It only applies to lists and leaf-lists indicated with the "ordered-by user"
+statement.<a href="#section-6.4-1" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-6.4-2">
+          <dt id="section-6.4-2.1">The reordering of list/leaf-list entry data is flagged by declaring the metadata</dt>
+          <dd style="margin-left: 1.5em" id="section-6.4-2.2">
+            <p id="section-6.4-2.2.1"></p><a href="#section-6.4-2.2" class="pilcrow">¶</a>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-6.4-2.3">object called "operation-tag" with different values.</dt>
+          <dd style="margin-left: 1.5em" id="section-6.4-2.4">
+            <p id="section-6.4-2.4.1"></p><a href="#section-6.4-2.4" class="pilcrow">¶</a>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-6.4-2.5">The "operation-tag" used for reordering has one of the following values:</dt>
+          <dd style="margin-left: 1.5em" id="section-6.4-2.6">
+            <p id="section-6.4-2.6.1">position-first: The attached entry is positioned as the first entry in the list/leaf-list.
+There must be no more than one entry that is annotated as "position-first" within the same operation request.<a href="#section-6.4-2.6.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-6.4-2.7"></dt>
+          <dd style="margin-left: 1.5em" id="section-6.4-2.8">
+            <p id="section-6.4-2.8.1">position-last: The attached entry is positioned as the last entry in the list/leaf-list.
+There must be no more than one entry that is annotated as "position-last" within the same operation request.<a href="#section-6.4-2.8.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-6.4-2.9"></dt>
+          <dd style="margin-left: 1.5em" id="section-6.4-2.10">
+            <p id="section-6.4-2.10.1">position-before: The attached entry is positioned before some other specified entries in the list/leaf-list.
+This value <span class="bcp14">MUST</span> be followed by one or more space-seperated key values to indicate the entries that the attached entry is just positioned before. The "position-before" metadata and key values are seperated by colon ":".
+There must not be any other entries that use "position-before" to target the entry attached as "position-first" within the same operation rquest.<a href="#section-6.4-2.10.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-6.4-2.11"></dt>
+          <dd style="margin-left: 1.5em" id="section-6.4-2.12">
+            <p id="section-6.4-2.12.1">position-after: The attached entry is positioned after some other specified entries in the list/leaf-list.
+This value <span class="bcp14">MUST</span> be followed by one or more space-seperated key values to indicate the entries that the attached entry is just positioned after. The "position-after" metadata and key values are seperated by colon ":".
+There must not be any other entries that use "position-after" to target the entry attached as "position-last" within the same operation request.<a href="#section-6.4-2.12.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+</dl>
+<p id="section-6.4-3">For example, the following template provides the user-ordered ACL configuration:<a href="#section-6.4-3" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-6.4-4">
+<pre>
+&lt;templates&gt;
+  &lt;template&gt;
+    &lt;id&gt;ACL-rules-template&lt;/id&gt;
+    &lt;acls&gt;
+      &lt;acl&gt;
+        &lt;name&gt;allow-access-from-tcp&lt;/name&gt;
+        &lt;matches&gt;
+          &lt;protocol&gt;tcp&lt;/protocol&gt;
+        &lt;/matches&gt;
+        &lt;action&gt;permit&lt;/action&gt;
+      &lt;/acl&gt;
+      &lt;acl&gt;
+        &lt;name&gt;allow-access-from-udp&lt;/name&gt;
+        &lt;matches&gt;
+          &lt;protocol&gt;udp&lt;/protocol&gt;
+        &lt;/matches&gt;
+        &lt;action&gt;permit&lt;/action&gt;
+      &lt;/acl&gt;
+    &lt;/acls&gt;
+  &lt;/template&gt;
+&lt;/templates&gt;
+</pre><a href="#section-6.4-4" class="pilcrow">¶</a>
 </div>
-<div id="positionlast-the-operation-tag-metadata-with-positionlast-value">
-<section id="section-6.2.2.2">
-            <h5 id="name-position_last-the-operation">
-<a href="#section-6.2.2.2" class="section-number selfRef">6.2.2.2. </a><a href="#name-position_last-the-operation" class="section-name selfRef">Position_last (The "operation-tag" Metadata with "Position_last" Value)</a>
-          </h5>
-</section>
+<p id="section-6.4-5">If the client wants to create another template with an additional ACL entry named "deny-traffic-from-ftp"
+ordered as the first entry and ACL entry named "allow-access-from-tcp" as the last one:<a href="#section-6.4-5" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-6.4-6">
+<pre>
+&lt;templates&gt;
+  &lt;template&gt;
+    &lt;id&gt;ACL-rules-template2&lt;/id&gt;
+    &lt;acls xmlns:template="urn:ietf:params:xml:ns:yang:ietf-template"
+      template:stmt-extend="acl-rule-template"&gt;
+      &lt;acl template:operation-tag="position-first"&gt;
+        &lt;name&gt;deny-traffic-from-ftp&lt;/name&gt;
+        &lt;matches&gt;
+          &lt;protocol&gt;ftp&lt;/protocol&gt;
+        &lt;/matches&gt;
+      &lt;/acl&gt;
+      &lt;acl template:operation-tag="position-last"&gt;
+        &lt;name&gt;allow-access-from-tcp&lt;/name&gt;
+      &lt;/acl&gt;
+    &lt;/acls&gt;
+  &lt;/template&gt;
+&lt;/templates&gt;
+</pre><a href="#section-6.4-6" class="pilcrow">¶</a>
 </div>
-<div id="positionbefore-the-operation-tag-metadata-with-positionbefore-value">
-<section id="section-6.2.2.3">
-            <h5 id="name-position_before-the-operati">
-<a href="#section-6.2.2.3" class="section-number selfRef">6.2.2.3. </a><a href="#name-position_before-the-operati" class="section-name selfRef">Position_before (The "operation-tag" Metadata with "Position_before" Value)</a>
-          </h5>
-</section>
+<p id="section-6.4-7">The client may also deliver the configuration defined in template
+"acl-rule-template" with some other additional ACL entries that is properly ordered:<a href="#section-6.4-7" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-6.4-8">
+<pre>
+&lt;acls xmlns:template="urn:ietf:params:xml:ns:yang:ietf-template"
+  template:stmt-extend="acl-rule-template"&gt;
+  &lt;acl template:operation-tag="position-before:\
+    'allow-access-from-tcp allow-access-from-udp'"&gt;
+    &lt;name&gt;deny-access-to-ipv4&lt;/name&gt;
+    &lt;matches&gt;
+      &lt;destination-ipv4-network&gt;192.0.2.0/24&lt;/destination-ipv4-network&gt;
+    &lt;/matches&gt;
+  &lt;/acl&gt;
+  &lt;acl template:operation-tag="position-after:'deny-access-to-ipv4'"&gt;
+    &lt;name&gt;deny-access-to-ipv6&lt;/name&gt;
+    &lt;matches&gt;
+      &lt;destination-ipv6-network&gt;2001:db8::/32&lt;/destination-ipv6-network&gt;
+    &lt;/matches&gt;
+  &lt;/acl&gt;
+&lt;/acls&gt;
+</pre><a href="#section-6.4-8" class="pilcrow">¶</a>
 </div>
-<div id="positionafter-the-operation-tag-metadata-with-positionafter-value">
-<section id="section-6.2.2.4">
-            <h5 id="name-position_after-the-operatio">
-<a href="#section-6.2.2.4" class="section-number selfRef">6.2.2.4. </a><a href="#name-position_after-the-operatio" class="section-name selfRef">Position_after (The "operation-tag" Metadata with "Position_after" Value)</a>
-          </h5>
-</section>
-</div>
-</section>
+<p id="section-6.4-9">The applied ACL configuration is equivalent to the following:<a href="#section-6.4-9" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-6.4-10">
+<pre>
+&lt;acls&gt;
+  &lt;acl&gt;
+    &lt;name&gt;deny-access-to-ipv4&lt;/name&gt;
+    &lt;matches&gt;
+      &lt;destination-ipv4-network&gt;192.0.2.0/24&lt;/destination-ipv4-network&gt;
+    &lt;/matches&gt;
+  &lt;/acl&gt;
+  &lt;acl&gt;
+    &lt;name&gt;deny-access-to-ipv6&lt;/name&gt;
+    &lt;matches&gt;
+      &lt;destination-ipv6-network&gt;2001:db8::/32&lt;/destination-ipv6-network&gt;
+    &lt;/matches&gt;
+  &lt;/acl&gt;
+  &lt;acl&gt;
+    &lt;name&gt;allow-access-from-tcp&lt;/name&gt;
+    &lt;matches&gt;
+      &lt;protocol&gt;tcp&lt;/protocol&gt;
+    &lt;/matches&gt;
+    &lt;action&gt;permit&lt;/action&gt;
+  &lt;/acl&gt;
+  &lt;acl&gt;
+    &lt;name&gt;allow-access-from-udp&lt;/name&gt;
+    &lt;matches&gt;
+      &lt;protocol&gt;udp&lt;/protocol&gt;
+    &lt;/matches&gt;
+    &lt;action&gt;permit&lt;/action&gt;
+  &lt;/acl&gt;
+&lt;/acls&gt;
+</pre><a href="#section-6.4-10" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
 <div id="interaction-with-nmda-datastores">
-<section id="section-6.3">
+<section id="section-6.5">
         <h3 id="name-interaction-with-nmda-datas">
-<a href="#section-6.3" class="section-number selfRef">6.3. </a><a href="#name-interaction-with-nmda-datas" class="section-name selfRef">Interaction with NMDA datastores</a>
+<a href="#section-6.5" class="section-number selfRef">6.5. </a><a href="#name-interaction-with-nmda-datas" class="section-name selfRef">Interaction with NMDA datastores</a>
         </h3>
-<p id="section-6.3-1">Some implementation may have predefined configuration templates for the convenience
+<p id="section-6.5-1">Some implementation may have predefined configuration templates for the convenience
 of clients, which are present in &lt;system&gt; (if implemented, see <span>[<a href="#I-D.ietf-netmod-system-config" class="cite xref">I-D.ietf-netmod-system-config</a>]</span>).
 In addition, clients can always define their own templates in &lt;running&gt;.
 However, configuration template data defined by "ietf-template" YANG data model
-should not be visible in &lt;operational&gt; until being inherited by a node in the data tree.<a href="#section-6.3-1" class="pilcrow">¶</a></p>
-<p id="section-6.3-2">If a node in the data tree inherits a configuration template, the configuration
+should not be visible in &lt;operational&gt; until being inherited by a node in the data tree.<a href="#section-6.5-1" class="pilcrow">¶</a></p>
+<p id="section-6.5-2">If a node in the data tree inherits a configuration template, the configuration
 template does not expand in &lt;running&gt;, a read back of &lt;running&gt; returns what is
 sent by the client with the "stmt-extend" metadata attached to the specific node.
-Configuration template which is inherited or overridden by the node instance <span class="bcp14">MUST</span> be expanded in &lt;intended&gt;.<a href="#section-6.3-2" class="pilcrow">¶</a></p>
+Configuration template which is inherited or overridden by the node instance <span class="bcp14">MUST</span> be expanded in &lt;intended&gt;.<a href="#section-6.5-2" class="pilcrow">¶</a></p>
 <ul class="normal ulEmpty">
-<li class="normal ulEmpty" id="section-6.3-3.1">
-            <p id="section-6.3-3.1.1">Editor's Note: The read-back of &lt;running&gt; might break legacy clients doesn't
-understand template?<a href="#section-6.3-3.1.1" class="pilcrow">¶</a></p>
+<li class="normal ulEmpty" id="section-6.5-3.1">
+            <p id="section-6.5-3.1.1">Editor's Note: The read-back of &lt;running&gt; might break legacy clients doesn't
+understand template?<a href="#section-6.5-3.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-</section>
-</div>
-<div id="the-get-template-expansion-rpc">
-<section id="section-6.4">
-        <h3 id="name-the-get-template-expansion-">
-<a href="#section-6.4" class="section-number selfRef">6.4. </a><a href="#name-the-get-template-expansion-" class="section-name selfRef">The "get-template-expansion" RPC</a>
-      </h3>
-</section>
-</div>
-<div id="applying-templates">
-<section id="section-6.5">
-        <h3 id="name-applying-templates">
-<a href="#section-6.5" class="section-number selfRef">6.5. </a><a href="#name-applying-templates" class="section-name selfRef">Applying Templates</a>
-      </h3>
 </section>
 </div>
 </section>
@@ -1704,13 +1796,6 @@ module: ietf-template
         +--ro last-modified?     yang:timestamp
         +--ro parent-template?   -&gt; ../../template/id
         +--ro inherited-by*      union
-
-  rpcs:
-    +---x get-template-expansion
-       +---w input
-       |  +---w template-id?   -&gt; /templates/template/id
-       +--ro output
-          +--ro data?   &lt;anydata&gt;
 </pre><a href="#section-7.1-2" class="pilcrow">¶</a>
 </div>
 </section>
@@ -1740,9 +1825,8 @@ module ietf-template {
     "WG Web:   &lt;https://datatracker.ietf.org/wg/netmod/&gt;
      WG List:  &lt;mailto:netmod@ietf.org&gt;
      Author: Qiufang Ma
-             &lt;mailto:maqiufang1@huawei.com&gt;
-             Zhan Wu
-             &lt;mailto:wuzhan1@huawei.com&gt;";
+             &lt;mailto:maqiufang1@huawei.com&gt;";
+
   description
     "This module defines a template list with a RPC to expand
      the template.
@@ -1826,26 +1910,8 @@ module ietf-template {
        }
      }
    }
-   rpc get-template-expansion {
-     description
-       "Expand a specified configuration template.";
-     input {
-       leaf template-id {
-         type leafref {
-           path "/templates/template/id";
-         }
-         description
-           "The template identifier that needs to be expanded.";
-       }
-     }
-     output {
-       anydata data {
-         description
-           "Configuration data block after template expansions.";
-       }
-     }
-  }
 }
+
 
 &lt;CODE ENDS&gt;</pre><a href="#section-7.2-1" class="pilcrow">¶</a>
 </div>
@@ -2331,10 +2397,10 @@ using "template-ntp" and "template-ntp2" that may be sent to a SDN controller:<a
 </div>
 </section>
 </div>
-<div id="applying-templates-1">
+<div id="applying-templates">
 <section id="appendix-A.5">
-        <h3 id="name-applying-templates-2">
-<a href="#appendix-A.5" class="section-number selfRef">A.5. </a><a href="#name-applying-templates-2" class="section-name selfRef">Applying Templates</a>
+        <h3 id="name-applying-templates">
+<a href="#appendix-A.5" class="section-number selfRef">A.5. </a><a href="#name-applying-templates" class="section-name selfRef">Applying Templates</a>
       </h3>
 </section>
 </div>
@@ -2350,8 +2416,8 @@ using "template-ntp" and "template-ntp2" that may be sent to a SDN controller:<a
 </div>
 <div id="authors-addresses">
 <section id="appendix-C">
-      <h2 id="name-authors-addresses">
-<a href="#name-authors-addresses" class="section-name selfRef">Authors' Addresses</a>
+      <h2 id="name-authors-address">
+<a href="#name-authors-address" class="section-name selfRef">Author's Address</a>
       </h2>
 <address class="vcard">
         <div dir="auto" class="left"><span class="fn nameRole">Qiufang Ma</span></div>
@@ -2363,14 +2429,6 @@ using "template-ntp" and "template-ntp2" that may be sent to a SDN controller:<a
 <div class="email">
 <span>Email:</span>
 <a href="mailto:maqiufang1@huawei.com" class="email">maqiufang1@huawei.com</a>
-</div>
-</address>
-<address class="vcard">
-        <div dir="auto" class="left"><span class="fn nameRole">Zhan Wu</span></div>
-<div dir="auto" class="left"><span class="org">Huawei</span></div>
-<div class="email">
-<span>Email:</span>
-<a href="mailto:wuzhan1@huawei.com" class="email">wuzhan1@huawei.com</a>
 </div>
 </address>
 </section>
