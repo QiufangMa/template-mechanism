@@ -1228,12 +1228,6 @@ and ensure consistency of it.<a href="#section-abstract-1" class="pilcrow">¶</a
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.3">
                 <p id="section-toc.1-1.12.2.3.1"><a href="#appendix-A.3" class="auto internal xref">A.3</a>.  <a href="#name-overriding-an-existing-temp" class="internal xref">Overriding An Existing Template</a></p>
 </li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.4">
-                <p id="section-toc.1-1.12.2.4.1"><a href="#appendix-A.4" class="auto internal xref">A.4</a>.  <a href="#name-expanding-templates" class="internal xref">Expanding Templates</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.5">
-                <p id="section-toc.1-1.12.2.5.1"><a href="#appendix-A.5" class="auto internal xref">A.5</a>.  <a href="#name-applying-templates" class="internal xref">Applying Templates</a></p>
-</li>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13">
@@ -2048,9 +2042,8 @@ module ietf-template {
 <a href="#appendix-A" class="section-number selfRef">Appendix A. </a><a href="#name-usage-examples" class="section-name selfRef">Usage Examples</a>
       </h2>
 <p id="appendix-A-1">This section provides some examples to show the use of templates.
-Both NETCONF and RESTCONF protocol operations and different encodings are used
-to not imply a preference in this document.
-The fictional data model used throughout this section is as follows. This
+JSON encodings are used to not imply a preference in this document.
+The fictional data model used throughout this section is shown as follows. This
 network model is inspired by the device model defined in <span>[<a href="#RFC7317" class="cite xref">RFC7317</a>]</span>.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="appendix-A-2">
 <pre>
@@ -2071,7 +2064,7 @@ module example-network-systime {
     container ntp {
       leaf enabled {
         type boolean;
-        default true;
+        mandatory true;
       }
       list server {
         key name;
@@ -2105,35 +2098,35 @@ module example-network-systime {
 <a href="#appendix-A.1" class="section-number selfRef">A.1. </a><a href="#name-creating-templates" class="section-name selfRef">Creating Templates</a>
         </h3>
 <p id="appendix-A.1-1">The NTP configuration on multiple network devices may be consistent. To create a
-configuration template, the following RESTCONF request might be sent to a SDN controller:<a href="#appendix-A.1-1" class="pilcrow">¶</a></p>
+template for NTP configuration, the following template configuration might be sent to a SDN controller:<a href="#appendix-A.1-1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="appendix-A.1-2">
 <pre>
-POST /restconf/data HTTP/1.1
-HOST: example.com
-Content-Type: application/yang-data+json
-
 {
     "ietf-templates:templates": {
         "template": [
             {
                 "id": "template-ntp",
                 "content": {
-                    "ntp": {
-                        "enabled": "true",
-                        "server": [
-                            {
-                                "name": "ntp-service-primary",
-                                "alias": "primary",
-                                "address": "ntp.service.com",
-                                "prefer": true
-                            },
-                            {
-                                "name": "ntp-service-secondary",
-                                "alias": "secondary",
-                                "address": "ntp.service.backup.com"
+                    "network-device": [
+                        {
+                            "ntp": {
+                                "enabled": "true",
+                                "server": [
+                                    {
+                                        "name": "ntp-service-primary",
+                                        "alias": "primary",
+                                        "address": "ntp.service.com",
+                                        "prefer": true
+                                    },
+                                    {
+                                        "name": "ntp-service-secondary",
+                                        "alias": "secondary",
+                                        "address": "ntp.service.backup.com"
+                                    }
+                                ]
                             }
-                        ]
-                    }
+                        }
+                    ]
                 }
             }
         ]
@@ -2149,7 +2142,7 @@ Content-Type: application/yang-data+json
 <a href="#appendix-A.2" class="section-number selfRef">A.2. </a><a href="#name-inheriting-an-existing-temp" class="section-name selfRef">Inheriting An Existing Template</a>
         </h3>
 <p id="appendix-A.2-1">The operator may create another template with an additional NTP server instance
-by inheriting the template created in <a href="#template-creation" class="auto internal xref">Appendix A.1</a>. Only the message-body
+when inheriting the template created in <a href="#template-creation" class="auto internal xref">Appendix A.1</a>. The configuration
 is shown as follows:<a href="#appendix-A.2-1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="appendix-A.2-2">
 <pre>
@@ -2157,20 +2150,24 @@ is shown as follows:<a href="#appendix-A.2-1" class="pilcrow">¶</a></p>
     "ietf-templates:templates": {
         "template": [
             {
-                "@": {
-                    "ietf-template:stmt-extend": "template-ntp"
-                },
                 "id": "template-ntp2",
                 "content": {
-                    "ntp": {
-                        "server": [
-                            {
-                                "name": "ntp-service-secondary-2",
-                                "alias": "secondary",
-                                "address": "ntp.service.backup.com"
+                    "network-device": [
+                        {
+                            "@": {
+                                "ietf-template:stmt-extend": "template-ntp"
+                            },
+                            "ntp": {
+                                "server": [
+                                    {
+                                        "name": "ntp-service-secondary-2",
+                                        "alias": "secondary",
+                                        "address": "ntp.service.backup.com"
+                                    }
+                                ]
                             }
-                        ]
-                    }
+                        }
+                    ]
                 }
             }
         ]
@@ -2182,31 +2179,44 @@ is shown as follows:<a href="#appendix-A.2-1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="appendix-A.2-4">
 <pre>
 {
-    "ntp": {
-        "enabled": "true",
-        "server": [
+    "ietf-templates:templates": {
+        "template": [
             {
-                "name": "ntp-service-primary",
-                "alias": "primary",
-                "address": "ntp.service.com",
-                "prefer": true
-            },
-            {
-                "name": "ntp-service-secondary",
-                "alias": "secondary",
-                "address": "ntp.service.backup.com"
-            },
-            {
-                "name": "ntp-service-secondary-2",
-                "alias": "secondary",
-                "address": "ntp.service.backup.com"
+                "id": "template-ntp2",
+                "content": {
+                    "network-device": [
+                        {
+                            "ntp": {
+                                "enabled": "true",
+                                "server": [
+                                    {
+                                        "name": "ntp-service-primary",
+                                        "alias": "primary",
+                                        "address": "ntp.service.com",
+                                        "prefer": true
+                                    },
+                                    {
+                                        "name": "ntp-service-secondary",
+                                        "alias": "secondary",
+                                        "address": "ntp.service.backup.com"
+                                    },
+                                    {
+                                        "name": "ntp-service-secondary-2",
+                                        "alias": "secondary",
+                                        "address": "ntp.service.backup.com"
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
             }
         ]
     }
 }
 </pre><a href="#appendix-A.2-4" class="pilcrow">¶</a>
 </div>
-<p id="appendix-A.2-5">the following shows the network-level ntp configuration with JSON format
+<p id="appendix-A.2-5">the following shows the network-level ntp configuration
 using "template-ntp" and "template-ntp2" that may be sent to a SDN controller:<a href="#appendix-A.2-5" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="appendix-A.2-6">
 <pre>
@@ -2240,7 +2250,7 @@ using "template-ntp" and "template-ntp2" that may be sent to a SDN controller:<a
 }
 </pre><a href="#appendix-A.2-6" class="pilcrow">¶</a>
 </div>
-<p id="appendix-A.2-7">Which is equivalent to the following:<a href="#appendix-A.2-7" class="pilcrow">¶</a></p>
+<p id="appendix-A.2-7">Which is equivalent to the following configuration:<a href="#appendix-A.2-7" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="appendix-A.2-8">
 <pre>
 {
@@ -2341,56 +2351,6 @@ using "template-ntp" and "template-ntp2" that may be sent to a SDN controller:<a
 <section id="appendix-A.3">
         <h3 id="name-overriding-an-existing-temp">
 <a href="#appendix-A.3" class="section-number selfRef">A.3. </a><a href="#name-overriding-an-existing-temp" class="section-name selfRef">Overriding An Existing Template</a>
-      </h3>
-</section>
-</div>
-<div id="expanding-templates">
-<section id="appendix-A.4">
-        <h3 id="name-expanding-templates">
-<a href="#appendix-A.4" class="section-number selfRef">A.4. </a><a href="#name-expanding-templates" class="section-name selfRef">Expanding Templates</a>
-        </h3>
-<p id="appendix-A.4-1">An operation request to expand the "template-ntp2" template in <a href="#template-inherits" class="auto internal xref">Appendix A.2</a>:<a href="#appendix-A.4-1" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="appendix-A.4-2">
-<pre>
-&lt;rpc message-id="101"
-     xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"&gt;
-  &lt;get-template-expansion&gt;
-    &lt;template-id&gt;template-ntp2&lt;/template-id&gt;
-  &lt;/get-template-expansion&gt;
-&lt;/rpc&gt;
-
-&lt;rpc-reply message-id="101"
-     xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"&gt;
-  &lt;data&gt;
-    &lt;ntp&gt;
-      &lt;enabled&gt;true&lt;/enabled&gt;
-      &lt;server&gt;
-        &lt;name&gt;ntp-service-primary&lt;/name&gt;
-        &lt;alias&gt;primary&lt;/alias&gt;
-        &lt;address&gt;ntp.service.com&lt;/address&gt;
-        &lt;prefer&gt;true&lt;/prefer&gt;
-      &lt;/server&gt;
-      &lt;server&gt;
-        &lt;name&gt;ntp-service-secondary&lt;/name&gt;
-        &lt;alias&gt;secondary&lt;/alias&gt;
-        &lt;address&gt;ntp.service.backup.com&lt;/address&gt;
-      &lt;/server&gt;
-      &lt;server&gt;
-        &lt;name&gt;ntp-service-secondary-2&lt;/name&gt;
-        &lt;alias&gt;secondary&lt;/alias&gt;
-        &lt;address&gt;ntp.service.backup.com&lt;/address&gt;
-      &lt;/server&gt;
-    &lt;/ntp&gt;
-  &lt;/data&gt;
-&lt;/rpc-reply&gt;
-</pre><a href="#appendix-A.4-2" class="pilcrow">¶</a>
-</div>
-</section>
-</div>
-<div id="applying-templates">
-<section id="appendix-A.5">
-        <h3 id="name-applying-templates">
-<a href="#appendix-A.5" class="section-number selfRef">A.5. </a><a href="#name-applying-templates" class="section-name selfRef">Applying Templates</a>
       </h3>
 </section>
 </div>
