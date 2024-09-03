@@ -108,8 +108,6 @@ parent template:
 
 # Hierarchical Template Overview
 
-> Editor's Note: The RPC may not be needed as operator can refer to the expansion by querying \<intended\>.
-
 A configuration template must first be defined before it can be applied. The creation,
 modification, and deletion of configuration templates can be achieved by network
 management operations via NETCONF or RESTCONF protocols. The content of the configuration
@@ -142,16 +140,6 @@ including those defined in the type's "range", "length", and "pattern" propertie
 That said, if a template is applied in the data tree, the results of the template
 configuration merging with configuration explicitly provided by the client MUST
 always be a valid configuration data tree, as defined in {{Section 8.1 of !RFC7950}}.
-
-## Different Levels of Templates
-
-The configuration templates may be defined at different levels, depending on
-where it is used and maintained.
-For exmaple, A network-level template maintained by the software-defined networking
-(SDN) {{?RFC7149}} {{?RFC7426}} controller defines configuration that may be shared
-by multiple network devices. While device-level template maintained by the network
-element defines configuration that can only be applied to specific network devices.
-Refer to {{appendix-network}} for examples of network-level templates.
 
 # Inheriting Templates
 
@@ -222,10 +210,6 @@ And it is equivalent to the following:
 {{template-inherits}} provides more examples of inheriting an existing template by indicating
 the "stmt-extend" metadata object.
 
-# Composing templates
-
-## The "stmt-compose" Metadata
-
 # Overriding Templates
 
 It may be desired to override some configuration in an existing template when it is interited.
@@ -273,7 +257,7 @@ needs to be 9122, and the "description" value also needs to be modified accordin
 ~~~~
 
 
-## Deletion (The "operation-tag" Metadata with "delete" Value)
+## Deletion
 
 The deletion of configuration data is flagged by declaring the metadata object
 called "operation-tag" with a value "delete". If some node instance defined in the configuration template
@@ -449,7 +433,7 @@ The applied ACL configuration is equivalent to the following:
 </acls>
 ~~~~
 
-## Interaction with NMDA datastores
+# Interaction with NMDA datastores
 
 Some implementation may have predefined configuration templates for the convenience
 of clients, which are present in \<system\> (if implemented, see {{?I-D.ietf-netmod-system-config}}).
@@ -464,6 +448,15 @@ Configuration template which is inherited or overridden by the node instance MUS
 
 > Editor's Note: The read-back of \<running\> might break legacy clients doesn't
 understand template?
+
+# Different Levels of Templates
+
+The configuration templates may be defined at different levels, depending on where it is used and maintained.
+For exmaple, A network-level template maintained by the software-defined networking
+(SDN) {{?RFC7149}} {{?RFC7426}} controller defines configuration that may be shared
+by multiple network devices. While device-level template maintained by the network
+element defines configuration that can only be applied to specific network devices.
+Refer to {{appendix-network}} for examples of network-level templates.
 
 # The "ietf-template" YANG Module {#template-yang}
 
