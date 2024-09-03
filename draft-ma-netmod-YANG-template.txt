@@ -69,27 +69,25 @@ Table of Contents
    2.  Conventions and Definitions
    3.  Hierarchical Template Overview
      3.1.  Validity of Templates
-     3.2.  Different Levels of Templates
    4.  Inheriting Templates
      4.1.  The "stmt-extend" Metadata
-   5.  Composing templates
-     5.1.  The "stmt-compose" Metadata
-   6.  Overriding Templates
-     6.1.  Creation
-     6.2.  Modification
-     6.3.  Deletion (The "operation-tag" Metadata with "delete" Value)
-     6.4.  List/leaf-list Reordering
-     6.5.  Interaction with NMDA datastores
-   7.  The "ietf-template" YANG Module
-     7.1.  Data Model Overview
-     7.2.  YANG Module
-   8.  Security Considerations
-   9.  IANA Considerations
-     9.1.  The "IETF XML" Registry
-     9.2.  The "YANG Module Names" Registry
-   10. References
-     10.1.  Normative References
-     10.2.  Informative References
+   5.  Overriding Templates
+     5.1.  Creation
+     5.2.  Modification
+     5.3.  Deletion
+     5.4.  List/leaf-list Reordering
+   6.  Interaction with NMDA datastores
+   7.  Different Levels of Templates
+   8.  The "ietf-template" YANG Module
+     8.1.  Data Model Overview
+     8.2.  YANG Module
+   9.  Security Considerations
+   10. IANA Considerations
+     10.1.  The "IETF XML" Registry
+     10.2.  The "YANG Module Names" Registry
+   11. References
+     11.1.  Normative References
+     11.2.  Informative References
    Appendix A.  Usage Examples
      A.1.  Creating Templates
      A.2.  Inheriting An Existing Template
@@ -176,9 +174,6 @@ Table of Contents
 
 3.  Hierarchical Template Overview
 
-      Editor's Note: The RPC may not be needed as operator can refer to
-      the expansion by querying <intended>.
-
    A configuration template must first be defined before it can be
    applied.  The creation, modification, and deletion of configuration
    templates can be achieved by network management operations via
@@ -199,7 +194,7 @@ Table of Contents
       Figure 1: Example of An Interface template 'interface-type-mtu'
 
    The YANG data model of configuration templates is defined in
-   Section 7.
+   Section 8.
 
 3.1.  Validity of Templates
 
@@ -217,17 +212,6 @@ Table of Contents
    the template configuration merging with configuration explicitly
    provided by the client MUST always be a valid configuration data
    tree, as defined in Section 8.1 of [RFC7950].
-
-3.2.  Different Levels of Templates
-
-   The configuration templates may be defined at different levels,
-   depending on where it is used and maintained.  For exmaple, A
-   network-level template maintained by the software-defined networking
-   (SDN) [RFC7149] [RFC7426] controller defines configuration that may
-   be shared by multiple network devices.  While device-level template
-   maintained by the network element defines configuration that can only
-   be applied to specific network devices.  Refer to Appendix A for
-   examples of network-level templates.
 
 4.  Inheriting Templates
 
@@ -301,11 +285,7 @@ Table of Contents
    Appendix A.2 provides more examples of inheriting an existing
    template by indicating the "stmt-extend" metadata object.
 
-5.  Composing templates
-
-5.1.  The "stmt-compose" Metadata
-
-6.  Overriding Templates
+5.  Overriding Templates
 
    It may be desired to override some configuration in an existing
    template when it is interited.  This may be achieved by directly
@@ -317,7 +297,7 @@ Table of Contents
    This document allows a configuration template to be overridden by
    other templates or configuration explicitly provided by the client.
 
-6.1.  Creation
+5.1.  Creation
 
    If there is some configuration data that needs to be created, it can
    be provided at the corresponding level when inheriting the
@@ -331,7 +311,7 @@ Table of Contents
      </interface>
    </interfaces>
 
-6.2.  Modification
+5.2.  Modification
 
    If there is some configuration values that need to be modified, the
    desired value can be provided at the corresponding level when
@@ -352,7 +332,7 @@ Table of Contents
      </interface>
    </interfaces>
 
-6.3.  Deletion (The "operation-tag" Metadata with "delete" Value)
+5.3.  Deletion
 
    The deletion of configuration data is flagged by declaring the
    metadata object called "operation-tag" with a value "delete".  If
@@ -397,7 +377,7 @@ Table of Contents
      </interface>
    </interfaces>
 
-6.4.  List/leaf-list Reordering
+5.4.  List/leaf-list Reordering
 
    There is a desire to reorder some existing list/leaf-list entries
    defined in an existing template, or specify the ordering of new
@@ -536,7 +516,7 @@ Table of Contents
   </acl>
 </acls>
 
-6.5.  Interaction with NMDA datastores
+6.  Interaction with NMDA datastores
 
    Some implementation may have predefined configuration templates for
    the convenience of clients, which are present in <system> (if
@@ -556,9 +536,20 @@ Table of Contents
       Editor's Note: The read-back of <running> might break legacy
       clients doesn't understand template?
 
-7.  The "ietf-template" YANG Module
+7.  Different Levels of Templates
 
-7.1.  Data Model Overview
+   The configuration templates may be defined at different levels,
+   depending on where it is used and maintained.  For exmaple, A
+   network-level template maintained by the software-defined networking
+   (SDN) [RFC7149] [RFC7426] controller defines configuration that may
+   be shared by multiple network devices.  While device-level template
+   maintained by the network element defines configuration that can only
+   be applied to specific network devices.  Refer to Appendix A for
+   examples of network-level templates.
+
+8.  The "ietf-template" YANG Module
+
+8.1.  Data Model Overview
 
    The following tree diagram [RFC8340] illustrates the "ietf-template"
    module:
@@ -573,7 +564,7 @@ Table of Contents
            +--ro parent-template?   -> ../../template/id
            +--ro inherited-by*      union
 
-7.2.  YANG Module
+8.2.  YANG Module
 
    <CODE BEGINS> file "ietf-template@2024-08-27.yang"
    module ietf-template {
@@ -681,13 +672,13 @@ Table of Contents
    }
    <CODE ENDS>
 
-8.  Security Considerations
+9.  Security Considerations
 
    TODO Security
 
-9.  IANA Considerations
+10.  IANA Considerations
 
-9.1.  The "IETF XML" Registry
+10.1.  The "IETF XML" Registry
 
    This document registers the following URI in the "IETF XML Registry"
    [RFC3688].
@@ -696,7 +687,7 @@ Table of Contents
            Registrant Contact: The IESG.
            XML: N/A, the requested URI is an XML namespace.
 
-9.2.  The "YANG Module Names" Registry
+10.2.  The "YANG Module Names" Registry
 
    This document registers the following YANG module in the "YANG Module
    Names" registry [RFC6020].
@@ -707,9 +698,9 @@ Table of Contents
            maintained by IANA? N
            reference:          RFC XXXX
 
-10.  References
+11.  References
 
-10.1.  Normative References
+11.1.  Normative References
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -742,7 +733,7 @@ Table of Contents
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
 
-10.2.  Informative References
+11.2.  Informative References
 
    [I-D.ietf-netmod-system-config]
               Ma, Q., Wu, Q., and C. Feng, "System-defined
