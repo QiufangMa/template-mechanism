@@ -25,10 +25,6 @@ author:
    code: 210012
    country: China
    email: maqiufang1@huawei.com
--
-  fullname: Zhan Wu
-  organization: Huawei
-  email: wuzhan1@huawei.com
 
 normative:
 
@@ -354,20 +350,20 @@ For example, the following template provides the user-ordered ACL configuration:
 ~~~~
 <templates>
   <template>
-    <id>ACL-rules-template</id>  
+    <id>ACL-rules-template</id>
     <acls>
       <acl>
-        <name>allow-access-from-tcp</name>  
+        <name>allow-access-from-tcp</name>
         <matches>
           <protocol>tcp</protocol>
-        </matches>  
+        </matches>
         <action>permit</action>
-      </acl>  
+      </acl>
       <acl>
-        <name>allow-access-from-udp</name>  
+        <name>allow-access-from-udp</name>
         <matches>
           <protocol>udp</protocol>
-        </matches>  
+        </matches>
         <action>permit</action>
       </acl>
     </acls>
@@ -403,16 +399,16 @@ The client may also deliver the configuration defined in template
 
 ~~~~
 <acls xmlns:template="urn:ietf:params:xml:ns:yang:ietf-template"
-  template:stmt-extend="acl-rule-template">  
+  template:stmt-extend="acl-rule-template">
   <acl template:operation-tag="position-before:\
     'allow-access-from-tcp allow-access-from-udp'">
-    <name>deny-access-to-ipv4</name>  
+    <name>deny-access-to-ipv4</name>
     <matches>
       <destination-ipv4-network>192.0.2.0/24</destination-ipv4-network>
     </matches>
-  </acl>  
+  </acl>
   <acl template:operation-tag="position-after:'deny-access-to-ipv4'">
-    <name>deny-access-to-ipv6</name>  
+    <name>deny-access-to-ipv6</name>
     <matches>
       <destination-ipv6-network>2001:db8::/32</destination-ipv6-network>
     </matches>
@@ -425,29 +421,29 @@ The applied ACL configuration is equivalent to the following:
 ~~~~
 <acls>
   <acl>
-    <name>deny-access-to-ipv4</name>  
+    <name>deny-access-to-ipv4</name>
     <matches>
       <destination-ipv4-network>192.0.2.0/24</destination-ipv4-network>
     </matches>
-  </acl>  
+  </acl>
   <acl>
-    <name>deny-access-to-ipv6</name>  
+    <name>deny-access-to-ipv6</name>
     <matches>
       <destination-ipv6-network>2001:db8::/32</destination-ipv6-network>
     </matches>
-  </acl>  
+  </acl>
   <acl>
-    <name>allow-access-from-tcp</name>  
+    <name>allow-access-from-tcp</name>
     <matches>
       <protocol>tcp</protocol>
-    </matches>  
+    </matches>
     <action>permit</action>
-  </acl>  
+  </acl>
   <acl>
-    <name>allow-access-from-udp</name>  
+    <name>allow-access-from-udp</name>
     <matches>
       <protocol>udp</protocol>
-    </matches>  
+    </matches>
     <action>permit</action>
   </acl>
 </acls>
