@@ -15,7 +15,7 @@ module example-network-systime {
     container ntp {
       leaf enabled {
         type boolean;
-        default true;
+        mandatory true;
       }
       list server {
         key name;

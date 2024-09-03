@@ -545,9 +545,8 @@ TODO Security
 # Usage Examples {#appendix-network}
 
 This section provides some examples to show the use of templates.
-Both NETCONF and RESTCONF protocol operations and different encodings are used
-to not imply a preference in this document.
-The fictional data model used throughout this section is as follows. This
+JSON encodings are used to not imply a preference in this document.
+The fictional data model used throughout this section is shown as follows. This
 network model is inspired by the device model defined in {{?RFC7317}}.
 
 ~~~~
@@ -557,35 +556,35 @@ network model is inspired by the device model defined in {{?RFC7317}}.
 ## Creating Templates {#template-creation}
 
 The NTP configuration on multiple network devices may be consistent. To create a
-configuration template, the following RESTCONF request might be sent to a SDN controller:
+template for NTP configuration, the following template configuration might be sent to a SDN controller:
 
 ~~~~
-POST /restconf/data HTTP/1.1
-HOST: example.com
-Content-Type: application/yang-data+json
-
 {
     "ietf-templates:templates": {
         "template": [
             {
                 "id": "template-ntp",
                 "content": {
-                    "ntp": {
-                        "enabled": "true",
-                        "server": [
-                            {
-                                "name": "ntp-service-primary",
-                                "alias": "primary",
-                                "address": "ntp.service.com",
-                                "prefer": true
-                            },
-                            {
-                                "name": "ntp-service-secondary",
-                                "alias": "secondary",
-                                "address": "ntp.service.backup.com"
+                    "network-device": [
+                        {
+                            "ntp": {
+                                "enabled": "true",
+                                "server": [
+                                    {
+                                        "name": "ntp-service-primary",
+                                        "alias": "primary",
+                                        "address": "ntp.service.com",
+                                        "prefer": true
+                                    },
+                                    {
+                                        "name": "ntp-service-secondary",
+                                        "alias": "secondary",
+                                        "address": "ntp.service.backup.com"
+                                    }
+                                ]
                             }
-                        ]
-                    }
+                        }
+                    ]
                 }
             }
         ]
@@ -596,7 +595,7 @@ Content-Type: application/yang-data+json
 ## Inheriting An Existing Template {#template-inherits}
 
 The operator may create another template with an additional NTP server instance
-by inheriting the template created in {{template-creation}}. Only the message-body
+when inheriting the template created in {{template-creation}}. The configuration
 is shown as follows:
 
 ~~~~
@@ -604,20 +603,24 @@ is shown as follows:
     "ietf-templates:templates": {
         "template": [
             {
-                "@": {
-                    "ietf-template:stmt-extend": "template-ntp"
-                },
                 "id": "template-ntp2",
                 "content": {
-                    "ntp": {
-                        "server": [
-                            {
-                                "name": "ntp-service-secondary-2",
-                                "alias": "secondary",
-                                "address": "ntp.service.backup.com"
+                    "network-device": [
+                        {
+                            "@": {
+                                "ietf-template:stmt-extend": "template-ntp"
+                            },
+                            "ntp": {
+                                "server": [
+                                    {
+                                        "name": "ntp-service-secondary-2",
+                                        "alias": "secondary",
+                                        "address": "ntp.service.backup.com"
+                                    }
+                                ]
                             }
-                        ]
-                    }
+                        }
+                    ]
                 }
             }
         ]
@@ -629,31 +632,44 @@ The configuration of template "template-ntp2" is equivalent to the following:
 
 ~~~~
 {
-    "ntp": {
-        "enabled": "true",
-        "server": [
+    "ietf-templates:templates": {
+        "template": [
             {
-                "name": "ntp-service-primary",
-                "alias": "primary",
-                "address": "ntp.service.com",
-                "prefer": true
-            },
-            {
-                "name": "ntp-service-secondary",
-                "alias": "secondary",
-                "address": "ntp.service.backup.com"
-            },
-            {
-                "name": "ntp-service-secondary-2",
-                "alias": "secondary",
-                "address": "ntp.service.backup.com"
+                "id": "template-ntp2",
+                "content": {
+                    "network-device": [
+                        {
+                            "ntp": {
+                                "enabled": "true",
+                                "server": [
+                                    {
+                                        "name": "ntp-service-primary",
+                                        "alias": "primary",
+                                        "address": "ntp.service.com",
+                                        "prefer": true
+                                    },
+                                    {
+                                        "name": "ntp-service-secondary",
+                                        "alias": "secondary",
+                                        "address": "ntp.service.backup.com"
+                                    },
+                                    {
+                                        "name": "ntp-service-secondary-2",
+                                        "alias": "secondary",
+                                        "address": "ntp.service.backup.com"
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
             }
         ]
     }
 }
 ~~~~
 
-the following shows the network-level ntp configuration with JSON format
+the following shows the network-level ntp configuration
 using "template-ntp" and "template-ntp2" that may be sent to a SDN controller:
 
 ~~~~
@@ -687,7 +703,7 @@ using "template-ntp" and "template-ntp2" that may be sent to a SDN controller:
 }
 ~~~~
 
-Which is equivalent to the following:
+Which is equivalent to the following configuration:
 
 ~~~~
 {
@@ -784,45 +800,8 @@ Which is equivalent to the following:
 
 ## Overriding An Existing Template
 
-## Expanding Templates
 
-An operation request to expand the "template-ntp2" template in {{template-inherits}}:
 
-~~~~
-<rpc message-id="101"
-     xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
-  <get-template-expansion>
-    <template-id>template-ntp2</template-id>
-  </get-template-expansion>
-</rpc>
-
-<rpc-reply message-id="101"
-     xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
-  <data>
-    <ntp>
-      <enabled>true</enabled>
-      <server>
-        <name>ntp-service-primary</name>
-        <alias>primary</alias>
-        <address>ntp.service.com</address>
-        <prefer>true</prefer>
-      </server>
-      <server>
-        <name>ntp-service-secondary</name>
-        <alias>secondary</alias>
-        <address>ntp.service.backup.com</address>
-      </server>
-      <server>
-        <name>ntp-service-secondary-2</name>
-        <alias>secondary</alias>
-        <address>ntp.service.backup.com</address>
-      </server>
-    </ntp>
-  </data>
-</rpc-reply>
-~~~~
-
-## Applying Templates
 
 # Acknowledgments
 {:numbered="false"}
