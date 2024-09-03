@@ -71,11 +71,11 @@ Table of Contents
      3.1.  Validity of Templates
    4.  Inheriting Templates
      4.1.  The "stmt-extend" Metadata
+     4.2.  Template Extension
    5.  Overriding Templates
-     5.1.  Creation
-     5.2.  Modification
-     5.3.  Deletion
-     5.4.  List/leaf-list Reordering
+     5.1.  Modification
+     5.2.  Deletion
+     5.3.  List/leaf-list Reordering
    6.  Interaction with NMDA datastores
    7.  Different Levels of Templates
    8.  The "ietf-template" YANG Module
@@ -104,13 +104,13 @@ Table of Contents
    configuration of network services or functionalities.  For example,
    [I-D.ietf-opsawg-ntw-attachment-circuit] defines a set of profiles at
    the network level which could be referred to under the node level to
-   factorize some common configuration shared by a group of ACs.
+   factorize some common configuration shared by a group of attachment
+   circuits (ACs).
 
    However, it is not trivial to always take care of the definition of
-   shared profiles/ policies/templates in the design of every data model
-   that could benefit from them.  There is a desire to make use of
-   common YANG-based templates without relying on specific definition in
-   YANG data models.
+   shared profiles/ policies/templates during the design of every data
+   model.  There is a desire to make use of common YANG-based templates
+   without relying on specific definition in YANG data models.
 
    NMDA [RFC8342] allows the configuration templates to be defined in
    <running> and expanded in <intended>, but it does not specify details
@@ -124,8 +124,8 @@ Table of Contents
    configuration and also ensures consistency of it.  Configuration
    template could be used based on any existing YANG data models, this
    document doesn't make any assumption on the YANG data model design,
-   i.e., does not rely on the shared profile/group defined in the YANG
-   data model.
+   i.e., it does not rely on the shared profile/group defined in the
+   YANG data model.
 
 1.1.  Editorial Note (To be removed by RFC Editor)
 
@@ -162,12 +162,11 @@ Table of Contents
    configuration template:  A chunk of reusable configuration data that
       could be applied to the configuration repeatedly, in order to
       simplify the delivery of network configuration and ensure the
-      consistency of it.  Configuration templates can be applied at
-      different levels of the data tree, a configuration template can
-      also be called "hierarchical template", or "template" for short.
+      consistency of it.  A configuration template can also be called
+      "hierarchical template", or "template" for short.
 
    inherited template:  A configuration template that is applied in the
-      configuration of network devices or reused by other templates.
+      configuration data tree or reused by other templates.
 
    parent template:  A configuration template that is an inherited
       template.
@@ -175,23 +174,29 @@ Table of Contents
 3.  Hierarchical Template Overview
 
    A configuration template must first be defined before it can be
-   applied.  The creation, modification, and deletion of configuration
-   templates can be achieved by network management operations via
-   NETCONF or RESTCONF protocols.  The content of the configuration
+   inherited Section 4.  The creation, modification, and deletion of
+   configuration templates are achieved by network management operations
+   via NETCONF or RESTCONF protocols.  The content of the configuration
    template must be an instantiated chunk of data starting from at least
-   one top-level node in the module hierarchies.  For example, Figure 1
-   provides an interface configuration template that sets MTU as 1500
-   for Ethernet interfaces:
+   one top-level node in the module hierarchies.
 
-   <interfaces>
-     <interface>
-       <type>ianaift:ethernetCsmacd</type>
-       <mtu>1500</mtu>
-       <description>MTU value is set by template</description>
-     </interface>
-   </interfaces>
+   For example, Figure 1 provides an interface configuration template
+   that sets "mtu" as 1500 for ethernet interfaces:
 
-      Figure 1: Example of An Interface template 'interface-type-mtu'
+   <templates>
+     <template>
+       <id>interface-type-mtu</id>
+       <interfaces>
+         <interface>
+           <type>ianaift:ethernetCsmacd</type>
+           <mtu>1500</mtu>
+           <description>MTU value is set by template</description>
+         </interface>
+       </interfaces>
+     </template>
+   </templates>
+
+                 Figure 1: Example of An Interface template
 
    The YANG data model of configuration templates is defined in
    Section 8.
@@ -203,26 +208,27 @@ Table of Contents
    depend on configuration outside of the templates to satisfy, e.g., a
    list may contain a mandatory leaf node which is not defined in the
    template but explicitly provided by the client.  However, servers
-   should parse the template and enforce the constraints if possible
-   during the processing of template creation, e.g., type constraints
-   for the leaf, including those defined in the type's "range",
-   "length", and "pattern" properties.
+   should parse the template and enforce the constraints if it is
+   possible during the processing of template creation, e.g., servers
+   may validate type constraints for the leaf, including those defined
+   in the type's "range", "length", and "pattern" properties.
 
-   That said, if a template is applied in the data tree, the results of
-   the template configuration merging with configuration explicitly
-   provided by the client MUST always be a valid configuration data
-   tree, as defined in Section 8.1 of [RFC7950].
+   That said, if a template is applied in the configuration data tree,
+   the results of the template configuration merging with configuration
+   explicitly provided by the client MUST always be valid, as defined in
+   Section 8.1 of [RFC7950].
 
 4.  Inheriting Templates
 
-   This document allows configuration templates to be inherited by
-   configuration nodes in the data tree or new templates.
+   This document allows configuration templates to be inherited by top-
+   level configuration nodes in the data tree or new templates.  A node
+   inherits at most one configuration template.
 
-   If a configuration template is inherited by a top-level node in the
-   data tree, it acts as if the configuration defined in the template is
-   contained and merged with the configuration provided explicitly at
-   the corresponding level in the data tree with the later takes
-   precedence.
+   If a configuration template is inherited by a node in the data tree,
+   it acts as if the configuration defined in the template is contained
+   and is merged with the configuration provided explicitly at the
+   corresponding level in the data tree with the explicitly provided
+   configuration takes precedence.
 
    If a configuration template is inherited by another new template, the
    configuration of the new template is the merging result of
@@ -238,14 +244,15 @@ Table of Contents
 4.1.  The "stmt-extend" Metadata
 
    Template inheritance is flagged by declaring the metadata object
-   called "stmt-extend".  If the template is inherited by a node in the
-   data tree, the metadata object is added to that specific node.  A
-   instance node inherits at most one configuration template.
+   called "stmt-extend".
 
-   If the template is inherited by another template, the metadata object
-   is added to the "/ietf-template:templates/ietf-template:template"
-   instance node that specifies the template contents.  Similarly, a
-   template inherits at most one configuration template.
+   If the template is inherited by a top-level node in the data tree,
+   the metadata object is added to that specific node.  Server MUST
+   igore any metadata objects added to the node that is not a top-level
+   node.
+
+   If the template is inherited by other templates, the metadata object
+   is added to the top-level node of the template contents.
 
    The "stmt-extend" metadata MUST have only one value to specify the
    parent template identifier that is inherited.  The encoding of "stmt-
@@ -256,16 +263,17 @@ Table of Contents
    "eth0" and "eth1" with the container node "interfaces" inheriting the
    template defined in Figure 1:
 
-   <interfaces template:stmt-extend="interface-type-mtu">
-     <interface>
-       <name>eth0</name>
-     </interface>
-     <interface>
-       <name>eth1</name>
-     </interface>
-   </interfaces>
+  <interfaces xmlns:template="urn:ietf:params:xml:ns:yang:ietf-template"
+    template:stmt-extend="interface-type-mtu">
+    <interface>
+      <name>eth0</name>
+    </interface>
+    <interface>
+      <name>eth1</name>
+    </interface>
+  </interfaces>
 
-   And it is equivalent to the following:
+   And the above interface configuration is equivalent to the following:
 
    <interfaces>
      <interface>
@@ -279,6 +287,39 @@ Table of Contents
        <type>ianaift:ethernetCsmacd</type>
        <mtu>1500</mtu>
        <description>MTU value is set by template</description>
+     </interface>
+   </interfaces>
+
+4.2.  Template Extension
+
+   If there is some further configuration data that needs to be created
+   but not included in the parent template, it can be provided at the
+   corresponding level when inheriting the configuration template.  For
+   example, the client may want to define another template and provide
+   an additional "enabled" leaf value on the basis of template defined
+   in Figure 1:
+
+<templates>
+  <template>
+    <id>interface-type-mtu-enabled</id>
+    <interfaces xmlns:template="urn:ietf:params:xml:ns:yang:ietf-template"
+      template:stmt-extend="interface-type-mtu">
+      <interface>
+        <enabled>true</enabled>
+      </interface>
+    </interfaces>
+  </template>
+</templates>
+
+   And the above interface configuration defined in the template
+   "interface-type-mtu-enabled" is equivalent to the following:
+
+   <interfaces>
+     <interface>
+       <type>ianaift:ethernetCsmacd</type>
+       <mtu>1500</mtu>
+       <description>MTU value is set by template</description>
+       <enabled>true</enabled>
      </interface>
    </interfaces>
 
@@ -297,42 +338,30 @@ Table of Contents
    This document allows a configuration template to be overridden by
    other templates or configuration explicitly provided by the client.
 
-5.1.  Creation
-
-   If there is some configuration data that needs to be created, it can
-   be provided at the corresponding level when inheriting the
-   configuration template.  For example, the client may want to define
-   another template and provide an additional "enabled" leaf value on
-   the basis of template defined in Figure 1:
-
-   <interfaces template:stmt-extend="interface-type-mtu">
-     <interface>
-       <enabled>true</enabled>
-     </interface>
-   </interfaces>
-
-5.2.  Modification
+5.1.  Modification
 
    If there is some configuration values that need to be modified, the
    desired value can be provided at the corresponding level when
-   inheriting the configuation template.  For example, a client may
-   configure physically present interfaces "eth0" and "eth1" inheriting
-   the template defined in Figure 1, but the "mtu" value of "eth1" needs
-   to be 9122, and the "description" value also needs to be modified
-   accordingly:
+   inheriting the configuation template.
 
-   <interfaces template:stmt-extend="interface-type-mtu">
-     <interface>
-       <name>eth0</name>
-     </interface>
-     <interface>
-       <name>eth1</name>
-       <mtu>9122</mtu>
-       <description>MTU value is set explicitly</description>
-     </interface>
-   </interfaces>
+   For example, a client may configure physically present interfaces
+   "eth0" and "eth1" inheriting the template defined in Figure 1, but
+   the "mtu" value of "eth1" needs to be 9122, and the "description"
+   value also needs to be modified accordingly:
 
-5.3.  Deletion
+  <interfaces xmlns:template="urn:ietf:params:xml:ns:yang:ietf-template"
+    template:stmt-extend="interface-type-mtu">
+    <interface>
+      <name>eth0</name>
+    </interface>
+    <interface>
+      <name>eth1</name>
+      <mtu>9122</mtu>
+      <description>MTU value is set explicitly</description>
+    </interface>
+  </interfaces>
+
+5.2.  Deletion
 
    The deletion of configuration data is flagged by declaring the
    metadata object called "operation-tag" with a value "delete".  If
@@ -350,7 +379,8 @@ Table of Contents
    instance defined in Figure 1 for interface "eth1", and the following
    shows the example configuration:
 
-<interfaces template:stmt-extend="interface-type-mtu">
+<interfaces xmlns:template="urn:ietf:params:xml:ns:yang:ietf-template"
+  template:stmt-extend="interface-type-mtu">
   <interface>
     <name>eth0</name>
   </interface>
@@ -377,45 +407,44 @@ Table of Contents
      </interface>
    </interfaces>
 
-5.4.  List/leaf-list Reordering
+5.3.  List/leaf-list Reordering
 
-   There is a desire to reorder some existing list/leaf-list entries
+   There may be a desire to reorder some existing list/leaf-list entries
    defined in an existing template, or specify the ordering of new
    instances when they are created.  It only applies to lists and leaf-
    lists indicated with the "ordered-by user" statement.
 
-   The reordering of list/leaf-list entry data is flagged by
-   declaring the metadata
-
-   object called "operation-tag" with different values.
-
+   The reordering of list/leaf-list entry data is flagged by declaring
+   the metadata object called "operation-tag" with different values.
    The "operation-tag" used for reordering has one of the following
-   values:  position-first: The attached entry is positioned as the
-      first entry in the list/leaf-list.  There must be no more than one
-      entry that is annotated as "position-first" within the same
-      operation request.
+   values:
 
-      position-last: The attached entry is positioned as the last entry
-      in the list/leaf-list.  There must be no more than one entry that
-      is annotated as "position-last" within the same operation request.
+   position-first: The attached entry is positioned as the first entry
+   in the list/leaf-list.  There must be no more than one entry that is
+   annotated as "position-first" within the same operation request.
 
-      position-before: The attached entry is positioned before some
-      other specified entries in the list/leaf-list.  This value MUST be
-      followed by one or more space-seperated key values to indicate the
-      entries that the attached entry is just positioned before.  The
-      "position-before" metadata and key values are seperated by colon
-      ":".  There must not be any other entries that use "position-
-      before" to target the entry attached as "position-first" within
-      the same operation rquest.
+   position-last: The attached entry is positioned as the last entry in
+   the list/leaf-list.  There must be no more than one entry that is
+   annotated as "position-last" within the same operation request.
 
-      position-after: The attached entry is positioned after some other
-      specified entries in the list/leaf-list.  This value MUST be
-      followed by one or more space-seperated key values to indicate the
-      entries that the attached entry is just positioned after.  The
-      "position-after" metadata and key values are seperated by colon
-      ":".  There must not be any other entries that use "position-
-      after" to target the entry attached as "position-last" within the
-      same operation request.
+   position-before: The attached entry is positioned before some
+   other specified entries in the list/leaf-list.
+
+   This value MUST be followed by one or more space-seperated key
+   values to indicate the entries that the attached entry is just
+   positioned before.  The "position-before" metadata and key values
+   are seperated by colon ":".
+
+   There must not be any other entries that use "position-before" to
+   target the entry attached as "position-first" within the same
+   operation rquest.  position-after: The attached entry is positioned
+      after some other specified entries in the list/leaf-list.  This
+      value MUST be followed by one or more space-seperated key values
+      to indicate the entries that the attached entry is just positioned
+      after.  The "position-after" metadata and key values are seperated
+      by colon ":".  There must not be any other entries that use
+      "position-after" to target the entry attached as "position-last"
+      within the same operation request.
 
    For example, the following template provides the user-ordered ACL
    configuration:

@@ -1155,22 +1155,22 @@ and ensure consistency of it.<a href="#section-abstract-1" class="pilcrow">¶</a
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.1">
                 <p id="section-toc.1-1.4.2.1.1"><a href="#section-4.1" class="auto internal xref">4.1</a>.  <a href="#name-the-stmt-extend-metadata" class="internal xref">The "stmt-extend" Metadata</a></p>
 </li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2">
+                <p id="section-toc.1-1.4.2.2.1"><a href="#section-4.2" class="auto internal xref">4.2</a>.  <a href="#name-template-extension" class="internal xref">Template Extension</a></p>
+</li>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5">
             <p id="section-toc.1-1.5.1"><a href="#section-5" class="auto internal xref">5</a>.  <a href="#name-overriding-templates" class="internal xref">Overriding Templates</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1">
-                <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="auto internal xref">5.1</a>.  <a href="#name-creation" class="internal xref">Creation</a></p>
+                <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="auto internal xref">5.1</a>.  <a href="#name-modification" class="internal xref">Modification</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.2">
-                <p id="section-toc.1-1.5.2.2.1"><a href="#section-5.2" class="auto internal xref">5.2</a>.  <a href="#name-modification" class="internal xref">Modification</a></p>
+                <p id="section-toc.1-1.5.2.2.1"><a href="#section-5.2" class="auto internal xref">5.2</a>.  <a href="#name-deletion" class="internal xref">Deletion</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.3">
-                <p id="section-toc.1-1.5.2.3.1"><a href="#section-5.3" class="auto internal xref">5.3</a>.  <a href="#name-deletion" class="internal xref">Deletion</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.4">
-                <p id="section-toc.1-1.5.2.4.1"><a href="#section-5.4" class="auto internal xref">5.4</a>.  <a href="#name-list-leaf-list-reordering" class="internal xref">List/leaf-list Reordering</a></p>
+                <p id="section-toc.1-1.5.2.3.1"><a href="#section-5.3" class="auto internal xref">5.3</a>.  <a href="#name-list-leaf-list-reordering" class="internal xref">List/leaf-list Reordering</a></p>
 </li>
             </ul>
 </li>
@@ -1255,9 +1255,9 @@ and ensure consistency of it.<a href="#section-abstract-1" class="pilcrow">¶</a
 be referenced in order to simplify the configuration of network services or functionalities.
 For example, <span>[<a href="#I-D.ietf-opsawg-ntw-attachment-circuit" class="cite xref">I-D.ietf-opsawg-ntw-attachment-circuit</a>]</span> defines a set of profiles
 at the network level which could be referred to under the node level to factorize
-some common configuration shared by a group of ACs.<a href="#section-1-1" class="pilcrow">¶</a></p>
+some common configuration shared by a group of attachment circuits (ACs).<a href="#section-1-1" class="pilcrow">¶</a></p>
 <p id="section-1-2">However, it is not trivial to always take care of the definition of shared profiles/
-policies/templates in the design of every data model that could benefit from them.
+policies/templates during the design of every data model.
 There is a desire to make use of common YANG-based templates without relying on
 specific definition in YANG data models.<a href="#section-1-2" class="pilcrow">¶</a></p>
 <p id="section-1-3">NMDA <span>[<a href="#RFC8342" class="cite xref">RFC8342</a>]</span> allows the configuration templates to be defined in &lt;running&gt;
@@ -1269,7 +1269,7 @@ By defining a common set of nodes as a configuration template and applying the
 configuration template repeatedly, it avoids the redundant definition of identical
 configuration and also ensures consistency of it. Configuration template could
 be used based on any existing YANG data models, this document doesn't make any
-assumption on the YANG data model design, i.e., does not rely on the shared profile/group
+assumption on the YANG data model design, i.e., it does not rely on the shared profile/group
 defined in the YANG data model.<a href="#section-1-4" class="pilcrow">¶</a></p>
 <div id="editorial-note-to-be-removed-by-rfc-editor">
 <section id="section-1.1">
@@ -1312,15 +1312,14 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
         <dd style="margin-left: 1.5em" id="section-2-5.2">
           <p id="section-2-5.2.1">A chunk of reusable configuration data that could be applied to the configuration
 repeatedly, in order to simplify the delivery of network configuration and
-ensure the consistency of it. Configuration templates can be applied at different
-levels of the data tree, a configuration template can also be called
+ensure the consistency of it. A configuration template can also be called
 "hierarchical template", or "template" for short.<a href="#section-2-5.2.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
 <dt id="section-2-5.3">inherited template:</dt>
         <dd style="margin-left: 1.5em" id="section-2-5.4">
-          <p id="section-2-5.4.1">A configuration template that is applied in the configuration of network
-devices or reused by other templates.<a href="#section-2-5.4.1" class="pilcrow">¶</a></p>
+          <p id="section-2-5.4.1">A configuration template that is applied in the configuration data tree or
+reused by other templates.<a href="#section-2-5.4.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
 <dt id="section-2-5.5">parent template:</dt>
@@ -1336,29 +1335,35 @@ devices or reused by other templates.<a href="#section-2-5.4.1" class="pilcrow">
       <h2 id="name-hierarchical-template-overv">
 <a href="#section-3" class="section-number selfRef">3. </a><a href="#name-hierarchical-template-overv" class="section-name selfRef">Hierarchical Template Overview</a>
       </h2>
-<p id="section-3-1">A configuration template must first be defined before it can be applied. The creation,
-modification, and deletion of configuration templates can be achieved by network
+<p id="section-3-1">A configuration template must first be defined before it can be inherited <a href="#inheriting-temp" class="auto internal xref">Section 4</a>. The creation,
+modification, and deletion of configuration templates are achieved by network
 management operations via NETCONF or RESTCONF protocols. The content of the configuration
-template must be an instantiated chunk of data starting from at least one top-level node in the module hierarchies. For example, <a href="#temp-ex-interface" class="auto internal xref">Figure 1</a> provides
-an interface configuration template that sets MTU as 1500 for Ethernet interfaces:<a href="#section-3-1" class="pilcrow">¶</a></p>
+template must be an instantiated chunk of data starting from at least one top-level node in the module hierarchies.<a href="#section-3-1" class="pilcrow">¶</a></p>
+<p id="section-3-2">For example, <a href="#temp-ex-interface" class="auto internal xref">Figure 1</a> provides an interface configuration template
+that sets "mtu" as 1500 for ethernet interfaces:<a href="#section-3-2" class="pilcrow">¶</a></p>
 <span id="name-example-of-an-interface-tem"></span><div id="temp-ex-interface">
 <figure id="figure-1">
-        <div class="alignLeft art-text artwork" id="section-3-2.1">
+        <div class="alignLeft art-text artwork" id="section-3-3.1">
 <pre>
-&lt;interfaces&gt;
-  &lt;interface&gt;
-    &lt;type&gt;ianaift:ethernetCsmacd&lt;/type&gt;
-    &lt;mtu&gt;1500&lt;/mtu&gt;
-    &lt;description&gt;MTU value is set by template&lt;/description&gt;
-  &lt;/interface&gt;
-&lt;/interfaces&gt;
+&lt;templates&gt;
+  &lt;template&gt;
+    &lt;id&gt;interface-type-mtu&lt;/id&gt;
+    &lt;interfaces&gt;
+      &lt;interface&gt;
+        &lt;type&gt;ianaift:ethernetCsmacd&lt;/type&gt;
+        &lt;mtu&gt;1500&lt;/mtu&gt;
+        &lt;description&gt;MTU value is set by template&lt;/description&gt;
+      &lt;/interface&gt;
+    &lt;/interfaces&gt;
+  &lt;/template&gt;
+&lt;/templates&gt;
 </pre>
 </div>
 <figcaption><a href="#figure-1" class="selfRef">Figure 1</a>:
-<a href="#name-example-of-an-interface-tem" class="selfRef">Example of An Interface template 'interface-type-mtu'</a>
+<a href="#name-example-of-an-interface-tem" class="selfRef">Example of An Interface template</a>
         </figcaption></figure>
 </div>
-<p id="section-3-3">The YANG data model of configuration templates is defined in <a href="#template-yang" class="auto internal xref">Section 8</a>.<a href="#section-3-3" class="pilcrow">¶</a></p>
+<p id="section-3-4">The YANG data model of configuration templates is defined in <a href="#template-yang" class="auto internal xref">Section 8</a>.<a href="#section-3-4" class="pilcrow">¶</a></p>
 <div id="validity-of-templates">
 <section id="section-3.1">
         <h3 id="name-validity-of-templates">
@@ -1368,27 +1373,28 @@ an interface configuration template that sets MTU as 1500 for Ethernet interface
 of the data model. Some constraints may depend on configuration outside of the
 templates to satisfy, e.g., a list may contain a mandatory leaf node which is not
 defined in the template but explicitly provided by the client. However, servers
-should parse the template and enforce the constraints if possible during the
-processing of template creation, e.g., type constraints for the leaf,
+should parse the template and enforce the constraints if it is possible during the
+processing of template creation, e.g., servers may validate type constraints for the leaf,
 including those defined in the type's "range", "length", and "pattern" properties.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
-<p id="section-3.1-2">That said, if a template is applied in the data tree, the results of the template
+<p id="section-3.1-2">That said, if a template is applied in the configuration data tree, the results of the template
 configuration merging with configuration explicitly provided by the client <span class="bcp14">MUST</span>
-always be a valid configuration data tree, as defined in <span><a href="https://rfc-editor.org/rfc/rfc7950#section-8.1" class="relref">Section 8.1</a> of [<a href="#RFC7950" class="cite xref">RFC7950</a>]</span>.<a href="#section-3.1-2" class="pilcrow">¶</a></p>
+always be valid, as defined in <span><a href="https://rfc-editor.org/rfc/rfc7950#section-8.1" class="relref">Section 8.1</a> of [<a href="#RFC7950" class="cite xref">RFC7950</a>]</span>.<a href="#section-3.1-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
 </div>
-<div id="inheriting-templates">
+<div id="inheriting-temp">
 <section id="section-4">
       <h2 id="name-inheriting-templates">
 <a href="#section-4" class="section-number selfRef">4. </a><a href="#name-inheriting-templates" class="section-name selfRef">Inheriting Templates</a>
       </h2>
-<p id="section-4-1">This document allows configuration templates to be inherited by
-configuration nodes in the data tree or new templates.<a href="#section-4-1" class="pilcrow">¶</a></p>
-<p id="section-4-2">If a configuration template is inherited by a top-level node in the data tree, it acts as
-if the configuration defined in the template is contained and
+<p id="section-4-1">This document allows configuration templates to be inherited by top-level
+configuration nodes in the data tree or new templates. A node inherits at most
+one configuration template.<a href="#section-4-1" class="pilcrow">¶</a></p>
+<p id="section-4-2">If a configuration template is inherited by a node in the data tree, it acts as
+if the configuration defined in the template is contained and is
 merged with the configuration provided explicitly at the corresponding level in the data tree
-with the later takes precedence.<a href="#section-4-2" class="pilcrow">¶</a></p>
+with the explicitly provided configuration takes precedence.<a href="#section-4-2" class="pilcrow">¶</a></p>
 <p id="section-4-3">If a configuration template is inherited by another new template,
 the configuration of the new template is the merging result of configuration defined
 in both templates with the new template takes precedence over its parent template.
@@ -1401,20 +1407,21 @@ Care <span class="bcp14">MUST</span> be taken when making changes to the parent 
         <h3 id="name-the-stmt-extend-metadata">
 <a href="#section-4.1" class="section-number selfRef">4.1. </a><a href="#name-the-stmt-extend-metadata" class="section-name selfRef">The "stmt-extend" Metadata</a>
         </h3>
-<p id="section-4.1-1">Template inheritance is flagged by declaring the metadata object called "stmt-extend".
-If the template is inherited by a node in the data tree, the metadata object is added
-to that specific node. A instance node inherits at most one configuration template.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
-<p id="section-4.1-2">If the template is inherited by another template, the metadata
-object is added to the "/ietf-template:templates/ietf-template:template" instance node that specifies the template contents.
-Similarly, a template inherits at most one configuration template.<a href="#section-4.1-2" class="pilcrow">¶</a></p>
-<p id="section-4.1-3">The "stmt-extend" metadata <span class="bcp14">MUST</span> have only one value to specify the parent template
+<p id="section-4.1-1">Template inheritance is flagged by declaring the metadata object called "stmt-extend".<a href="#section-4.1-1" class="pilcrow">¶</a></p>
+<p id="section-4.1-2">If the template is inherited by a top-level node in the data tree, the metadata object is added
+to that specific node. Server <span class="bcp14">MUST</span> igore any metadata objects added to the node
+that is not a top-level node.<a href="#section-4.1-2" class="pilcrow">¶</a></p>
+<p id="section-4.1-3">If the template is inherited by other templates, the metadata object is added to
+the top-level node of the template contents.<a href="#section-4.1-3" class="pilcrow">¶</a></p>
+<p id="section-4.1-4">The "stmt-extend" metadata <span class="bcp14">MUST</span> have only one value to specify the parent template
 identifier that is inherited. The encoding of "stmt-extend" metadata object follows the way defined
-in <span><a href="https://rfc-editor.org/rfc/rfc7952#section-5" class="relref">Section 5</a> of [<a href="#RFC7952" class="cite xref">RFC7952</a>]</span>.<a href="#section-4.1-3" class="pilcrow">¶</a></p>
-<p id="section-4.1-4">For example, a client may configure physically present interfaces "eth0" and "eth1"
-with the container node "interfaces" inheriting the template defined in <a href="#temp-ex-interface" class="auto internal xref">Figure 1</a>:<a href="#section-4.1-4" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-4.1-5">
+in <span><a href="https://rfc-editor.org/rfc/rfc7952#section-5" class="relref">Section 5</a> of [<a href="#RFC7952" class="cite xref">RFC7952</a>]</span>.<a href="#section-4.1-4" class="pilcrow">¶</a></p>
+<p id="section-4.1-5">For example, a client may configure physically present interfaces "eth0" and "eth1"
+with the container node "interfaces" inheriting the template defined in <a href="#temp-ex-interface" class="auto internal xref">Figure 1</a>:<a href="#section-4.1-5" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-4.1-6">
 <pre>
-&lt;interfaces template:stmt-extend="interface-type-mtu"&gt;
+&lt;interfaces xmlns:template="urn:ietf:params:xml:ns:yang:ietf-template"
+  template:stmt-extend="interface-type-mtu"&gt;
   &lt;interface&gt;
     &lt;name&gt;eth0&lt;/name&gt;
   &lt;/interface&gt;
@@ -1422,10 +1429,10 @@ with the container node "interfaces" inheriting the template defined in <a href=
     &lt;name&gt;eth1&lt;/name&gt;
   &lt;/interface&gt;
 &lt;/interfaces&gt;
-</pre><a href="#section-4.1-5" class="pilcrow">¶</a>
+</pre><a href="#section-4.1-6" class="pilcrow">¶</a>
 </div>
-<p id="section-4.1-6">And it is equivalent to the following:<a href="#section-4.1-6" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-4.1-7">
+<p id="section-4.1-7">And the above interface configuration is equivalent to the following:<a href="#section-4.1-7" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-4.1-8">
 <pre>
 &lt;interfaces&gt;
   &lt;interface&gt;
@@ -1441,15 +1448,56 @@ with the container node "interfaces" inheriting the template defined in <a href=
     &lt;description&gt;MTU value is set by template&lt;/description&gt;
   &lt;/interface&gt;
 &lt;/interfaces&gt;
-</pre><a href="#section-4.1-7" class="pilcrow">¶</a>
+</pre><a href="#section-4.1-8" class="pilcrow">¶</a>
 </div>
-<p id="section-4.1-8"><a href="#template-inherits" class="auto internal xref">Appendix A.2</a> provides more examples of inheriting an existing template by indicating
-the "stmt-extend" metadata object.<a href="#section-4.1-8" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="template-extension">
+<section id="section-4.2">
+        <h3 id="name-template-extension">
+<a href="#section-4.2" class="section-number selfRef">4.2. </a><a href="#name-template-extension" class="section-name selfRef">Template Extension</a>
+        </h3>
+<p id="section-4.2-1">If there is some further configuration data that needs to be created but not included
+in the parent template, it can be provided at the corresponding level when
+inheriting the configuration template. For example, the client may want to define
+another template and provide an additional "enabled" leaf value
+on the basis of template defined in <a href="#temp-ex-interface" class="auto internal xref">Figure 1</a>:<a href="#section-4.2-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-4.2-2">
+<pre>
+&lt;templates&gt;
+  &lt;template&gt;
+    &lt;id&gt;interface-type-mtu-enabled&lt;/id&gt;
+    &lt;interfaces xmlns:template="urn:ietf:params:xml:ns:yang:ietf-template"
+      template:stmt-extend="interface-type-mtu"&gt;
+      &lt;interface&gt;
+        &lt;enabled&gt;true&lt;/enabled&gt;
+      &lt;/interface&gt;
+    &lt;/interfaces&gt;
+  &lt;/template&gt;
+&lt;/templates&gt;
+</pre><a href="#section-4.2-2" class="pilcrow">¶</a>
+</div>
+<p id="section-4.2-3">And the above interface configuration defined in the template
+"interface-type-mtu-enabled" is equivalent to the following:<a href="#section-4.2-3" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-4.2-4">
+<pre>
+&lt;interfaces&gt;
+  &lt;interface&gt;
+    &lt;type&gt;ianaift:ethernetCsmacd&lt;/type&gt;
+    &lt;mtu&gt;1500&lt;/mtu&gt;
+    &lt;description&gt;MTU value is set by template&lt;/description&gt;
+    &lt;enabled&gt;true&lt;/enabled&gt;
+  &lt;/interface&gt;
+&lt;/interfaces&gt;
+</pre><a href="#section-4.2-4" class="pilcrow">¶</a>
+</div>
+<p id="section-4.2-5"><a href="#template-inherits" class="auto internal xref">Appendix A.2</a> provides more examples of inheriting an existing template by indicating
+the "stmt-extend" metadata object.<a href="#section-4.2-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
 </div>
-<div id="overriding-templates">
+<div id="overriding-temp">
 <section id="section-5">
       <h2 id="name-overriding-templates">
 <a href="#section-5" class="section-number selfRef">5. </a><a href="#name-overriding-templates" class="section-name selfRef">Overriding Templates</a>
@@ -1460,39 +1508,20 @@ however, the parent template may have also been inherited by other instance node
 templates, and direct modification of the parent template may yield unexpected results.<a href="#section-5-1" class="pilcrow">¶</a></p>
 <p id="section-5-2">This document allows a configuration template to be overridden by other templates
 or configuration explicitly provided by the client.<a href="#section-5-2" class="pilcrow">¶</a></p>
-<div id="creation">
-<section id="section-5.1">
-        <h3 id="name-creation">
-<a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-creation" class="section-name selfRef">Creation</a>
-        </h3>
-<p id="section-5.1-1">If there is some configuration data that needs to be created, it can be provided
-at the corresponding level when inheriting the configuration template. For example,
-the client may want to define another template and provide an additional "enabled" leaf value
-on the basis of template defined in <a href="#temp-ex-interface" class="auto internal xref">Figure 1</a>:<a href="#section-5.1-1" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-5.1-2">
-<pre>
-&lt;interfaces template:stmt-extend="interface-type-mtu"&gt;
-  &lt;interface&gt;
-    &lt;enabled&gt;true&lt;/enabled&gt;
-  &lt;/interface&gt;
-&lt;/interfaces&gt;
-</pre><a href="#section-5.1-2" class="pilcrow">¶</a>
-</div>
-</section>
-</div>
 <div id="modification">
-<section id="section-5.2">
+<section id="section-5.1">
         <h3 id="name-modification">
-<a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-modification" class="section-name selfRef">Modification</a>
+<a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-modification" class="section-name selfRef">Modification</a>
         </h3>
-<p id="section-5.2-1">If there is some configuration values that need to be modified, the desired value
-can be provided at the corresponding level when inheriting the configuation template.
-For example, a client may configure physically present interfaces "eth0" and "eth1"
+<p id="section-5.1-1">If there is some configuration values that need to be modified, the desired value
+can be provided at the corresponding level when inheriting the configuation template.<a href="#section-5.1-1" class="pilcrow">¶</a></p>
+<p id="section-5.1-2">For example, a client may configure physically present interfaces "eth0" and "eth1"
 inheriting the template defined in <a href="#temp-ex-interface" class="auto internal xref">Figure 1</a>, but the "mtu" value of "eth1"
-needs to be 9122, and the "description" value also needs to be modified accordingly:<a href="#section-5.2-1" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-5.2-2">
+needs to be 9122, and the "description" value also needs to be modified accordingly:<a href="#section-5.1-2" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.1-3">
 <pre>
-&lt;interfaces template:stmt-extend="interface-type-mtu"&gt;
+&lt;interfaces xmlns:template="urn:ietf:params:xml:ns:yang:ietf-template"
+  template:stmt-extend="interface-type-mtu"&gt;
   &lt;interface&gt;
     &lt;name&gt;eth0&lt;/name&gt;
   &lt;/interface&gt;
@@ -1502,29 +1531,30 @@ needs to be 9122, and the "description" value also needs to be modified accordin
     &lt;description&gt;MTU value is set explicitly&lt;/description&gt;
   &lt;/interface&gt;
 &lt;/interfaces&gt;
-</pre><a href="#section-5.2-2" class="pilcrow">¶</a>
+</pre><a href="#section-5.1-3" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
 <div id="deletion">
-<section id="section-5.3">
+<section id="section-5.2">
         <h3 id="name-deletion">
-<a href="#section-5.3" class="section-number selfRef">5.3. </a><a href="#name-deletion" class="section-name selfRef">Deletion</a>
+<a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-deletion" class="section-name selfRef">Deletion</a>
         </h3>
-<p id="section-5.3-1">The deletion of configuration data is flagged by declaring the metadata object
+<p id="section-5.2-1">The deletion of configuration data is flagged by declaring the metadata object
 called "operation-tag" with a value "delete". If some node instance defined in the configuration template
 is intended to be deleted in the configuration explicitly by the client or by new
 templates, the metadata object is added to that specific node. Servers <span class="bcp14">MUST</span> ignore this
 metadata if the configuration identified currently does not exist in the configuration
-template.<a href="#section-5.3-1" class="pilcrow">¶</a></p>
-<p id="section-5.3-2">The "operation-tag" metadata <span class="bcp14">MUST</span> have only one value to specify the intended operation.
-The encoding of "operation-tag" metadata object follows the way defined in <span><a href="https://rfc-editor.org/rfc/rfc7952#section-5" class="relref">Section 5</a> of [<a href="#RFC7952" class="cite xref">RFC7952</a>]</span>.<a href="#section-5.3-2" class="pilcrow">¶</a></p>
-<p id="section-5.3-3">For example, a client may want to delete the "description" node instance defined
+template.<a href="#section-5.2-1" class="pilcrow">¶</a></p>
+<p id="section-5.2-2">The "operation-tag" metadata <span class="bcp14">MUST</span> have only one value to specify the intended operation.
+The encoding of "operation-tag" metadata object follows the way defined in <span><a href="https://rfc-editor.org/rfc/rfc7952#section-5" class="relref">Section 5</a> of [<a href="#RFC7952" class="cite xref">RFC7952</a>]</span>.<a href="#section-5.2-2" class="pilcrow">¶</a></p>
+<p id="section-5.2-3">For example, a client may want to delete the "description" node instance defined
 in <a href="#temp-ex-interface" class="auto internal xref">Figure 1</a> for interface "eth1", and the following shows the example
-configuration:<a href="#section-5.3-3" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-5.3-4">
+configuration:<a href="#section-5.2-3" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.2-4">
 <pre>
-&lt;interfaces template:stmt-extend="interface-type-mtu"&gt;
+&lt;interfaces xmlns:template="urn:ietf:params:xml:ns:yang:ietf-template"
+  template:stmt-extend="interface-type-mtu"&gt;
   &lt;interface&gt;
     &lt;name&gt;eth0&lt;/name&gt;
   &lt;/interface&gt;
@@ -1534,10 +1564,10 @@ configuration:<a href="#section-5.3-3" class="pilcrow">¶</a></p>
     &lt;description template:operation-tag="delete"&gt;MTU value is set by template&lt;/description&gt;
   &lt;/interface&gt;
 &lt;/interfaces&gt;
-</pre><a href="#section-5.3-4" class="pilcrow">¶</a>
+</pre><a href="#section-5.2-4" class="pilcrow">¶</a>
 </div>
-<p id="section-5.3-5">And it is equivalent to the following:<a href="#section-5.3-5" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-5.3-6">
+<p id="section-5.2-5">And it is equivalent to the following:<a href="#section-5.2-5" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.2-6">
 <pre>
 &lt;interfaces&gt;
   &lt;interface&gt;
@@ -1552,59 +1582,47 @@ configuration:<a href="#section-5.3-3" class="pilcrow">¶</a></p>
     &lt;mtu&gt;9122&lt;/mtu&gt;
   &lt;/interface&gt;
 &lt;/interfaces&gt;
-</pre><a href="#section-5.3-6" class="pilcrow">¶</a>
+</pre><a href="#section-5.2-6" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
 <div id="listleaf-list-reordering">
-<section id="section-5.4">
+<section id="section-5.3">
         <h3 id="name-list-leaf-list-reordering">
-<a href="#section-5.4" class="section-number selfRef">5.4. </a><a href="#name-list-leaf-list-reordering" class="section-name selfRef">List/leaf-list Reordering</a>
+<a href="#section-5.3" class="section-number selfRef">5.3. </a><a href="#name-list-leaf-list-reordering" class="section-name selfRef">List/leaf-list Reordering</a>
         </h3>
-<p id="section-5.4-1">There is a desire to reorder some existing list/leaf-list entries defined in an
+<p id="section-5.3-1">There may be a desire to reorder some existing list/leaf-list entries defined in an
 existing template, or specify the ordering of new instances when they are created.
 It only applies to lists and leaf-lists indicated with the "ordered-by user"
-statement.<a href="#section-5.4-1" class="pilcrow">¶</a></p>
-<span class="break"></span><dl class="dlParallel" id="section-5.4-2">
-          <dt id="section-5.4-2.1">The reordering of list/leaf-list entry data is flagged by declaring the metadata</dt>
-          <dd style="margin-left: 1.5em" id="section-5.4-2.2">
-            <p id="section-5.4-2.2.1"></p><a href="#section-5.4-2.2" class="pilcrow">¶</a>
+statement.<a href="#section-5.3-1" class="pilcrow">¶</a></p>
+<p id="section-5.3-2">The reordering of list/leaf-list entry data is flagged by declaring the metadata
+object called "operation-tag" with different values. The "operation-tag" used
+for reordering has one of the following values:<a href="#section-5.3-2" class="pilcrow">¶</a></p>
+<p id="section-5.3-3">position-first: The attached entry is positioned as the first entry in the list/leaf-list.
+  There must be no more than one entry that is annotated as "position-first" within the same operation request.<a href="#section-5.3-3" class="pilcrow">¶</a></p>
+<p id="section-5.3-4">position-last: The attached entry is positioned as the last entry in the list/leaf-list.
+  There must be no more than one entry that is annotated as "position-last" within the same operation request.<a href="#section-5.3-4" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-5.3-5">
+          <dt id="section-5.3-5.1">position-before: The attached entry is positioned before some other specified entries in the list/leaf-list.</dt>
+          <dd style="margin-left: 1.5em" id="section-5.3-5.2">
+            <p id="section-5.3-5.2.1"></p><a href="#section-5.3-5.2" class="pilcrow">¶</a>
 </dd>
           <dd class="break"></dd>
-<dt id="section-5.4-2.3">object called "operation-tag" with different values.</dt>
-          <dd style="margin-left: 1.5em" id="section-5.4-2.4">
-            <p id="section-5.4-2.4.1"></p><a href="#section-5.4-2.4" class="pilcrow">¶</a>
+<dt id="section-5.3-5.3">  This value <span class="bcp14">MUST</span> be followed by one or more space-seperated key values to indicate the entries that the attached entry is just positioned before. The "position-before" metadata and key values are seperated by colon ":".</dt>
+          <dd style="margin-left: 1.5em" id="section-5.3-5.4">
+            <p id="section-5.3-5.4.1"></p><a href="#section-5.3-5.4" class="pilcrow">¶</a>
 </dd>
           <dd class="break"></dd>
-<dt id="section-5.4-2.5">The "operation-tag" used for reordering has one of the following values:</dt>
-          <dd style="margin-left: 1.5em" id="section-5.4-2.6">
-            <p id="section-5.4-2.6.1">position-first: The attached entry is positioned as the first entry in the list/leaf-list.
-There must be no more than one entry that is annotated as "position-first" within the same operation request.<a href="#section-5.4-2.6.1" class="pilcrow">¶</a></p>
-</dd>
-          <dd class="break"></dd>
-<dt id="section-5.4-2.7"></dt>
-          <dd style="margin-left: 1.5em" id="section-5.4-2.8">
-            <p id="section-5.4-2.8.1">position-last: The attached entry is positioned as the last entry in the list/leaf-list.
-There must be no more than one entry that is annotated as "position-last" within the same operation request.<a href="#section-5.4-2.8.1" class="pilcrow">¶</a></p>
-</dd>
-          <dd class="break"></dd>
-<dt id="section-5.4-2.9"></dt>
-          <dd style="margin-left: 1.5em" id="section-5.4-2.10">
-            <p id="section-5.4-2.10.1">position-before: The attached entry is positioned before some other specified entries in the list/leaf-list.
-This value <span class="bcp14">MUST</span> be followed by one or more space-seperated key values to indicate the entries that the attached entry is just positioned before. The "position-before" metadata and key values are seperated by colon ":".
-There must not be any other entries that use "position-before" to target the entry attached as "position-first" within the same operation rquest.<a href="#section-5.4-2.10.1" class="pilcrow">¶</a></p>
-</dd>
-          <dd class="break"></dd>
-<dt id="section-5.4-2.11"></dt>
-          <dd style="margin-left: 1.5em" id="section-5.4-2.12">
-            <p id="section-5.4-2.12.1">position-after: The attached entry is positioned after some other specified entries in the list/leaf-list.
+<dt id="section-5.3-5.5">  There must not be any other entries that use "position-before" to target the entry attached as "position-first" within the same operation rquest.</dt>
+          <dd style="margin-left: 1.5em" id="section-5.3-5.6">
+            <p id="section-5.3-5.6.1">position-after: The attached entry is positioned after some other specified entries in the list/leaf-list.
 This value <span class="bcp14">MUST</span> be followed by one or more space-seperated key values to indicate the entries that the attached entry is just positioned after. The "position-after" metadata and key values are seperated by colon ":".
-There must not be any other entries that use "position-after" to target the entry attached as "position-last" within the same operation request.<a href="#section-5.4-2.12.1" class="pilcrow">¶</a></p>
+There must not be any other entries that use "position-after" to target the entry attached as "position-last" within the same operation request.<a href="#section-5.3-5.6.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
 </dl>
-<p id="section-5.4-3">For example, the following template provides the user-ordered ACL configuration:<a href="#section-5.4-3" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-5.4-4">
+<p id="section-5.3-6">For example, the following template provides the user-ordered ACL configuration:<a href="#section-5.3-6" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.3-7">
 <pre>
 &lt;templates&gt;
   &lt;template&gt;
@@ -1627,11 +1645,11 @@ There must not be any other entries that use "position-after" to target the entr
     &lt;/acls&gt;
   &lt;/template&gt;
 &lt;/templates&gt;
-</pre><a href="#section-5.4-4" class="pilcrow">¶</a>
+</pre><a href="#section-5.3-7" class="pilcrow">¶</a>
 </div>
-<p id="section-5.4-5">If the client wants to create another template with an additional ACL entry named "deny-traffic-from-ftp"
-ordered as the first entry and ACL entry named "allow-access-from-tcp" as the last one:<a href="#section-5.4-5" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-5.4-6">
+<p id="section-5.3-8">If the client wants to create another template with an additional ACL entry named "deny-traffic-from-ftp"
+ordered as the first entry and ACL entry named "allow-access-from-tcp" as the last one:<a href="#section-5.3-8" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.3-9">
 <pre>
 &lt;templates&gt;
   &lt;template&gt;
@@ -1650,11 +1668,11 @@ ordered as the first entry and ACL entry named "allow-access-from-tcp" as the la
     &lt;/acls&gt;
   &lt;/template&gt;
 &lt;/templates&gt;
-</pre><a href="#section-5.4-6" class="pilcrow">¶</a>
+</pre><a href="#section-5.3-9" class="pilcrow">¶</a>
 </div>
-<p id="section-5.4-7">The client may also deliver the configuration defined in template
-"acl-rule-template" with some other additional ACL entries that is properly ordered:<a href="#section-5.4-7" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-5.4-8">
+<p id="section-5.3-10">The client may also deliver the configuration defined in template
+"acl-rule-template" with some other additional ACL entries that is properly ordered:<a href="#section-5.3-10" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.3-11">
 <pre>
 &lt;acls xmlns:template="urn:ietf:params:xml:ns:yang:ietf-template"
   template:stmt-extend="acl-rule-template"&gt;
@@ -1672,10 +1690,10 @@ ordered as the first entry and ACL entry named "allow-access-from-tcp" as the la
     &lt;/matches&gt;
   &lt;/acl&gt;
 &lt;/acls&gt;
-</pre><a href="#section-5.4-8" class="pilcrow">¶</a>
+</pre><a href="#section-5.3-11" class="pilcrow">¶</a>
 </div>
-<p id="section-5.4-9">The applied ACL configuration is equivalent to the following:<a href="#section-5.4-9" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-5.4-10">
+<p id="section-5.3-12">The applied ACL configuration is equivalent to the following:<a href="#section-5.3-12" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.3-13">
 <pre>
 &lt;acls&gt;
   &lt;acl&gt;
@@ -1705,7 +1723,7 @@ ordered as the first entry and ACL entry named "allow-access-from-tcp" as the la
     &lt;action&gt;permit&lt;/action&gt;
   &lt;/acl&gt;
 &lt;/acls&gt;
-</pre><a href="#section-5.4-10" class="pilcrow">¶</a>
+</pre><a href="#section-5.3-13" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
