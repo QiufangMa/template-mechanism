@@ -118,11 +118,11 @@ that sets "mtu" as 1500 for ethernet interfaces:
 ~~~~
 <templates>
   <template>
-    <id>interface-type-mtu</id>  
+    <id>interface-type-mtu</id>
     <interfaces>
       <interface>
-        <type>ianaift:ethernetCsmacd</type>  
-        <mtu>1500</mtu>  
+        <type>ianaift:ethernetCsmacd</type>
+        <mtu>1500</mtu>
         <description>MTU value is set by template</description>
       </interface>
     </interfaces>
@@ -228,9 +228,9 @@ on the basis of template defined in {{temp-ex-interface}}:
 ~~~~
 <templates>
   <template>
-    <id>interface-type-mtu-enabled</id>  
+    <id>interface-type-mtu-enabled</id>
     <interfaces xmlns:template="urn:ietf:params:xml:ns:yang:ietf-template"
-      template:stmt-extend="interface-type-mtu">  
+      template:stmt-extend="interface-type-mtu">
       <interface>
         <enabled>true</enabled>
       </interface>
@@ -245,10 +245,10 @@ And the above interface configuration defined in the template
 ~~~~
 <interfaces>
   <interface>
-    <type>ianaift:ethernetCsmacd</type>  
-    <mtu>1500</mtu>  
+    <type>ianaift:ethernetCsmacd</type>
+    <mtu>1500</mtu>
     <description>MTU value is set by template</description>
-    <enabled>true</enabled>    
+    <enabled>true</enabled>
   </interface>
 </interfaces>
 ~~~~
