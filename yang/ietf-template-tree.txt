@@ -7,10 +7,3 @@ module: ietf-template
         +--ro last-modified?     yang:timestamp
         +--ro parent-template?   -> ../../template/id
         +--ro inherited-by*      union
-
-  rpcs:
-    +---x get-template-expansion
-       +---w input
-       |  +---w template-id?   -> /templates/template/id
-       +--ro output
-          +--ro data?   <anydata>

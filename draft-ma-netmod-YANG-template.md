@@ -277,15 +277,17 @@ needs to be 9122, and the "description" value also needs to be modified accordin
 ~~~~
 
 
-### Deletion (The "operation-tag" Metadata with "delete" Value)
+## Deletion (The "operation-tag" Metadata with "delete" Value)
 
 The deletion of configuration data is flagged by declaring the metadata object
-called "operation-tag" with a value "delete". When some node instance defined in the configuration template
+called "operation-tag" with a value "delete". If some node instance defined in the configuration template
 is intended to be deleted in the configuration explicitly by the client or by new
-templates, if the node is at a top level, the metadata object is added to that
-specific node. Servers MUST ignore this
+templates, the metadata object is added to that specific node. Servers MUST ignore this
 metadata if the configuration identified currently does not exist in the configuration
 template.
+
+The "operation-tag" metadata MUST have only one value to specify the intended operation.
+The encoding of "operation-tag" metadata object follows the way defined in {{Section 5 of ?RFC7952}}.
 
 For example, a client may want to delete the "description" node instance defined
 in {{temp-ex-interface}} for interface "eth1", and the following shows the example
@@ -322,15 +324,134 @@ And it is equivalent to the following:
 </interfaces>
 ~~~~
 
-### List/leaflists Reordering
+## List/leaf-list Reordering
 
-#### Position_first (The "operation-tag" Metadata with "Position_first" Value)
+There is a desire to reorder some existing list/leaf-list entries defined in an
+existing template, or specify the ordering of new instances when they are created.
+It only applies to lists and leaf-lists indicated with the "ordered-by user"
+statement.
 
-#### Position_last (The "operation-tag" Metadata with "Position_last" Value)
+The reordering of list/leaf-list entry data is flagged by declaring the metadata
+object called "operation-tag" with different values.
+The "operation-tag" used for reordering has one of the following values:
 
-#### Position_before (The "operation-tag" Metadata with "Position_before" Value)
+: position-first: The attached entry is positioned as the first entry in the list/leaf-list.
+  There must be no more than one entry that is annotated as "position-first" within the same operation request.
 
-#### Position_after (The "operation-tag" Metadata with "Position_after" Value)
+: position-last: The attached entry is positioned as the last entry in the list/leaf-list.
+  There must be no more than one entry that is annotated as "position-last" within the same operation request.
+
+: position-before: The attached entry is positioned before some other specified entries in the list/leaf-list.
+  This value MUST be followed by one or more space-seperated key values to indicate the entries that the attached entry is just positioned before. The "position-before" metadata and key values are seperated by colon ":".
+  There must not be any other entries that use "position-before" to target the entry attached as "position-first" within the same operation rquest.
+
+: position-after: The attached entry is positioned after some other specified entries in the list/leaf-list.
+  This value MUST be followed by one or more space-seperated key values to indicate the entries that the attached entry is just positioned after. The "position-after" metadata and key values are seperated by colon ":".
+  There must not be any other entries that use "position-after" to target the entry attached as "position-last" within the same operation request.
+
+For example, the following template provides the user-ordered ACL configuration:
+
+~~~~
+<templates>
+  <template>
+    <id>ACL-rules-template</id>  
+    <acls>
+      <acl>
+        <name>allow-access-from-tcp</name>  
+        <matches>
+          <protocol>tcp</protocol>
+        </matches>  
+        <action>permit</action>
+      </acl>  
+      <acl>
+        <name>allow-access-from-udp</name>  
+        <matches>
+          <protocol>udp</protocol>
+        </matches>  
+        <action>permit</action>
+      </acl>
+    </acls>
+  </template>
+</templates>
+~~~~
+
+If the client wants to create another template with an additional ACL entry named "deny-traffic-from-ftp"
+ordered as the first entry and ACL entry named "allow-access-from-tcp" as the last one:
+
+~~~~
+<templates>
+  <template>
+    <id>ACL-rules-template2</id>
+    <acls xmlns:template="urn:ietf:params:xml:ns:yang:ietf-template"
+      template:stmt-extend="acl-rule-template">
+      <acl template:operation-tag="position-first">
+        <name>deny-traffic-from-ftp</name>
+        <matches>
+          <protocol>ftp</protocol>
+        </matches>
+      </acl>
+      <acl template:operation-tag="position-last">
+        <name>allow-access-from-tcp</name>
+      </acl>
+    </acls>
+  </template>
+</templates>
+~~~~
+
+The client may also deliver the configuration defined in template
+"acl-rule-template" with some other additional ACL entries that is properly ordered:
+
+~~~~
+<acls xmlns:template="urn:ietf:params:xml:ns:yang:ietf-template"
+  template:stmt-extend="acl-rule-template">  
+  <acl template:operation-tag="position-before:\
+    'allow-access-from-tcp allow-access-from-udp'">
+    <name>deny-access-to-ipv4</name>  
+    <matches>
+      <destination-ipv4-network>192.0.2.0/24</destination-ipv4-network>
+    </matches>
+  </acl>  
+  <acl template:operation-tag="position-after:'deny-access-to-ipv4'">
+    <name>deny-access-to-ipv6</name>  
+    <matches>
+      <destination-ipv6-network>2001:db8::/32</destination-ipv6-network>
+    </matches>
+  </acl>
+</acls>
+~~~~
+
+The applied ACL configuration is equivalent to the following:
+
+~~~~
+<acls>
+  <acl>
+    <name>deny-access-to-ipv4</name>  
+    <matches>
+      <destination-ipv4-network>192.0.2.0/24</destination-ipv4-network>
+    </matches>
+  </acl>  
+  <acl>
+    <name>deny-access-to-ipv6</name>  
+    <matches>
+      <destination-ipv6-network>2001:db8::/32</destination-ipv6-network>
+    </matches>
+  </acl>  
+  <acl>
+    <name>allow-access-from-tcp</name>  
+    <matches>
+      <protocol>tcp</protocol>
+    </matches>  
+    <action>permit</action>
+  </acl>  
+  <acl>
+    <name>allow-access-from-udp</name>  
+    <matches>
+      <protocol>udp</protocol>
+    </matches>  
+    <action>permit</action>
+  </acl>
+</acls>
+~~~~
 
 ## Interaction with NMDA datastores
 
@@ -347,12 +468,6 @@ Configuration template which is inherited or overridden by the node instance MUS
 
 > Editor's Note: The read-back of \<running\> might break legacy clients doesn't
 understand template?
-
-
-## The "get-template-expansion" RPC
-
-## Applying Templates
-
 
 # The "ietf-template" YANG Module {#template-yang}
 
@@ -375,7 +490,6 @@ The following tree diagram {{?RFC8340}} illustrates the "ietf-template" module:
 # Security Considerations
 
 TODO Security
-
 
 # IANA Considerations
 

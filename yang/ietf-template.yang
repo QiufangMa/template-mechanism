@@ -6,18 +6,17 @@ module ietf-template {
   import ietf-yang-types {
     prefix yang;
     reference
-      "RFC 6991: Common YANG Data Types";    
+      "RFC 6991: Common YANG Data Types";
   }
-  
+
   organization
     "IETF NETMOD (Network Modeling) Working Group";
   contact
     "WG Web:   <https://datatracker.ietf.org/wg/netmod/>
      WG List:  <mailto:netmod@ietf.org>
      Author: Qiufang Ma
-             <mailto:maqiufang1@huawei.com>          
-             Zhan Wu
-             <mailto:wuzhan1@huawei.com>";
+             <mailto:maqiufang1@huawei.com>";
+             
   description
     "This module defines a template list with a RPC to expand
      the template.
@@ -42,14 +41,14 @@ module ietf-template {
      are to be interpreted as described in BCP 14 (RFC 2119)
      (RFC 8174) when, and only when, they appear in all
      capitals, as shown here.";
-   
+
    revision 2024-08-27 {
      description
        "Initial revision.";
      reference
        "RFC XXXX: YANG Templates";
-   }   
-   
+   }
+
    container templates {
      description
        "Specifies the template parameters.";
@@ -84,7 +83,7 @@ module ietf-template {
          }
          config false;
          description
-           "The identifier of the template that this template is 
+           "The identifier of the template that this template is
             inherited from.";
        }
        leaf-list inherited-by {
@@ -101,23 +100,5 @@ module ietf-template {
        }
      }
    }
-   rpc get-template-expansion {
-     description
-       "Expand a specified configuration template.";
-     input {
-       leaf template-id {
-         type leafref {
-           path "/templates/template/id";
-         }
-         description
-           "The template identifier that needs to be expanded.";
-       }
-     }
-     output {
-       anydata data {
-         description
-           "Configuration data block after template expansions.";
-       }
-     }
-  }
 }
+
