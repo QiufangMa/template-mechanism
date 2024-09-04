@@ -355,13 +355,21 @@ position-first: The attached entry is positioned as the first entry in the list/
 position-last: The attached entry is positioned as the last entry in the list/leaf-list.
   There must be no more than one entry that is annotated as "position-last" within the same operation request.
 
-position-before: The attached entry is positioned before some other specified entries in the list/leaf-list.
-  This value MUST be followed by one or more space-seperated key values to indicate the entries that the attached entry is just positioned before. The "position-before" metadata and key values are seperated by colon ":".
-  There must not be any other entries that use "position-before" to target the entry attached as "position-first" within the same operation rquest.
+position-before: The attached entry is positioned before some other specified
+  entries in the list/leaf-list. This value MUST be followed by one or more
+  space-seperated key values to indicate the entries that the attached entry is
+  just positioned before. The "position-before" metadata and key values are
+  seperated by colon ":". There must not be any other entries that use
+  "position-before" to target the entry attached as "position-first" within the
+  same operation rquest.
 
-: position-after: The attached entry is positioned after some other specified entries in the list/leaf-list.
-  This value MUST be followed by one or more space-seperated key values to indicate the entries that the attached entry is just positioned after. The "position-after" metadata and key values are seperated by colon ":".
-  There must not be any other entries that use "position-after" to target the entry attached as "position-last" within the same operation request.
+: position-after: The attached entry is positioned after some other specified
+  entries in the list/leaf-list. This value MUST be followed by one or more
+  space-seperated key values to indicate the entries that the attached entry is
+  just positioned after. The "position-after" metadata and key values are
+  seperated by colon ":". There must not be any other entries that use
+  "position-after" to target the entry attached as "position-last" within the
+  same operation request.
 
 For example, the following template provides the user-ordered ACL configuration:
 
