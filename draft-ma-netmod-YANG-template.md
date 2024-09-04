@@ -546,8 +546,7 @@ TODO Security
 
 This section provides some examples to show the use of templates.
 JSON encodings are used to not imply a preference in this document.
-The fictional data model used throughout this section is shown as follows. This
-network model is inspired by the device model defined in {{?RFC7317}}.
+The fictional data model used throughout this section is shown as follows:
 
 ~~~~
 {::include-fold ./yang/example-network-systime.yang}
@@ -573,13 +572,12 @@ template for NTP configuration, the following template configuration might be se
                                     {
                                         "name": "ntp-server-1",
                                         "alias": "primary",
-                                        "address": "ntp.service.com",
-                                        "prefer": true
+                                        "address": "ntp.example-1.com"
                                     },
                                     {
                                         "name": "ntp-server-2",
                                         "alias": "secondary",
-                                        "address": "ntp.service.backup.com"
+                                        "address": "ntp.example-2.com"
                                     }
                                 ]
                             }
@@ -613,9 +611,9 @@ is shown as follows:
                             "ntp": {
                                 "server": [
                                     {
-                                        "name": "ntp-server-secondary",
+                                        "name": "ntp-server-3",
                                         "alias": "secondary",
-                                        "address": "ntp.service.backup.com"
+                                        "address": "ntp.example-3.com"
                                     }
                                 ]
                             }
@@ -645,18 +643,18 @@ The configuration of template "template-ntp2" is equivalent to the following:
                                     {
                                         "name": "ntp-server-1",
                                         "alias": "primary",
-                                        "address": "ntp.service.com",
+                                        "address": "ntp.example-1.com",
                                         "prefer": true
                                     },
                                     {
                                         "name": "ntp-server-2",
                                         "alias": "secondary",
-                                        "address": "ntp.service.backup.com"
+                                        "address": "ntp.example-2.com"
                                     },
                                     {
-                                        "name": "ntp-server-secondary",
+                                        "name": "ntp-server-3",
                                         "alias": "secondary",
-                                        "address": "ntp.service.backup.com"
+                                        "address": "ntp.example-3.com"
                                     }
                                 ]
                             }
@@ -714,15 +712,14 @@ Which is equivalent to the following configuration:
                 "enabled": "true",
                 "server": [
                     {
-                        "name": "ntp-service-primary",
+                        "name": "ntp-server-1",
                         "alias": "primary",
-                        "address": "ntp.service.com",
-                        "prefer": true
+                        "address": "ntp.example-1.com"
                     },
                     {
-                        "name": "ntp-service-secondary",
+                        "name": "ntp-server-2",
                         "alias": "secondary",
-                        "address": "ntp.service.backup.com"
+                        "address": "ntp.example-2.com"
                     }
                 ]
             }
@@ -735,13 +732,12 @@ Which is equivalent to the following configuration:
                     {
                         "name": "ntp-server-1",
                         "alias": "primary",
-                        "address": "ntp.service.com",
-                        "prefer": true
+                        "address": "ntp.example-1.com"
                     },
                     {
                         "name": "ntp-server-2",
                         "alias": "secondary",
-                        "address": "ntp.service.backup.com"
+                        "address": "ntp.example-2.com"
                     }
                 ]
             }
@@ -754,18 +750,17 @@ Which is equivalent to the following configuration:
                     {
                         "name": "ntp-server-1",
                         "alias": "primary",
-                        "address": "ntp.service.com",
-                        "prefer": true
+                        "address": "ntp.example-1.com"
                     },
                     {
                         "name": "ntp-server-2",
                         "alias": "secondary",
-                        "address": "ntp.service.backup.com"
+                        "address": "ntp.example-2.com"
                     },
                     {
-                        "name": "ntp-server-secondary",
+                        "name": "ntp-server-3",
                         "alias": "secondary",
-                        "address": "ntp.service.backup.com"
+                        "address": "ntp.example-3.com"
                     }
                 ]
             }
@@ -778,18 +773,17 @@ Which is equivalent to the following configuration:
                     {
                         "name": "ntp-server-1",
                         "alias": "primary",
-                        "address": "ntp.service.com",
-                        "prefer": true
+                        "address": "ntp.example-1.com"
                     },
                     {
                         "name": "ntp-server-2",
                         "alias": "secondary",
-                        "address": "ntp.service.backup.com"
+                        "address": "ntp.example-2.com"
                     },
                     {
-                        "name": "ntp-server-secondary",
+                        "name": "ntp-server-3",
                         "alias": "secondary",
-                        "address": "ntp.service.backup.com"
+                        "address": "ntp.example-3.com"
                     }
                 ]
             }
@@ -800,8 +794,12 @@ Which is equivalent to the following configuration:
 
 ## Overriding Templates
 
-The client may override the template created in {{template-creation}}
+The client may override the template created in {{template-creation}} to specify
+the NTP server named "ntp-server-2" as the perferred one for device "ne-4":
 
+~~~~
+
+~~~~
 
 # Acknowledgments
 {:numbered="false"}
