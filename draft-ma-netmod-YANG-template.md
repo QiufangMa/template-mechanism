@@ -554,6 +554,23 @@ TODO Security
 
 --- back
 
+# template Syntax
+
+Some implementations support richer syntax in the template definition so that
+the use of configuration template could be more flexible.
+
+## Variable Declaration
+
+TBD
+
+## Loop Statement
+
+TBD
+
+## If-Else Statement
+
+TBD
+
 # Usage Examples {#appendix-network}
 
 This section provides some examples to show the use of templates.
