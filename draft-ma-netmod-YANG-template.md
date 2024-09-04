@@ -571,12 +571,16 @@ template for NTP configuration, the following template configuration might be se
                                 "server": [
                                     {
                                         "name": "ntp-server-1",
-                                        "alias": "primary",
+                                        "alias": [
+                                            "primary"
+                                        ],
                                         "address": "ntp.example-1.com"
                                     },
                                     {
                                         "name": "ntp-server-2",
-                                        "alias": "secondary",
+                                        "alias": [
+                                            "secondary"
+                                        ],
                                         "address": "ntp.example-2.com"
                                     }
                                 ]
@@ -612,7 +616,9 @@ is shown as follows:
                                 "server": [
                                     {
                                         "name": "ntp-server-3",
-                                        "alias": "secondary",
+                                        "alias": [
+                                            "secondary"
+                                        ],
                                         "address": "ntp.example-3.com"
                                     }
                                 ]
@@ -642,18 +648,24 @@ The configuration of template "template-ntp2" is equivalent to the following:
                                 "server": [
                                     {
                                         "name": "ntp-server-1",
-                                        "alias": "primary",
+                                        "alias": [
+                                            "primary"
+                                        ],
                                         "address": "ntp.example-1.com",
                                         "prefer": true
                                     },
                                     {
                                         "name": "ntp-server-2",
-                                        "alias": "secondary",
+                                        "alias": [
+                                            "secondary"
+                                        ],
                                         "address": "ntp.example-2.com"
                                     },
                                     {
                                         "name": "ntp-server-3",
-                                        "alias": "secondary",
+                                        "alias": [
+                                            "secondary"
+                                        ],
                                         "address": "ntp.example-3.com"
                                     }
                                 ]
@@ -701,7 +713,7 @@ using "template-ntp" and "template-ntp2" that may be sent to a SDN controller:
 }
 ~~~~
 
-Which is equivalent to the following configuration:
+And it is equivalent to the following configuration:
 
 ~~~~
 {
@@ -713,12 +725,16 @@ Which is equivalent to the following configuration:
                 "server": [
                     {
                         "name": "ntp-server-1",
-                        "alias": "primary",
+                        "alias": [
+                            "primary"
+                        ],
                         "address": "ntp.example-1.com"
                     },
                     {
                         "name": "ntp-server-2",
-                        "alias": "secondary",
+                        "alias": [
+                            "secondary"
+                        ],
                         "address": "ntp.example-2.com"
                     }
                 ]
@@ -731,12 +747,16 @@ Which is equivalent to the following configuration:
                 "server": [
                     {
                         "name": "ntp-server-1",
-                        "alias": "primary",
+                        "alias": [
+                            "primary"
+                        ],
                         "address": "ntp.example-1.com"
                     },
                     {
                         "name": "ntp-server-2",
-                        "alias": "secondary",
+                        "alias": [
+                            "secondary"
+                        ],
                         "address": "ntp.example-2.com"
                     }
                 ]
@@ -749,17 +769,23 @@ Which is equivalent to the following configuration:
                 "server": [
                     {
                         "name": "ntp-server-1",
-                        "alias": "primary",
+                        "alias": [
+                            "primary"
+                        ],
                         "address": "ntp.example-1.com"
                     },
                     {
                         "name": "ntp-server-2",
-                        "alias": "secondary",
+                        "alias": [
+                            "secondary"
+                        ],
                         "address": "ntp.example-2.com"
                     },
                     {
                         "name": "ntp-server-3",
-                        "alias": "secondary",
+                        "alias": [
+                            "secondary"
+                        ],
                         "address": "ntp.example-3.com"
                     }
                 ]
@@ -772,17 +798,23 @@ Which is equivalent to the following configuration:
                 "server": [
                     {
                         "name": "ntp-server-1",
-                        "alias": "primary",
+                        "alias": [
+                            "primary"
+                        ],
                         "address": "ntp.example-1.com"
                     },
                     {
                         "name": "ntp-server-2",
-                        "alias": "secondary",
+                        "alias": [
+                            "secondary"
+                        ],
                         "address": "ntp.example-2.com"
                     },
                     {
                         "name": "ntp-server-3",
-                        "alias": "secondary",
+                        "alias": [
+                            "secondary"
+                        ],
                         "address": "ntp.example-3.com"
                     }
                 ]
@@ -798,7 +830,79 @@ The client may override the template created in {{template-creation}} to specify
 the NTP server named "ntp-server-2" as the perferred one for device "ne-4":
 
 ~~~~
-ee
+{
+    "example-network-systime:network-device": [
+        {
+            "@": {
+                "ietf-template:stmt-extend": "template-ntp"
+            },
+            "device-id": "ne-4",
+            "server": [
+                {
+                    "name": "ntp-server-1",
+                    "alias": [
+                        "primary",
+                        "secondary"
+                    ],
+                    "@alias": [
+                        {
+                            "ietf-template:operation-tag": "delete"
+                        }
+                    ],
+                    "address": "ntp.example-1.com"
+                },
+                {
+                    "@": {
+                        "ietf-template:operation-tag": "position-first"
+                    },
+                    "name": "ntp-server-2",
+                    "alias": [
+                        "primary",
+                        "secondary"
+                    ],
+                    "@alias": [
+                        null,
+                        {
+                            "ietf-template:operation-tag": "delete"
+                        }
+                    ],
+                    "address": "ntp.example-2.com"
+                }
+            ]
+        }
+    ]
+}
+~~~~
+
+It is equivalent to the configuration as follows:
+
+~~~~
+{
+    "example-network-systime:network-device": [
+        {
+            "device-id": "ne-4",
+            "ntp": {
+                "enabled": "true",
+                "server": [
+                    {
+                        "name": "ntp-server-2",
+                        "alias": [
+                            "primary"
+                        ],
+                        "address": "ntp.example-2.com"
+                    },
+                    {
+                        "name": "ntp-server-1",
+                        "alias": [
+                            "secondary"
+                        ],
+                        "address": "ntp.example-1.com"
+                    }
+                ]
+            }
+        }
+    ]
+}
 ~~~~
 
 # Acknowledgments
