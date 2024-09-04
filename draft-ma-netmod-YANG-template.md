@@ -571,13 +571,13 @@ template for NTP configuration, the following template configuration might be se
                                 "enabled": "true",
                                 "server": [
                                     {
-                                        "name": "ntp-service-primary",
+                                        "name": "ntp-server-1",
                                         "alias": "primary",
                                         "address": "ntp.service.com",
                                         "prefer": true
                                     },
                                     {
-                                        "name": "ntp-service-secondary",
+                                        "name": "ntp-server-2",
                                         "alias": "secondary",
                                         "address": "ntp.service.backup.com"
                                     }
@@ -592,7 +592,7 @@ template for NTP configuration, the following template configuration might be se
 }
 ~~~~
 
-## Inheriting An Existing Template {#template-inherits}
+## Inheriting Templates {#template-inherits}
 
 The operator may create another template with an additional NTP server instance
 when inheriting the template created in {{template-creation}}. The configuration
@@ -613,7 +613,7 @@ is shown as follows:
                             "ntp": {
                                 "server": [
                                     {
-                                        "name": "ntp-service-secondary-2",
+                                        "name": "ntp-server-secondary",
                                         "alias": "secondary",
                                         "address": "ntp.service.backup.com"
                                     }
@@ -643,18 +643,18 @@ The configuration of template "template-ntp2" is equivalent to the following:
                                 "enabled": "true",
                                 "server": [
                                     {
-                                        "name": "ntp-service-primary",
+                                        "name": "ntp-server-1",
                                         "alias": "primary",
                                         "address": "ntp.service.com",
                                         "prefer": true
                                     },
                                     {
-                                        "name": "ntp-service-secondary",
+                                        "name": "ntp-server-2",
                                         "alias": "secondary",
                                         "address": "ntp.service.backup.com"
                                     },
                                     {
-                                        "name": "ntp-service-secondary-2",
+                                        "name": "ntp-server-secondary",
                                         "alias": "secondary",
                                         "address": "ntp.service.backup.com"
                                     }
@@ -733,13 +733,13 @@ Which is equivalent to the following configuration:
                 "enabled": "true",
                 "server": [
                     {
-                        "name": "ntp-service-primary",
+                        "name": "ntp-server-1",
                         "alias": "primary",
                         "address": "ntp.service.com",
                         "prefer": true
                     },
                     {
-                        "name": "ntp-service-secondary",
+                        "name": "ntp-server-2",
                         "alias": "secondary",
                         "address": "ntp.service.backup.com"
                     }
@@ -752,18 +752,18 @@ Which is equivalent to the following configuration:
                 "enabled": "true",
                 "server": [
                     {
-                        "name": "ntp-service-primary",
+                        "name": "ntp-server-1",
                         "alias": "primary",
                         "address": "ntp.service.com",
                         "prefer": true
                     },
                     {
-                        "name": "ntp-service-secondary",
+                        "name": "ntp-server-2",
                         "alias": "secondary",
                         "address": "ntp.service.backup.com"
                     },
                     {
-                        "name": "ntp-service-secondary-2",
+                        "name": "ntp-server-secondary",
                         "alias": "secondary",
                         "address": "ntp.service.backup.com"
                     }
@@ -776,18 +776,18 @@ Which is equivalent to the following configuration:
                 "enabled": "true",
                 "server": [
                     {
-                        "name": "ntp-service-primary",
+                        "name": "ntp-server-1",
                         "alias": "primary",
                         "address": "ntp.service.com",
                         "prefer": true
                     },
                     {
-                        "name": "ntp-service-secondary",
+                        "name": "ntp-server-2",
                         "alias": "secondary",
                         "address": "ntp.service.backup.com"
                     },
                     {
-                        "name": "ntp-service-secondary-2",
+                        "name": "ntp-server-secondary",
                         "alias": "secondary",
                         "address": "ntp.service.backup.com"
                     }
@@ -798,9 +798,9 @@ Which is equivalent to the following configuration:
 }
 ~~~~
 
-## Overriding An Existing Template
+## Overriding Templates
 
-
+The client may override the template created in {{template-creation}}
 
 
 # Acknowledgments
