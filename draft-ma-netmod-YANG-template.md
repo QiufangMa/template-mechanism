@@ -798,7 +798,7 @@ The client may override the template created in {{template-creation}} to specify
 the NTP server named "ntp-server-2" as the perferred one for device "ne-4":
 
 ~~~~
-
+ee
 ~~~~
 
 # Acknowledgments

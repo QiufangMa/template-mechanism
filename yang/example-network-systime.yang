@@ -18,6 +18,7 @@ module example-network-systime {
         mandatory true;
       }
       list server {
+        ordered-by user;
         key name;
         leaf name {
           type string;
@@ -32,10 +33,6 @@ module example-network-systime {
         leaf port {
           type inet:port-number;
           default 123;
-        }
-        leaf prefer {
-          type boolean;
-          default false;
         }
       }
     }
