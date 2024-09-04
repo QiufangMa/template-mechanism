@@ -88,10 +88,14 @@ Table of Contents
    11. References
      11.1.  Normative References
      11.2.  Informative References
-   Appendix A.  Usage Examples
-     A.1.  Creating Templates
-     A.2.  Inheriting Templates
-     A.3.  Overriding Templates
+   Appendix A.  template Syntax
+     A.1.  Variable Declaration
+     A.2.  Loop Statement
+     A.3.  If-Else Statement
+   Appendix B.  Usage Examples
+     B.1.  Creating Templates
+     B.2.  Inheriting Templates
+     B.3.  Overriding Templates
    Acknowledgments
    Author's Address
 
@@ -321,7 +325,7 @@ Table of Contents
      </interface>
    </interfaces>
 
-   Appendix A.2 provides more examples of inheriting an existing
+   Appendix B.2 provides more examples of inheriting an existing
    template by indicating the "stmt-extend" metadata object.
 
 5.  Overriding Templates
@@ -572,7 +576,7 @@ Table of Contents
    (SDN) [RFC7149] [RFC7426] controller defines configuration that may
    be shared by multiple network devices.  While device-level template
    maintained by the network element defines configuration that can only
-   be applied to specific network devices.  Refer to Appendix A for
+   be applied to specific network devices.  Refer to Appendix B for
    examples of network-level templates.
 
 8.  The "ietf-template" YANG Module
@@ -802,7 +806,24 @@ Table of Contents
               (NMDA)", RFC 8342, DOI 10.17487/RFC8342, March 2018,
               <https://www.rfc-editor.org/rfc/rfc8342>.
 
-Appendix A.  Usage Examples
+Appendix A.  template Syntax
+
+   Some implementations support richer syntax in the template definition
+   so that the use of configuration template could be more flexible.
+
+A.1.  Variable Declaration
+
+   TBD
+
+A.2.  Loop Statement
+
+   TBD
+
+A.3.  If-Else Statement
+
+   TBD
+
+Appendix B.  Usage Examples
 
    This section provides some examples to show the use of templates.
    JSON encodings are used to not imply a preference in this document.
@@ -850,7 +871,7 @@ Appendix A.  Usage Examples
      }
    }
 
-A.1.  Creating Templates
+B.1.  Creating Templates
 
    The NTP configuration on multiple network devices may be consistent.
    To create a template for NTP configuration, the following template
@@ -891,10 +912,10 @@ A.1.  Creating Templates
       }
   }
 
-A.2.  Inheriting Templates
+B.2.  Inheriting Templates
 
    The operator may create another template with an additional NTP
-   server instance when inheriting the template created in Appendix A.1.
+   server instance when inheriting the template created in Appendix B.1.
    The configuration is shown as follows:
 
 {
@@ -1115,9 +1136,9 @@ A.2.  Inheriting Templates
        ]
    }
 
-A.3.  Overriding Templates
+B.3.  Overriding Templates
 
-   The client may override the template created in Appendix A.1 to
+   The client may override the template created in Appendix B.1 to
    specify the NTP server named "ntp-server-2" as the perferred one for
    device "ne-4":
 
