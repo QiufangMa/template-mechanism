@@ -349,13 +349,16 @@ The reordering of list/leaf-list entry data is flagged by declaring the metadata
 object called "operation-tag" with different values. The "operation-tag" used
 for reordering has one of the following values:
 
-position-first: The attached entry is positioned as the first entry in the list/leaf-list.
+* position-first:
+: The attached entry is positioned as the first entry in the list/leaf-list.
   There must be no more than one entry that is annotated as "position-first" within the same operation request.
 
-position-last: The attached entry is positioned as the last entry in the list/leaf-list.
+* position-last:
+: The attached entry is positioned as the last entry in the list/leaf-list.
   There must be no more than one entry that is annotated as "position-last" within the same operation request.
 
-position-before: The attached entry is positioned before some other specified
+* position-before:
+: The attached entry is positioned before some other specified
   entries in the list/leaf-list. This value MUST be followed by one or more
   space-seperated key values to indicate the entries that the attached entry is
   just positioned before. The "position-before" metadata and key values are
@@ -363,7 +366,8 @@ position-before: The attached entry is positioned before some other specified
   "position-before" to target the entry attached as "position-first" within the
   same operation rquest.
 
-: position-after: The attached entry is positioned after some other specified
+* position-after:
+: The attached entry is positioned after some other specified
   entries in the list/leaf-list. This value MUST be followed by one or more
   space-seperated key values to indicate the entries that the attached entry is
   just positioned after. The "position-after" metadata and key values are
