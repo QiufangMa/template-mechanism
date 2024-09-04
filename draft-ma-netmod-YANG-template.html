@@ -2011,10 +2011,6 @@ module ietf-template {
         <dd>
 <span class="refAuthor">Boucadair, M.</span> and <span class="refAuthor">C. Jacquenet</span>, <span class="refTitle">"Software-Defined Networking: A Perspective from within a Service Provider Environment"</span>, <span class="seriesInfo">RFC 7149</span>, <span class="seriesInfo">DOI 10.17487/RFC7149</span>, <time datetime="2014-03" class="refDate">March 2014</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7149">https://www.rfc-editor.org/rfc/rfc7149</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="RFC7317">[RFC7317]</dt>
-        <dd>
-<span class="refAuthor">Bierman, A.</span> and <span class="refAuthor">M. Bjorklund</span>, <span class="refTitle">"A YANG Data Model for System Management"</span>, <span class="seriesInfo">RFC 7317</span>, <span class="seriesInfo">DOI 10.17487/RFC7317</span>, <time datetime="2014-08" class="refDate">August 2014</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7317">https://www.rfc-editor.org/rfc/rfc7317</a>&gt;</span>. </dd>
-<dd class="break"></dd>
 <dt id="RFC7426">[RFC7426]</dt>
         <dd>
 <span class="refAuthor">Haleplidis, E., Ed.</span>, <span class="refAuthor">Pentikousis, K., Ed.</span>, <span class="refAuthor">Denazis, S.</span>, <span class="refAuthor">Hadi Salim, J.</span>, <span class="refAuthor">Meyer, D.</span>, and <span class="refAuthor">O. Koufopavlou</span>, <span class="refTitle">"Software-Defined Networking (SDN): Layers and Architecture Terminology"</span>, <span class="seriesInfo">RFC 7426</span>, <span class="seriesInfo">DOI 10.17487/RFC7426</span>, <time datetime="2015-01" class="refDate">January 2015</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7426">https://www.rfc-editor.org/rfc/rfc7426</a>&gt;</span>. </dd>
@@ -2043,8 +2039,7 @@ module ietf-template {
       </h2>
 <p id="appendix-A-1">This section provides some examples to show the use of templates.
 JSON encodings are used to not imply a preference in this document.
-The fictional data model used throughout this section is shown as follows. This
-network model is inspired by the device model defined in <span>[<a href="#RFC7317" class="cite xref">RFC7317</a>]</span>.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
+The fictional data model used throughout this section is shown as follows:<a href="#appendix-A-1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="appendix-A-2">
 <pre>
 module example-network-systime {
@@ -2067,6 +2062,7 @@ module example-network-systime {
         mandatory true;
       }
       list server {
+        ordered-by user;
         key name;
         leaf name {
           type string;
@@ -2081,10 +2077,6 @@ module example-network-systime {
         leaf port {
           type inet:port-number;
           default 123;
-        }
-        leaf prefer {
-          type boolean;
-          default false;
         }
       }
     }
@@ -2115,13 +2107,12 @@ template for NTP configuration, the following template configuration might be se
                                     {
                                         "name": "ntp-server-1",
                                         "alias": "primary",
-                                        "address": "ntp.service.com",
-                                        "prefer": true
+                                        "address": "ntp.example-1.com"
                                     },
                                     {
                                         "name": "ntp-server-2",
                                         "alias": "secondary",
-                                        "address": "ntp.service.backup.com"
+                                        "address": "ntp.example-2.com"
                                     }
                                 ]
                             }
@@ -2160,9 +2151,9 @@ is shown as follows:<a href="#appendix-A.2-1" class="pilcrow">¶</a></p>
                             "ntp": {
                                 "server": [
                                     {
-                                        "name": "ntp-server-secondary",
+                                        "name": "ntp-server-3",
                                         "alias": "secondary",
-                                        "address": "ntp.service.backup.com"
+                                        "address": "ntp.example-3.com"
                                     }
                                 ]
                             }
@@ -2192,18 +2183,18 @@ is shown as follows:<a href="#appendix-A.2-1" class="pilcrow">¶</a></p>
                                     {
                                         "name": "ntp-server-1",
                                         "alias": "primary",
-                                        "address": "ntp.service.com",
+                                        "address": "ntp.example-1.com",
                                         "prefer": true
                                     },
                                     {
                                         "name": "ntp-server-2",
                                         "alias": "secondary",
-                                        "address": "ntp.service.backup.com"
+                                        "address": "ntp.example-2.com"
                                     },
                                     {
-                                        "name": "ntp-server-secondary",
+                                        "name": "ntp-server-3",
                                         "alias": "secondary",
-                                        "address": "ntp.service.backup.com"
+                                        "address": "ntp.example-3.com"
                                     }
                                 ]
                             }
@@ -2261,15 +2252,14 @@ using "template-ntp" and "template-ntp2" that may be sent to a SDN controller:<a
                 "enabled": "true",
                 "server": [
                     {
-                        "name": "ntp-service-primary",
+                        "name": "ntp-server-1",
                         "alias": "primary",
-                        "address": "ntp.service.com",
-                        "prefer": true
+                        "address": "ntp.example-1.com"
                     },
                     {
-                        "name": "ntp-service-secondary",
+                        "name": "ntp-server-2",
                         "alias": "secondary",
-                        "address": "ntp.service.backup.com"
+                        "address": "ntp.example-2.com"
                     }
                 ]
             }
@@ -2282,13 +2272,12 @@ using "template-ntp" and "template-ntp2" that may be sent to a SDN controller:<a
                     {
                         "name": "ntp-server-1",
                         "alias": "primary",
-                        "address": "ntp.service.com",
-                        "prefer": true
+                        "address": "ntp.example-1.com"
                     },
                     {
                         "name": "ntp-server-2",
                         "alias": "secondary",
-                        "address": "ntp.service.backup.com"
+                        "address": "ntp.example-2.com"
                     }
                 ]
             }
@@ -2301,18 +2290,17 @@ using "template-ntp" and "template-ntp2" that may be sent to a SDN controller:<a
                     {
                         "name": "ntp-server-1",
                         "alias": "primary",
-                        "address": "ntp.service.com",
-                        "prefer": true
+                        "address": "ntp.example-1.com"
                     },
                     {
                         "name": "ntp-server-2",
                         "alias": "secondary",
-                        "address": "ntp.service.backup.com"
+                        "address": "ntp.example-2.com"
                     },
                     {
-                        "name": "ntp-server-secondary",
+                        "name": "ntp-server-3",
                         "alias": "secondary",
-                        "address": "ntp.service.backup.com"
+                        "address": "ntp.example-3.com"
                     }
                 ]
             }
@@ -2325,18 +2313,17 @@ using "template-ntp" and "template-ntp2" that may be sent to a SDN controller:<a
                     {
                         "name": "ntp-server-1",
                         "alias": "primary",
-                        "address": "ntp.service.com",
-                        "prefer": true
+                        "address": "ntp.example-1.com"
                     },
                     {
                         "name": "ntp-server-2",
                         "alias": "secondary",
-                        "address": "ntp.service.backup.com"
+                        "address": "ntp.example-2.com"
                     },
                     {
-                        "name": "ntp-server-secondary",
+                        "name": "ntp-server-3",
                         "alias": "secondary",
-                        "address": "ntp.service.backup.com"
+                        "address": "ntp.example-3.com"
                     }
                 ]
             }
@@ -2352,7 +2339,13 @@ using "template-ntp" and "template-ntp2" that may be sent to a SDN controller:<a
         <h3 id="name-overriding-templates-2">
 <a href="#appendix-A.3" class="section-number selfRef">A.3. </a><a href="#name-overriding-templates-2" class="section-name selfRef">Overriding Templates</a>
         </h3>
-<p id="appendix-A.3-1">The client may override the template created in <a href="#template-creation" class="auto internal xref">Appendix A.1</a><a href="#appendix-A.3-1" class="pilcrow">¶</a></p>
+<p id="appendix-A.3-1">The client may override the template created in <a href="#template-creation" class="auto internal xref">Appendix A.1</a> to specify
+the NTP server named "ntp-server-2" as the perferred one for device "ne-4":<a href="#appendix-A.3-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="appendix-A.3-2">
+<pre>
+ee
+</pre><a href="#appendix-A.3-2" class="pilcrow">¶</a>
+</div>
 </section>
 </div>
 </section>

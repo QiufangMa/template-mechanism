@@ -782,10 +782,6 @@ Table of Contents
               Environment", RFC 7149, DOI 10.17487/RFC7149, March 2014,
               <https://www.rfc-editor.org/rfc/rfc7149>.
 
-   [RFC7317]  Bierman, A. and M. Bjorklund, "A YANG Data Model for
-              System Management", RFC 7317, DOI 10.17487/RFC7317, August
-              2014, <https://www.rfc-editor.org/rfc/rfc7317>.
-
    [RFC7426]  Haleplidis, E., Ed., Pentikousis, K., Ed., Denazis, S.,
               Hadi Salim, J., Meyer, D., and O. Koufopavlou, "Software-
               Defined Networking (SDN): Layers and Architecture
@@ -810,8 +806,7 @@ Appendix A.  Usage Examples
    This section provides some examples to show the use of templates.
    JSON encodings are used to not imply a preference in this document.
    The fictional data model used throughout this section is shown as
-   follows.  This network model is inspired by the device model defined
-   in [RFC7317].
+   follows:
 
    module example-network-systime {
      yang-version 1.1;
@@ -833,6 +828,7 @@ Appendix A.  Usage Examples
            mandatory true;
          }
          list server {
+           ordered-by user;
            key name;
            leaf name {
              type string;
@@ -848,10 +844,6 @@ Appendix A.  Usage Examples
              type inet:port-number;
              default 123;
            }
-           leaf prefer {
-             type boolean;
-             default false;
-           }
          }
        }
      }
@@ -863,37 +855,36 @@ A.1.  Creating Templates
    To create a template for NTP configuration, the following template
    configuration might be sent to a SDN controller:
 
-{
-    "ietf-templates:templates": {
-        "template": [
-            {
-                "id": "template-ntp",
-                "content": {
-                    "network-device": [
-                        {
-                            "ntp": {
-                                "enabled": "true",
-                                "server": [
-                                    {
-                                        "name": "ntp-server-1",
-                                        "alias": "primary",
-                                        "address": "ntp.service.com",
-                                        "prefer": true
-                                    },
-                                    {
-                                        "name": "ntp-server-2",
-                                        "alias": "secondary",
-                                        "address": "ntp.service.backup.com"
-                                    }
-                                ]
-                            }
-                        }
-                    ]
-                }
-            }
-        ]
-    }
-}
+  {
+      "ietf-templates:templates": {
+          "template": [
+              {
+                  "id": "template-ntp",
+                  "content": {
+                      "network-device": [
+                          {
+                              "ntp": {
+                                  "enabled": "true",
+                                  "server": [
+                                      {
+                                          "name": "ntp-server-1",
+                                          "alias": "primary",
+                                          "address": "ntp.example-1.com"
+                                      },
+                                      {
+                                          "name": "ntp-server-2",
+                                          "alias": "secondary",
+                                          "address": "ntp.example-2.com"
+                                      }
+                                  ]
+                              }
+                          }
+                      ]
+                  }
+              }
+          ]
+      }
+  }
 
 A.2.  Inheriting Templates
 
@@ -915,9 +906,9 @@ A.2.  Inheriting Templates
                             "ntp": {
                                 "server": [
                                     {
-                                        "name": "ntp-server-secondary",
+                                        "name": "ntp-server-3",
                                         "alias": "secondary",
-                                        "address": "ntp.service.backup.com"
+                                        "address": "ntp.example-3.com"
                                     }
                                 ]
                             }
@@ -932,42 +923,42 @@ A.2.  Inheriting Templates
    The configuration of template "template-ntp2" is equivalent to the
    following:
 
-{
-    "ietf-templates:templates": {
-        "template": [
-            {
-                "id": "template-ntp2",
-                "content": {
-                    "network-device": [
-                        {
-                            "ntp": {
-                                "enabled": "true",
-                                "server": [
-                                    {
-                                        "name": "ntp-server-1",
-                                        "alias": "primary",
-                                        "address": "ntp.service.com",
-                                        "prefer": true
-                                    },
-                                    {
-                                        "name": "ntp-server-2",
-                                        "alias": "secondary",
-                                        "address": "ntp.service.backup.com"
-                                    },
-                                    {
-                                        "name": "ntp-server-secondary",
-                                        "alias": "secondary",
-                                        "address": "ntp.service.backup.com"
-                                    }
-                                ]
-                            }
-                        }
-                    ]
-                }
-            }
-        ]
-    }
-}
+ {
+     "ietf-templates:templates": {
+         "template": [
+             {
+                 "id": "template-ntp2",
+                 "content": {
+                     "network-device": [
+                         {
+                             "ntp": {
+                                 "enabled": "true",
+                                 "server": [
+                                     {
+                                         "name": "ntp-server-1",
+                                         "alias": "primary",
+                                         "address": "ntp.example-1.com",
+                                         "prefer": true
+                                     },
+                                     {
+                                         "name": "ntp-server-2",
+                                         "alias": "secondary",
+                                         "address": "ntp.example-2.com"
+                                     },
+                                     {
+                                         "name": "ntp-server-3",
+                                         "alias": "secondary",
+                                         "address": "ntp.example-3.com"
+                                     }
+                                 ]
+                             }
+                         }
+                     ]
+                 }
+             }
+         ]
+     }
+ }
 
    the following shows the network-level ntp configuration using
    "template-ntp" and "template-ntp2" that may be sent to a SDN
@@ -1012,15 +1003,14 @@ A.2.  Inheriting Templates
                    "enabled": "true",
                    "server": [
                        {
-                           "name": "ntp-service-primary",
+                           "name": "ntp-server-1",
                            "alias": "primary",
-                           "address": "ntp.service.com",
-                           "prefer": true
+                           "address": "ntp.example-1.com"
                        },
                        {
-                           "name": "ntp-service-secondary",
+                           "name": "ntp-server-2",
                            "alias": "secondary",
-                           "address": "ntp.service.backup.com"
+                           "address": "ntp.example-2.com"
                        }
                    ]
                }
@@ -1033,13 +1023,12 @@ A.2.  Inheriting Templates
                        {
                            "name": "ntp-server-1",
                            "alias": "primary",
-                           "address": "ntp.service.com",
-                           "prefer": true
+                           "address": "ntp.example-1.com"
                        },
                        {
                            "name": "ntp-server-2",
                            "alias": "secondary",
-                           "address": "ntp.service.backup.com"
+                           "address": "ntp.example-2.com"
                        }
                    ]
                }
@@ -1052,18 +1041,17 @@ A.2.  Inheriting Templates
                        {
                            "name": "ntp-server-1",
                            "alias": "primary",
-                           "address": "ntp.service.com",
-                           "prefer": true
+                           "address": "ntp.example-1.com"
                        },
                        {
                            "name": "ntp-server-2",
                            "alias": "secondary",
-                           "address": "ntp.service.backup.com"
+                           "address": "ntp.example-2.com"
                        },
                        {
-                           "name": "ntp-server-secondary",
+                           "name": "ntp-server-3",
                            "alias": "secondary",
-                           "address": "ntp.service.backup.com"
+                           "address": "ntp.example-3.com"
                        }
                    ]
                }
@@ -1076,18 +1064,17 @@ A.2.  Inheriting Templates
                        {
                            "name": "ntp-server-1",
                            "alias": "primary",
-                           "address": "ntp.service.com",
-                           "prefer": true
+                           "address": "ntp.example-1.com"
                        },
                        {
                            "name": "ntp-server-2",
                            "alias": "secondary",
-                           "address": "ntp.service.backup.com"
+                           "address": "ntp.example-2.com"
                        },
                        {
-                           "name": "ntp-server-secondary",
+                           "name": "ntp-server-3",
                            "alias": "secondary",
-                           "address": "ntp.service.backup.com"
+                           "address": "ntp.example-3.com"
                        }
                    ]
                }
@@ -1097,7 +1084,11 @@ A.2.  Inheriting Templates
 
 A.3.  Overriding Templates
 
-   The client may override the template created in Appendix A.1
+   The client may override the template created in Appendix A.1 to
+   specify the NTP server named "ntp-server-2" as the perferred one for
+   device "ne-4":
+
+   ee
 
 Acknowledgments
 
