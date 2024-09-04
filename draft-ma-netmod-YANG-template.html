@@ -1592,55 +1592,60 @@ statement.<a href="#section-5.3-1" class="pilcrow">¶</a></p>
 <p id="section-5.3-2">The reordering of list/leaf-list entry data is flagged by declaring the metadata
 object called "operation-tag" with different values. The "operation-tag" used
 for reordering has one of the following values:<a href="#section-5.3-2" class="pilcrow">¶</a></p>
-<p id="section-5.3-3">position-first: The attached entry is positioned as the first entry in the list/leaf-list.
-  There must be no more than one entry that is annotated as "position-first" within the same operation request.<a href="#section-5.3-3" class="pilcrow">¶</a></p>
-<p id="section-5.3-4">position-last: The attached entry is positioned as the last entry in the list/leaf-list.
-  There must be no more than one entry that is annotated as "position-last" within the same operation request.<a href="#section-5.3-4" class="pilcrow">¶</a></p>
-<span class="break"></span><dl class="dlParallel" id="section-5.3-5">
-          <dt id="section-5.3-5.1">position-before: The attached entry is positioned before some other specified</dt>
-          <dd style="margin-left: 1.5em" id="section-5.3-5.2">
-            <p id="section-5.3-5.2.1"></p><a href="#section-5.3-5.2" class="pilcrow">¶</a>
+<ul class="normal">
+<li class="normal" id="section-5.3-3.1">
+            <span class="break"></span><dl class="dlParallel" id="section-5.3-3.1.1">
+              <dt id="section-5.3-3.1.1.1">position-first:</dt>
+              <dd style="margin-left: 1.5em" id="section-5.3-3.1.1.2">
+                <p id="section-5.3-3.1.1.2.1">The attached entry is positioned as the first entry in the list/leaf-list.
+There must be no more than one entry that is annotated as "position-first" within the same operation request.<a href="#section-5.3-3.1.1.2.1" class="pilcrow">¶</a></p>
 </dd>
-          <dd class="break"></dd>
-<dt id="section-5.3-5.3">  entries in the list/leaf-list. This value <span class="bcp14">MUST</span> be followed by one or more</dt>
-          <dd style="margin-left: 1.5em" id="section-5.3-5.4">
-            <p id="section-5.3-5.4.1"></p><a href="#section-5.3-5.4" class="pilcrow">¶</a>
+            <dd class="break"></dd>
+</dl>
+</li>
+          <li class="normal" id="section-5.3-3.2">
+            <span class="break"></span><dl class="dlParallel" id="section-5.3-3.2.1">
+              <dt id="section-5.3-3.2.1.1">position-last:</dt>
+              <dd style="margin-left: 1.5em" id="section-5.3-3.2.1.2">
+                <p id="section-5.3-3.2.1.2.1">The attached entry is positioned as the last entry in the list/leaf-list.
+There must be no more than one entry that is annotated as "position-last" within the same operation request.<a href="#section-5.3-3.2.1.2.1" class="pilcrow">¶</a></p>
 </dd>
-          <dd class="break"></dd>
-<dt id="section-5.3-5.5">  space-seperated key values to indicate the entries that the attached entry is</dt>
-          <dd style="margin-left: 1.5em" id="section-5.3-5.6">
-            <p id="section-5.3-5.6.1"></p><a href="#section-5.3-5.6" class="pilcrow">¶</a>
+            <dd class="break"></dd>
+</dl>
+</li>
+          <li class="normal" id="section-5.3-3.3">
+            <span class="break"></span><dl class="dlParallel" id="section-5.3-3.3.1">
+              <dt id="section-5.3-3.3.1.1">position-before:</dt>
+              <dd style="margin-left: 1.5em" id="section-5.3-3.3.1.2">
+                <p id="section-5.3-3.3.1.2.1">The attached entry is positioned before some other specified
+entries in the list/leaf-list. This value <span class="bcp14">MUST</span> be followed by one or more
+space-seperated key values to indicate the entries that the attached entry is
+just positioned before. The "position-before" metadata and key values are
+seperated by colon ":". There must not be any other entries that use
+"position-before" to target the entry attached as "position-first" within the
+same operation rquest.<a href="#section-5.3-3.3.1.2.1" class="pilcrow">¶</a></p>
 </dd>
-          <dd class="break"></dd>
-<dt id="section-5.3-5.7">  just positioned before. The "position-before" metadata and key values are</dt>
-          <dd style="margin-left: 1.5em" id="section-5.3-5.8">
-            <p id="section-5.3-5.8.1"></p><a href="#section-5.3-5.8" class="pilcrow">¶</a>
-</dd>
-          <dd class="break"></dd>
-<dt id="section-5.3-5.9">  seperated by colon ":". There must not be any other entries that use</dt>
-          <dd style="margin-left: 1.5em" id="section-5.3-5.10">
-            <p id="section-5.3-5.10.1"></p><a href="#section-5.3-5.10" class="pilcrow">¶</a>
-</dd>
-          <dd class="break"></dd>
-<dt id="section-5.3-5.11">  "position-before" to target the entry attached as "position-first" within the</dt>
-          <dd style="margin-left: 1.5em" id="section-5.3-5.12">
-            <p id="section-5.3-5.12.1"></p><a href="#section-5.3-5.12" class="pilcrow">¶</a>
-</dd>
-          <dd class="break"></dd>
-<dt id="section-5.3-5.13">  same operation rquest.</dt>
-          <dd style="margin-left: 1.5em" id="section-5.3-5.14">
-            <p id="section-5.3-5.14.1">position-after: The attached entry is positioned after some other specified
+            <dd class="break"></dd>
+</dl>
+</li>
+          <li class="normal" id="section-5.3-3.4">
+            <span class="break"></span><dl class="dlParallel" id="section-5.3-3.4.1">
+              <dt id="section-5.3-3.4.1.1">position-after:</dt>
+              <dd style="margin-left: 1.5em" id="section-5.3-3.4.1.2">
+                <p id="section-5.3-3.4.1.2.1">The attached entry is positioned after some other specified
 entries in the list/leaf-list. This value <span class="bcp14">MUST</span> be followed by one or more
 space-seperated key values to indicate the entries that the attached entry is
 just positioned after. The "position-after" metadata and key values are
 seperated by colon ":". There must not be any other entries that use
 "position-after" to target the entry attached as "position-last" within the
-same operation request.<a href="#section-5.3-5.14.1" class="pilcrow">¶</a></p>
+same operation request.<a href="#section-5.3-3.4.1.2.1" class="pilcrow">¶</a></p>
 </dd>
-        <dd class="break"></dd>
+            <dd class="break"></dd>
 </dl>
-<p id="section-5.3-6">For example, the following template provides the user-ordered ACL configuration:<a href="#section-5.3-6" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-5.3-7">
+</li>
+        </ul>
+<p id="section-5.3-4">For example, the following template provides the user-ordered ACL configuration:<a href="#section-5.3-4" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.3-5">
 <pre>
 &lt;templates&gt;
   &lt;template&gt;
@@ -1663,11 +1668,11 @@ same operation request.<a href="#section-5.3-5.14.1" class="pilcrow">¶</a></p>
     &lt;/acls&gt;
   &lt;/template&gt;
 &lt;/templates&gt;
-</pre><a href="#section-5.3-7" class="pilcrow">¶</a>
+</pre><a href="#section-5.3-5" class="pilcrow">¶</a>
 </div>
-<p id="section-5.3-8">If the client wants to create another template with an additional ACL entry named "deny-traffic-from-ftp"
-ordered as the first entry and ACL entry named "allow-access-from-tcp" as the last one:<a href="#section-5.3-8" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-5.3-9">
+<p id="section-5.3-6">If the client wants to create another template with an additional ACL entry named "deny-traffic-from-ftp"
+ordered as the first entry and ACL entry named "allow-access-from-tcp" as the last one:<a href="#section-5.3-6" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.3-7">
 <pre>
 &lt;templates&gt;
   &lt;template&gt;
@@ -1686,11 +1691,11 @@ ordered as the first entry and ACL entry named "allow-access-from-tcp" as the la
     &lt;/acls&gt;
   &lt;/template&gt;
 &lt;/templates&gt;
-</pre><a href="#section-5.3-9" class="pilcrow">¶</a>
+</pre><a href="#section-5.3-7" class="pilcrow">¶</a>
 </div>
-<p id="section-5.3-10">The client may also deliver the configuration defined in template
-"acl-rule-template" with some other additional ACL entries that is properly ordered:<a href="#section-5.3-10" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-5.3-11">
+<p id="section-5.3-8">The client may also deliver the configuration defined in template
+"acl-rule-template" with some other additional ACL entries that is properly ordered:<a href="#section-5.3-8" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.3-9">
 <pre>
 &lt;acls xmlns:template="urn:ietf:params:xml:ns:yang:ietf-template"
   template:stmt-extend="acl-rule-template"&gt;
@@ -1708,10 +1713,10 @@ ordered as the first entry and ACL entry named "allow-access-from-tcp" as the la
     &lt;/matches&gt;
   &lt;/acl&gt;
 &lt;/acls&gt;
-</pre><a href="#section-5.3-11" class="pilcrow">¶</a>
+</pre><a href="#section-5.3-9" class="pilcrow">¶</a>
 </div>
-<p id="section-5.3-12">The applied ACL configuration is equivalent to the following:<a href="#section-5.3-12" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-5.3-13">
+<p id="section-5.3-10">The applied ACL configuration is equivalent to the following:<a href="#section-5.3-10" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.3-11">
 <pre>
 &lt;acls&gt;
   &lt;acl&gt;
@@ -1741,7 +1746,7 @@ ordered as the first entry and ACL entry named "allow-access-from-tcp" as the la
     &lt;action&gt;permit&lt;/action&gt;
   &lt;/acl&gt;
 &lt;/acls&gt;
-</pre><a href="#section-5.3-13" class="pilcrow">¶</a>
+</pre><a href="#section-5.3-11" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
