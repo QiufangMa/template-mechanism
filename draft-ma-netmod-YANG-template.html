@@ -1597,21 +1597,45 @@ for reordering has one of the following values:<a href="#section-5.3-2" class="p
 <p id="section-5.3-4">position-last: The attached entry is positioned as the last entry in the list/leaf-list.
   There must be no more than one entry that is annotated as "position-last" within the same operation request.<a href="#section-5.3-4" class="pilcrow">¶</a></p>
 <span class="break"></span><dl class="dlParallel" id="section-5.3-5">
-          <dt id="section-5.3-5.1">position-before: The attached entry is positioned before some other specified entries in the list/leaf-list.</dt>
+          <dt id="section-5.3-5.1">position-before: The attached entry is positioned before some other specified</dt>
           <dd style="margin-left: 1.5em" id="section-5.3-5.2">
             <p id="section-5.3-5.2.1"></p><a href="#section-5.3-5.2" class="pilcrow">¶</a>
 </dd>
           <dd class="break"></dd>
-<dt id="section-5.3-5.3">  This value <span class="bcp14">MUST</span> be followed by one or more space-seperated key values to indicate the entries that the attached entry is just positioned before. The "position-before" metadata and key values are seperated by colon ":".</dt>
+<dt id="section-5.3-5.3">  entries in the list/leaf-list. This value <span class="bcp14">MUST</span> be followed by one or more</dt>
           <dd style="margin-left: 1.5em" id="section-5.3-5.4">
             <p id="section-5.3-5.4.1"></p><a href="#section-5.3-5.4" class="pilcrow">¶</a>
 </dd>
           <dd class="break"></dd>
-<dt id="section-5.3-5.5">  There must not be any other entries that use "position-before" to target the entry attached as "position-first" within the same operation rquest.</dt>
+<dt id="section-5.3-5.5">  space-seperated key values to indicate the entries that the attached entry is</dt>
           <dd style="margin-left: 1.5em" id="section-5.3-5.6">
-            <p id="section-5.3-5.6.1">position-after: The attached entry is positioned after some other specified entries in the list/leaf-list.
-This value <span class="bcp14">MUST</span> be followed by one or more space-seperated key values to indicate the entries that the attached entry is just positioned after. The "position-after" metadata and key values are seperated by colon ":".
-There must not be any other entries that use "position-after" to target the entry attached as "position-last" within the same operation request.<a href="#section-5.3-5.6.1" class="pilcrow">¶</a></p>
+            <p id="section-5.3-5.6.1"></p><a href="#section-5.3-5.6" class="pilcrow">¶</a>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-5.3-5.7">  just positioned before. The "position-before" metadata and key values are</dt>
+          <dd style="margin-left: 1.5em" id="section-5.3-5.8">
+            <p id="section-5.3-5.8.1"></p><a href="#section-5.3-5.8" class="pilcrow">¶</a>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-5.3-5.9">  seperated by colon ":". There must not be any other entries that use</dt>
+          <dd style="margin-left: 1.5em" id="section-5.3-5.10">
+            <p id="section-5.3-5.10.1"></p><a href="#section-5.3-5.10" class="pilcrow">¶</a>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-5.3-5.11">  "position-before" to target the entry attached as "position-first" within the</dt>
+          <dd style="margin-left: 1.5em" id="section-5.3-5.12">
+            <p id="section-5.3-5.12.1"></p><a href="#section-5.3-5.12" class="pilcrow">¶</a>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-5.3-5.13">  same operation rquest.</dt>
+          <dd style="margin-left: 1.5em" id="section-5.3-5.14">
+            <p id="section-5.3-5.14.1">position-after: The attached entry is positioned after some other specified
+entries in the list/leaf-list. This value <span class="bcp14">MUST</span> be followed by one or more
+space-seperated key values to indicate the entries that the attached entry is
+just positioned after. The "position-after" metadata and key values are
+seperated by colon ":". There must not be any other entries that use
+"position-after" to target the entry attached as "position-last" within the
+same operation request.<a href="#section-5.3-5.14.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
 </dl>
