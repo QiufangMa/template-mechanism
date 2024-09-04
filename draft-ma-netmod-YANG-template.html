@@ -2106,12 +2106,16 @@ template for NTP configuration, the following template configuration might be se
                                 "server": [
                                     {
                                         "name": "ntp-server-1",
-                                        "alias": "primary",
+                                        "alias": [
+                                            "primary"
+                                        ],
                                         "address": "ntp.example-1.com"
                                     },
                                     {
                                         "name": "ntp-server-2",
-                                        "alias": "secondary",
+                                        "alias": [
+                                            "secondary"
+                                        ],
                                         "address": "ntp.example-2.com"
                                     }
                                 ]
@@ -2152,7 +2156,9 @@ is shown as follows:<a href="#appendix-A.2-1" class="pilcrow">¶</a></p>
                                 "server": [
                                     {
                                         "name": "ntp-server-3",
-                                        "alias": "secondary",
+                                        "alias": [
+                                            "secondary"
+                                        ],
                                         "address": "ntp.example-3.com"
                                     }
                                 ]
@@ -2182,18 +2188,24 @@ is shown as follows:<a href="#appendix-A.2-1" class="pilcrow">¶</a></p>
                                 "server": [
                                     {
                                         "name": "ntp-server-1",
-                                        "alias": "primary",
+                                        "alias": [
+                                            "primary"
+                                        ],
                                         "address": "ntp.example-1.com",
                                         "prefer": true
                                     },
                                     {
                                         "name": "ntp-server-2",
-                                        "alias": "secondary",
+                                        "alias": [
+                                            "secondary"
+                                        ],
                                         "address": "ntp.example-2.com"
                                     },
                                     {
                                         "name": "ntp-server-3",
-                                        "alias": "secondary",
+                                        "alias": [
+                                            "secondary"
+                                        ],
                                         "address": "ntp.example-3.com"
                                     }
                                 ]
@@ -2241,7 +2253,7 @@ using "template-ntp" and "template-ntp2" that may be sent to a SDN controller:<a
 }
 </pre><a href="#appendix-A.2-6" class="pilcrow">¶</a>
 </div>
-<p id="appendix-A.2-7">Which is equivalent to the following configuration:<a href="#appendix-A.2-7" class="pilcrow">¶</a></p>
+<p id="appendix-A.2-7">And it is equivalent to the following configuration:<a href="#appendix-A.2-7" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="appendix-A.2-8">
 <pre>
 {
@@ -2253,12 +2265,16 @@ using "template-ntp" and "template-ntp2" that may be sent to a SDN controller:<a
                 "server": [
                     {
                         "name": "ntp-server-1",
-                        "alias": "primary",
+                        "alias": [
+                            "primary"
+                        ],
                         "address": "ntp.example-1.com"
                     },
                     {
                         "name": "ntp-server-2",
-                        "alias": "secondary",
+                        "alias": [
+                            "secondary"
+                        ],
                         "address": "ntp.example-2.com"
                     }
                 ]
@@ -2271,12 +2287,16 @@ using "template-ntp" and "template-ntp2" that may be sent to a SDN controller:<a
                 "server": [
                     {
                         "name": "ntp-server-1",
-                        "alias": "primary",
+                        "alias": [
+                            "primary"
+                        ],
                         "address": "ntp.example-1.com"
                     },
                     {
                         "name": "ntp-server-2",
-                        "alias": "secondary",
+                        "alias": [
+                            "secondary"
+                        ],
                         "address": "ntp.example-2.com"
                     }
                 ]
@@ -2289,17 +2309,23 @@ using "template-ntp" and "template-ntp2" that may be sent to a SDN controller:<a
                 "server": [
                     {
                         "name": "ntp-server-1",
-                        "alias": "primary",
+                        "alias": [
+                            "primary"
+                        ],
                         "address": "ntp.example-1.com"
                     },
                     {
                         "name": "ntp-server-2",
-                        "alias": "secondary",
+                        "alias": [
+                            "secondary"
+                        ],
                         "address": "ntp.example-2.com"
                     },
                     {
                         "name": "ntp-server-3",
-                        "alias": "secondary",
+                        "alias": [
+                            "secondary"
+                        ],
                         "address": "ntp.example-3.com"
                     }
                 ]
@@ -2312,17 +2338,23 @@ using "template-ntp" and "template-ntp2" that may be sent to a SDN controller:<a
                 "server": [
                     {
                         "name": "ntp-server-1",
-                        "alias": "primary",
+                        "alias": [
+                            "primary"
+                        ],
                         "address": "ntp.example-1.com"
                     },
                     {
                         "name": "ntp-server-2",
-                        "alias": "secondary",
+                        "alias": [
+                            "secondary"
+                        ],
                         "address": "ntp.example-2.com"
                     },
                     {
                         "name": "ntp-server-3",
-                        "alias": "secondary",
+                        "alias": [
+                            "secondary"
+                        ],
                         "address": "ntp.example-3.com"
                     }
                 ]
@@ -2343,8 +2375,80 @@ using "template-ntp" and "template-ntp2" that may be sent to a SDN controller:<a
 the NTP server named "ntp-server-2" as the perferred one for device "ne-4":<a href="#appendix-A.3-1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="appendix-A.3-2">
 <pre>
-ee
+{
+    "example-network-systime:network-device": [
+        {
+            "@": {
+                "ietf-template:stmt-extend": "template-ntp"
+            },
+            "device-id": "ne-4",
+            "server": [
+                {
+                    "name": "ntp-server-1",
+                    "alias": [
+                        "primary",
+                        "secondary"
+                    ],
+                    "@alias": [
+                        {
+                            "ietf-template:operation-tag": "delete"
+                        }
+                    ],
+                    "address": "ntp.example-1.com"
+                },
+                {
+                    "@": {
+                        "ietf-template:operation-tag": "position-first"
+                    },
+                    "name": "ntp-server-2",
+                    "alias": [
+                        "primary",
+                        "secondary"
+                    ],
+                    "@alias": [
+                        null,
+                        {
+                            "ietf-template:operation-tag": "delete"
+                        }
+                    ],
+                    "address": "ntp.example-2.com"
+                }
+            ]
+        }
+    ]
+}
 </pre><a href="#appendix-A.3-2" class="pilcrow">¶</a>
+</div>
+<p id="appendix-A.3-3">It is equivalent to the configuration as follows:<a href="#appendix-A.3-3" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="appendix-A.3-4">
+<pre>
+{
+    "example-network-systime:network-device": [
+        {
+            "device-id": "ne-4",
+            "ntp": {
+                "enabled": "true",
+                "server": [
+                    {
+                        "name": "ntp-server-2",
+                        "alias": [
+                            "primary"
+                        ],
+                        "address": "ntp.example-2.com"
+                    },
+                    {
+                        "name": "ntp-server-1",
+                        "alias": [
+                            "secondary"
+                        ],
+                        "address": "ntp.example-1.com"
+                    }
+                ]
+            }
+        }
+    ]
+}
+</pre><a href="#appendix-A.3-4" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
