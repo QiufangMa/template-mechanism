@@ -3,9 +3,9 @@
 
 
 Network Modeling                                                   Q. Ma
-Internet-Draft                                                    Huawei
-Intended status: Standards Track                        4 September 2024
-Expires: 8 March 2025
+Internet-Draft                                                     Q. Wu
+Intended status: Standards Track                                  Huawei
+Expires: 24 April 2025                                   21 October 2024
 
 
                              YANG Templates
@@ -46,7 +46,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 8 March 2025.
+   This Internet-Draft will expire on 24 April 2025.
 
 Copyright Notice
 
@@ -97,7 +97,7 @@ Table of Contents
      B.2.  Inheriting Templates
      B.3.  Overriding Templates
    Acknowledgments
-   Author's Address
+   Authors' Addresses
 
 1.  Introduction
 
@@ -110,7 +110,7 @@ Table of Contents
    circuits (ACs).
 
    However, it is not trivial to always take care of the definition of
-   shared profiles/ policies/templates during the design of every data
+   shared profiles/policies/templates during the design of every data
    model.  There is a desire to make use of common YANG-based templates
    without relying on specific definition in YANG data models.
 
@@ -239,19 +239,18 @@ Table of Contents
    additional configuration is intended to be defined on the basis of
    the parent template.
 
-   Any modification to the parent template also applies somewhere
-   inherits the template.  Care MUST be taken when making changes to the
-   parent templates.
+   Any modification to the parent template also applies where the
+   template is inherited.
 
 4.1.  The "stmt-extend" Metadata
 
-   Template inheritance is flagged by declaring the metadata object
+   Template inheritance is indicated by declaring the metadata object
    called "stmt-extend".
 
    If the template is inherited by a top-level node in the data tree,
    the metadata object is added to that specific node.  Server MUST
-   igore any metadata objects added to the node that is not a top-level
-   node.
+   ignore any "stmt-extend" metadata annotations added to the node that
+   is not a top-level node.
 
    If the template is inherited by other templates, the metadata object
    is added to the top-level node of the template contents.
@@ -275,7 +274,8 @@ Table of Contents
     </interface>
   </interfaces>
 
-   And the above interface configuration is equivalent to the following:
+   And the above interface configuration renders the following expanded
+   configuration:
 
    <interfaces>
      <interface>
@@ -314,7 +314,8 @@ Table of Contents
 </templates>
 
    And the above interface configuration defined in the template
-   "interface-type-mtu-enabled" is equivalent to the following:
+   "interface-type-mtu-enabled" renders the following expanded
+   configuration:
 
    <interfaces>
      <interface>
@@ -369,9 +370,10 @@ Table of Contents
    metadata object called "operation-tag" with a value "delete".  If
    some node instance defined in the configuration template is intended
    to be deleted in the configuration explicitly by the client or by new
-   templates, the metadata object is added to that specific node.
-   Servers MUST ignore this metadata if the configuration identified
-   currently does not exist in the configuration template.
+   templates, the "operation-tag" metadata annotation is added to that
+   specific node.  Servers MUST ignore this metadata if the
+   configuration identified currently does not exist in the
+   configuration template.
 
    The "operation-tag" metadata MUST have only one value to specify the
    intended operation.  The encoding of "operation-tag" metadata object
@@ -393,7 +395,7 @@ Table of Contents
   </interface>
 </interfaces>
 
-   And it is equivalent to the following:
+   And it renders the following expanded configuration:
 
    <interfaces>
      <interface>
@@ -517,7 +519,8 @@ Table of Contents
   </acl>
 </acls>
 
-   The applied ACL configuration is equivalent to the following:
+   The applied ACL configuration renders the following expanded
+   configuration:
 
 <acls>
   <acl>
@@ -770,17 +773,17 @@ Table of Contents
    [I-D.ietf-netmod-system-config]
               Ma, Q., Wu, Q., and C. Feng, "System-defined
               Configuration", Work in Progress, Internet-Draft, draft-
-              ietf-netmod-system-config-08, 18 June 2024,
+              ietf-netmod-system-config-09, 29 September 2024,
               <https://datatracker.ietf.org/doc/html/draft-ietf-netmod-
-              system-config-08>.
+              system-config-09>.
 
    [I-D.ietf-opsawg-ntw-attachment-circuit]
               Boucadair, M., Roberts, R., de Dios, O. G., Barguil, S.,
               and B. Wu, "A Network YANG Data Model for Attachment
               Circuits", Work in Progress, Internet-Draft, draft-ietf-
-              opsawg-ntw-attachment-circuit-12, 24 July 2024,
+              opsawg-ntw-attachment-circuit-13, 5 September 2024,
               <https://datatracker.ietf.org/doc/html/draft-ietf-opsawg-
-              ntw-attachment-circuit-12>.
+              ntw-attachment-circuit-13>.
 
    [RFC7149]  Boucadair, M. and C. Jacquenet, "Software-Defined
               Networking: A Perspective from within a Service Provider
@@ -948,8 +951,8 @@ B.2.  Inheriting Templates
     }
 }
 
-   The configuration of template "template-ntp2" is equivalent to the
-   following:
+   The configuration of template "template-ntp2" renders the following
+   expanded configuration:
 
  {
      "ietf-templates:templates": {
@@ -1027,7 +1030,7 @@ B.2.  Inheriting Templates
        ]
    }
 
-   And it is equivalent to the following configuration:
+   And it renders the following expanded configuration:
 
    {
        "example-network-systime:network-device": [
@@ -1218,7 +1221,7 @@ Acknowledgments
 
    TODO acknowledge.
 
-Author's Address
+Authors' Addresses
 
    Qiufang Ma
    Huawei
@@ -1227,3 +1230,12 @@ Author's Address
    210012
    China
    Email: maqiufang1@huawei.com
+
+
+   Qin Wu
+   Huawei
+   101 Software Avenue, Yuhua District
+   Jiangsu
+   210012
+   China
+   Email: bill.wu@huawei.com
