@@ -25,6 +25,14 @@ author:
    code: 210012
    country: China
    email: maqiufang1@huawei.com
+-
+  fullname: Qin Wu
+  organization: Huawei
+  street: 101 Software Avenue, Yuhua District
+  city: Jiangsu
+  code: 210012
+  country: China
+  email: bill.wu@huawei.com
 
 normative:
 
@@ -49,8 +57,7 @@ For example, {{?I-D.ietf-opsawg-ntw-attachment-circuit}} defines a set of profil
 at the network level which could be referred to under the node level to factorize
 some common configuration shared by a group of attachment circuits (ACs).
 
-However, it is not trivial to always take care of the definition of shared profiles/
-policies/templates during the design of every data model.
+However, it is not trivial to always take care of the definition of shared profiles/policies/templates during the design of every data model.
 There is a desire to make use of common YANG-based templates without relying on
 specific definition in YANG data models.
 
@@ -164,15 +171,15 @@ in both templates with the new template takes precedence over its parent templat
 This is useful when some additional configuration is intended to be defined on the
 basis of the parent template.
 
-Any modification to the parent template also applies somewhere inherits the template.
-Care MUST be taken when making changes to the parent templates.
+Any modification to the parent template also applies where the template is inherited.
+
 
 ## The "stmt-extend" Metadata
 
-Template inheritance is flagged by declaring the metadata object called "stmt-extend".
+Template inheritance is indicated by declaring the metadata object called "stmt-extend".
 
 If the template is inherited by a top-level node in the data tree, the metadata object is added
-to that specific node. Server MUST igore any metadata objects added to the node
+to that specific node. Server MUST ignore any "stmt-extend" metadata annotations added to the node
 that is not a top-level node.
 
 If the template is inherited by other templates, the metadata object is added to
@@ -198,7 +205,7 @@ with the container node "interfaces" inheriting the template defined in {{temp-e
 </interfaces>
 ~~~~
 
-And the above interface configuration is equivalent to the following:
+And the above interface configuration renders the following expanded configuration:
 
 ~~~~
 <interfaces>
@@ -240,7 +247,7 @@ on the basis of template defined in {{temp-ex-interface}}:
 ~~~~
 
 And the above interface configuration defined in the template
-"interface-type-mtu-enabled" is equivalent to the following:
+"interface-type-mtu-enabled" renders the following expanded configuration:
 
 ~~~~
 <interfaces>
@@ -295,7 +302,7 @@ needs to be 9122, and the "description" value also needs to be modified accordin
 The deletion of configuration data is flagged by declaring the metadata object
 called "operation-tag" with a value "delete". If some node instance defined in the configuration template
 is intended to be deleted in the configuration explicitly by the client or by new
-templates, the metadata object is added to that specific node. Servers MUST ignore this
+templates, the "operation-tag" metadata annotation is added to that specific node. Servers MUST ignore this
 metadata if the configuration identified currently does not exist in the configuration
 template.
 
@@ -320,7 +327,7 @@ configuration:
 </interfaces>
 ~~~~
 
-And it is equivalent to the following:
+And it renders the following expanded configuration:
 
 ~~~~
 <interfaces>
@@ -446,7 +453,7 @@ The client may also deliver the configuration defined in template
 </acls>
 ~~~~
 
-The applied ACL configuration is equivalent to the following:
+The applied ACL configuration renders the following expanded configuration:
 
 ~~~~
 <acls>
@@ -661,7 +668,7 @@ is shown as follows:
 }
 ~~~~
 
-The configuration of template "template-ntp2" is equivalent to the following:
+The configuration of template "template-ntp2" renders the following expanded configuration:
 
 ~~~~
 {
@@ -742,7 +749,7 @@ using "template-ntp" and "template-ntp2" that may be sent to a SDN controller:
 }
 ~~~~
 
-And it is equivalent to the following configuration:
+And it renders the following expanded configuration:
 
 ~~~~
 {
