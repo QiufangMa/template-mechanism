@@ -559,7 +559,7 @@ Table of Contents
    <intended>.
 
       Editor's Note: The read-back of <running> might break legacy
-      clients doesn't understand template?
+      clients that don't understand template?
 
 7.  Different Levels of Templates
 
@@ -567,9 +567,9 @@ Table of Contents
    depending on where it is used and maintained.  For exmaple, A
    network-level template maintained by the software-defined networking
    (SDN) [RFC7149] [RFC7426] controller defines configuration that may
-   be shared by multiple network devices.  While device-level template
+   be shared by multiple network elements.  While device-level template
    maintained by the network element defines configuration that can only
-   be applied to specific network devices.  Refer to Appendix B for
+   be applied to specific network element.  Refer to Appendix B for
    examples of network-level templates.
 
 8.  The "ietf-template" YANG Module
@@ -588,6 +588,9 @@ Table of Contents
            +--ro last-modified?     yang:timestamp
            +--ro parent-template*   -> ../../template/id
            +--ro inherited-by*      union
+
+      Editor's Note: Should the 'stmt-extend' and 'operation-tag'
+      metadata annotations be defined here?
 
 8.2.  YANG Module
 

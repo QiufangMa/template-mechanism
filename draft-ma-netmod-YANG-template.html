@@ -1775,7 +1775,7 @@ sent by the client with the "stmt-extend" metadata attached to the specific node
 Configuration template which is inherited or overridden by the node instance <span class="bcp14">MUST</span> be expanded in &lt;intended&gt;.<a href="#section-6-2" class="pilcrow">¶</a></p>
 <ul class="normal ulEmpty">
 <li class="normal ulEmpty" id="section-6-3.1">
-          <p id="section-6-3.1.1">Editor's Note: The read-back of &lt;running&gt; might break legacy clients doesn't
+          <p id="section-6-3.1.1">Editor's Note: The read-back of &lt;running&gt; might break legacy clients that don't
 understand template?<a href="#section-6-3.1.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
@@ -1789,8 +1789,8 @@ understand template?<a href="#section-6-3.1.1" class="pilcrow">¶</a></p>
 <p id="section-7-1">The configuration templates may be defined at different levels, depending on where it is used and maintained.
 For exmaple, A network-level template maintained by the software-defined networking
 (SDN) <span>[<a href="#RFC7149" class="cite xref">RFC7149</a>]</span> <span>[<a href="#RFC7426" class="cite xref">RFC7426</a>]</span> controller defines configuration that may be shared
-by multiple network devices. While device-level template maintained by the network
-element defines configuration that can only be applied to specific network devices.
+by multiple network elements. While device-level template maintained by the network
+element defines configuration that can only be applied to specific network element.
 Refer to <a href="#appendix-network" class="auto internal xref">Appendix B</a> for examples of network-level templates.<a href="#section-7-1" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -1818,6 +1818,11 @@ module: ietf-template
         +--ro inherited-by*      union
 </pre><a href="#section-8.1-2" class="pilcrow">¶</a>
 </div>
+<ul class="normal ulEmpty">
+<li class="normal ulEmpty" id="section-8.1-3.1">
+            <p id="section-8.1-3.1.1">Editor's Note: Should the 'stmt-extend' and 'operation-tag' metadata annotations be defined here?<a href="#section-8.1-3.1.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
 </section>
 </div>
 <div id="yang-module">
