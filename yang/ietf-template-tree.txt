@@ -5,5 +5,5 @@ module: ietf-template
         +--rw description?       string
         +--rw content?           <anydata>
         +--ro last-modified?     yang:timestamp
-        +--ro parent-template?   -> ../../template/id
+        +--ro parent-template*   -> ../../template/id
         +--ro inherited-by*      union

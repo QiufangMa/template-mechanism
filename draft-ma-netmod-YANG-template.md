@@ -117,7 +117,7 @@ parent template:
 A configuration template must first be defined before it can be inherited {{inheriting-temp}}. The creation,
 modification, and deletion of configuration templates are achieved by network
 management operations via NETCONF or RESTCONF protocols. The content of the configuration
-template must be an instantiated chunk of data starting from at least one top-level node in the module hierarchies.
+template must be an instantiated chunk of data starting from any level node in the module hierarchies.
 
 For example, {{temp-ex-interface}} provides an interface configuration template
 that sets "mtu" as 1500 for ethernet interfaces:
@@ -126,13 +126,11 @@ that sets "mtu" as 1500 for ethernet interfaces:
 <templates>
   <template>
     <id>interface-type-mtu</id>
-    <interfaces>
-      <interface>
-        <type>ianaift:ethernetCsmacd</type>
-        <mtu>1500</mtu>
-        <description>MTU value is set by template</description>
-      </interface>
-    </interfaces>
+    <interface>
+      <type>ianaift:ethernetCsmacd</type>
+      <mtu>1500</mtu>
+      <description>MTU value is set by template</description>
+    </interface>
   </template>
 </templates>
 ~~~~
@@ -156,8 +154,8 @@ always be valid, as defined in {{Section 8.1 of !RFC7950}}.
 
 # Inheriting Templates {#inheriting-temp}
 
-This document allows configuration templates to be inherited by top-level
-configuration nodes in the data tree or new templates. A node inherits at most
+This document allows configuration templates to be inherited by
+configuration nodes in the data tree or new templates at corresponding level. A node inherits at most
 one configuration template.
 
 If a configuration template is inherited by a node in the data tree, it acts as
@@ -178,12 +176,11 @@ Any modification to the parent template also applies where the template is inher
 
 Template inheritance is indicated by declaring the metadata object called "stmt-extend".
 
-If the template is inherited by a top-level node in the data tree, the metadata object is added
-to that specific node. Server MUST ignore any "stmt-extend" metadata annotations added to the node
-that is not a top-level node.
+If the template is inherited by a node in the data tree, the metadata object is added
+to that specific node.
 
 If the template is inherited by other templates, the metadata object is added to
-the top-level node of the template contents.
+the node at corresponding level of the template contents.
 
 
 The "stmt-extend" metadata MUST have only one value to specify the parent template
@@ -191,15 +188,14 @@ identifier that is inherited. The encoding of "stmt-extend" metadata object foll
 in {{Section 5 of ?RFC7952}}.
 
 For example, a client may configure physically present interfaces "eth0" and "eth1"
-with the container node "interfaces" inheriting the template defined in {{temp-ex-interface}}:
+with the list node "interface" inheriting the template defined in {{temp-ex-interface}}:
 
 ~~~~
-<interfaces xmlns:template="urn:ietf:params:xml:ns:yang:ietf-template"
-  template:stmt-extend="interface-type-mtu">
-  <interface>
+<interfaces xmlns:template="urn:ietf:params:xml:ns:yang:ietf-template">
+  <interface template:stmt-extend="interface-type-mtu">
     <name>eth0</name>
   </interface>
-  <interface>
+  <interface template:stmt-extend="interface-type-mtu">
     <name>eth1</name>
   </interface>
 </interfaces>
@@ -236,12 +232,10 @@ on the basis of template defined in {{temp-ex-interface}}:
 <templates>
   <template>
     <id>interface-type-mtu-enabled</id>
-    <interfaces xmlns:template="urn:ietf:params:xml:ns:yang:ietf-template"
-      template:stmt-extend="interface-type-mtu">
-      <interface>
-        <enabled>true</enabled>
-      </interface>
-    </interfaces>
+    <interface xmlns:template="urn:ietf:params:xml:ns:yang:ietf-template"
+               template:stmt-extend="interface-type-mtu">
+      <enabled>true</enabled>
+    </interface>
   </template>
 </templates>
 ~~~~
@@ -250,14 +244,12 @@ And the above interface configuration defined in the template
 "interface-type-mtu-enabled" renders the following expanded configuration:
 
 ~~~~
-<interfaces>
-  <interface>
-    <type>ianaift:ethernetCsmacd</type>
-    <mtu>1500</mtu>
-    <description>MTU value is set by template</description>
-    <enabled>true</enabled>
-  </interface>
-</interfaces>
+<interface>
+  <type>ianaift:ethernetCsmacd</type>
+  <mtu>1500</mtu>
+  <description>MTU value is set by template</description>
+  <enabled>true</enabled>
+</interface>
 ~~~~
 
 {{template-inherits}} provides more examples of inheriting an existing template by indicating
@@ -283,12 +275,11 @@ inheriting the template defined in {{temp-ex-interface}}, but the "mtu" value of
 needs to be 9122, and the "description" value also needs to be modified accordingly:
 
 ~~~~
-<interfaces xmlns:template="urn:ietf:params:xml:ns:yang:ietf-template"
-  template:stmt-extend="interface-type-mtu">
-  <interface>
+<interfaces xmlns:template="urn:ietf:params:xml:ns:yang:ietf-template">
+  <interface template:stmt-extend="interface-type-mtu">
     <name>eth0</name>
   </interface>
-  <interface>
+  <interface template:stmt-extend="interface-type-mtu">
     <name>eth1</name>
     <mtu>9122</mtu>
     <description>MTU value is set explicitly</description>
@@ -314,12 +305,11 @@ in {{temp-ex-interface}} for interface "eth1", and the following shows the examp
 configuration:
 
 ~~~~
-<interfaces xmlns:template="urn:ietf:params:xml:ns:yang:ietf-template"
-  template:stmt-extend="interface-type-mtu">
-  <interface>
+<interfaces xmlns:template="urn:ietf:params:xml:ns:yang:ietf-template">
+  <interface template:stmt-extend="interface-type-mtu">
     <name>eth0</name>
   </interface>
-  <interface>
+  <interface template:stmt-extend="interface-type-mtu">
     <name>eth1</name>
     <mtu>9122</mtu>
     <description template:operation-tag="delete">MTU value is set by template</description>

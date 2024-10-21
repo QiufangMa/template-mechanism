@@ -77,7 +77,7 @@ module ietf-template {
          description
            "Timestamp when the template is modified last time.";
        }
-       leaf parent-template {
+       leaf-list parent-template {
          type leafref {
            path "../../template/id";
          }
