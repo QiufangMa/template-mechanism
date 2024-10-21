@@ -9,7 +9,7 @@ Expires: 24 April 2025                                   21 October 2024
 
 
                              YANG Templates
-                  draft-ma-netmod-YANG-template-latest
+              draft-ma-netmod-yang-config-template-latest
 
 Abstract
 
