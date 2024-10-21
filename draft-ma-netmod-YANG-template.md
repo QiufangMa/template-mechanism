@@ -489,7 +489,7 @@ template does not expand in \<running\>, a read back of \<running\> returns what
 sent by the client with the "stmt-extend" metadata attached to the specific node.
 Configuration template which is inherited or overridden by the node instance MUST be expanded in \<intended\>.
 
-> Editor's Note: The read-back of \<running\> might break legacy clients doesn't
+> Editor's Note: The read-back of \<running\> might break legacy clients that don't
 understand template?
 
 # Different Levels of Templates
@@ -497,8 +497,8 @@ understand template?
 The configuration templates may be defined at different levels, depending on where it is used and maintained.
 For exmaple, A network-level template maintained by the software-defined networking
 (SDN) {{?RFC7149}} {{?RFC7426}} controller defines configuration that may be shared
-by multiple network devices. While device-level template maintained by the network
-element defines configuration that can only be applied to specific network devices.
+by multiple network elements. While device-level template maintained by the network
+element defines configuration that can only be applied to specific network element.
 Refer to {{appendix-network}} for examples of network-level templates.
 
 # The "ietf-template" YANG Module {#template-yang}
@@ -510,6 +510,8 @@ The following tree diagram {{?RFC8340}} illustrates the "ietf-template" module:
 ~~~~
 {::include ./yang/ietf-template-tree.txt}
 ~~~~
+
+> Editor's Note: Should the 'stmt-extend' and 'operation-tag' metadata annotations be defined here?
 
 ## YANG Module
 
