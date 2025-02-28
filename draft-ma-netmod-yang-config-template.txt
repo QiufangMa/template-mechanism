@@ -5,7 +5,7 @@
 Network Modeling                                                   Q. Ma
 Internet-Draft                                                     Q. Wu
 Intended status: Standards Track                                  Huawei
-Expires: 24 April 2025                                   21 October 2024
+Expires: 1 September 2025                               28 February 2025
 
 
                              YANG Templates
@@ -46,11 +46,11 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 24 April 2025.
+   This Internet-Draft will expire on 1 September 2025.
 
 Copyright Notice
 
-   Copyright (c) 2024 IETF Trust and the persons identified as the
+   Copyright (c) 2025 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -766,17 +766,17 @@ Table of Contents
    [I-D.ietf-netmod-system-config]
               Ma, Q., Wu, Q., and C. Feng, "System-defined
               Configuration", Work in Progress, Internet-Draft, draft-
-              ietf-netmod-system-config-09, 29 September 2024,
+              ietf-netmod-system-config-12, 12 February 2025,
               <https://datatracker.ietf.org/doc/html/draft-ietf-netmod-
-              system-config-09>.
+              system-config-12>.
 
    [I-D.ietf-opsawg-ntw-attachment-circuit]
               Boucadair, M., Roberts, R., de Dios, O. G., Barguil, S.,
               and B. Wu, "A Network YANG Data Model for Attachment
               Circuits", Work in Progress, Internet-Draft, draft-ietf-
-              opsawg-ntw-attachment-circuit-13, 5 September 2024,
+              opsawg-ntw-attachment-circuit-16, 23 January 2025,
               <https://datatracker.ietf.org/doc/html/draft-ietf-opsawg-
-              ntw-attachment-circuit-13>.
+              ntw-attachment-circuit-16>.
 
    [RFC7149]  Boucadair, M. and C. Jacquenet, "Software-Defined
               Networking: A Perspective from within a Service Provider

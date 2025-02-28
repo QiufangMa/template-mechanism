@@ -2,14 +2,14 @@
 
 
 
-Network Modeling                                                   Q. Ma
-Internet-Draft                                                     Q. Wu
-Intended status: Standards Track                                  Huawei
-Expires: 24 April 2025                                   21 October 2024
+Network Modeling                                              Q. Ma, Ed.
+Internet-Draft                                                    Huawei
+Intended status: Standards Track                        28 February 2025
+Expires: 1 September 2025
 
 
                              YANG Templates
-                  draft-ma-netmod-YANG-template-latest
+              draft-xxx-netmod-yang-config-template-latest
 
 Abstract
 
@@ -46,11 +46,11 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 24 April 2025.
+   This Internet-Draft will expire on 1 September 2025.
 
 Copyright Notice
 
-   Copyright (c) 2024 IETF Trust and the persons identified as the
+   Copyright (c) 2025 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -67,37 +67,34 @@ Table of Contents
    1.  Introduction
      1.1.  Editorial Note (To be removed by RFC Editor)
    2.  Conventions and Definitions
-   3.  Hierarchical Template Overview
-     3.1.  Validity of Templates
-   4.  Inheriting Templates
-     4.1.  The "stmt-extend" Metadata
-     4.2.  Template Extension
-   5.  Overriding Templates
-     5.1.  Modification
-     5.2.  Deletion
-     5.3.  List/leaf-list Reordering
-   6.  Interaction with NMDA datastores
-   7.  Different Levels of Templates
-   8.  The "ietf-template" YANG Module
-     8.1.  Data Model Overview
-     8.2.  YANG Module
-   9.  Security Considerations
-   10. IANA Considerations
-     10.1.  The "IETF XML" Registry
-     10.2.  The "YANG Module Names" Registry
-   11. References
-     11.1.  Normative References
-     11.2.  Informative References
-   Appendix A.  template Syntax
-     A.1.  Variable Declaration
-     A.2.  Loop Statement
-     A.3.  If-Else Statement
-   Appendix B.  Usage Examples
-     B.1.  Creating Templates
-     B.2.  Inheriting Templates
-     B.3.  Overriding Templates
+   3.  YANG Template Solution
+     3.1.  Defining Templates
+       3.1.1.  Templates with Regular Expressions
+     3.2.  Applying Templates
+       3.2.1.  The "stmt-extend" Metadata
+       3.2.2.  Template Precedence Rules
+     3.3.  Overriding Templates
+     3.4.  Expanding Templates
+     3.5.  Validity of Templates
+   4.  Interaction with NMDA datastores
+   5.  Interaction with Non-NMDA datastores
+   6.  The "ietf-template" YANG Module
+     6.1.  Data Model Overview
+     6.2.  YANG Module
+   7.  Security Considerations
+   8.  IANA Considerations
+     8.1.  The "IETF XML" Registry
+     8.2.  The "YANG Module Names" Registry
+   9.  References
+     9.1.  Normative References
+     9.2.  Informative References
+   Appendix A.  Usage Examples
+     A.1.  Creating Templates
+     A.2.  Applying Templates
+     A.3.  Overriding Templates
    Acknowledgments
-   Authors' Addresses
+   Contributors
+   Author's Address
 
 1.  Introduction
 
@@ -165,18 +162,20 @@ Table of Contents
       could be applied to the configuration repeatedly, in order to
       simplify the delivery of network configuration and ensure the
       consistency of it.  A configuration template can also be called
-      "hierarchical template", or "template" for short.
+      "template" for short.
 
    inherited template:  A configuration template that is applied in the
-      configuration data tree or reused by other templates.
+      configuration data tree.
 
    parent template:  A configuration template that is an inherited
       template.
 
-3.  Hierarchical Template Overview
+3.  YANG Template Solution
+
+3.1.  Defining Templates
 
    A configuration template must first be defined before it can be
-   inherited Section 4.  The creation, modification, and deletion of
+   inherited Section 3.2.  The creation, modification, and deletion of
    configuration templates are achieved by network management operations
    via NETCONF or RESTCONF protocols.  The content of the configuration
    template must be an instantiated chunk of data starting from any
@@ -199,31 +198,16 @@ Table of Contents
                  Figure 1: Example of An Interface template
 
    The YANG data model of configuration templates is defined in
-   Section 8.
+   Section 6.
 
-3.1.  Validity of Templates
+3.1.1.  Templates with Regular Expressions
 
-   The contents of the template alone is not always sufficient to
-   enforce the constraints of the data model.  Some constraints may
-   depend on configuration outside of the templates to satisfy, e.g., a
-   list may contain a mandatory leaf node which is not defined in the
-   template but explicitly provided by the client.  However, servers
-   should parse the template and enforce the constraints if it is
-   possible during the processing of template creation, e.g., servers
-   may validate type constraints for the leaf, including those defined
-   in the type's "range", "length", and "pattern" properties.
+   TBC
 
-   That said, if a template is applied in the configuration data tree,
-   the results of the template configuration merging with configuration
-   explicitly provided by the client MUST always be valid, as defined in
-   Section 8.1 of [RFC7950].
-
-4.  Inheriting Templates
+3.2.  Applying Templates
 
    This document allows configuration templates to be inherited by
-   configuration nodes in the data tree or new templates at
-   corresponding level.  A node inherits at most one configuration
-   template.
+   configuration nodes in the data tree at corresponding level.
 
    If a configuration template is inherited by a node in the data tree,
    it acts as if the configuration defined in the template is contained
@@ -241,7 +225,7 @@ Table of Contents
    Any modification to the parent template also applies where the
    template is inherited.
 
-4.1.  The "stmt-extend" Metadata
+3.2.1.  The "stmt-extend" Metadata
 
    Template inheritance is indicated by declaring the metadata object
    called "stmt-extend".
@@ -288,7 +272,11 @@ Table of Contents
      </interface>
    </interfaces>
 
-4.2.  Template Extension
+3.2.2.  Template Precedence Rules
+
+   TBC
+
+3.3.  Overriding Templates
 
    If there is some further configuration data that needs to be created
    but not included in the parent template, it can be provided at the
@@ -318,10 +306,8 @@ Table of Contents
      <enabled>true</enabled>
    </interface>
 
-   Appendix B.2 provides more examples of inheriting an existing
+   Appendix A.2 provides more examples of inheriting an existing
    template by indicating the "stmt-extend" metadata object.
-
-5.  Overriding Templates
 
    It may be desired to override some configuration in an existing
    template when it is interited.  This may be achieved by directly
@@ -331,9 +317,7 @@ Table of Contents
    yield unexpected results.
 
    This document allows a configuration template to be overridden by
-   other templates or configuration explicitly provided by the client.
-
-5.1.  Modification
+   configuration explicitly provided by the client.
 
    If there is some configuration values that need to be modified, the
    desired value can be provided at the corresponding level when
@@ -355,193 +339,28 @@ Table of Contents
    </interface>
  </interfaces>
 
-5.2.  Deletion
+3.4.  Expanding Templates
 
-   The deletion of configuration data is flagged by declaring the
-   metadata object called "operation-tag" with a value "delete".  If
-   some node instance defined in the configuration template is intended
-   to be deleted in the configuration explicitly by the client or by new
-   templates, the "operation-tag" metadata annotation is added to that
-   specific node.  Servers MUST ignore this metadata if the
-   configuration identified currently does not exist in the
-   configuration template.
+   TBC
 
-   The "operation-tag" metadata MUST have only one value to specify the
-   intended operation.  The encoding of "operation-tag" metadata object
-   follows the way defined in Section 5 of [RFC7952].
+3.5.  Validity of Templates
 
-   For example, a client may want to delete the "description" node
-   instance defined in Figure 1 for interface "eth1", and the following
-   shows the example configuration:
+   The contents of the template alone is not always sufficient to
+   enforce the constraints of the data model.  Some constraints may
+   depend on configuration outside of the templates to satisfy, e.g., a
+   list may contain a mandatory leaf node which is not defined in the
+   template but explicitly provided by the client.  However, servers
+   should parse the template and enforce the constraints if it is
+   possible during the processing of template creation, e.g., servers
+   may validate type constraints for the leaf, including those defined
+   in the type's "range", "length", and "pattern" properties.
 
-<interfaces xmlns:template="urn:ietf:params:xml:ns:yang:ietf-template">
-  <interface template:stmt-extend="interface-type-mtu">
-    <name>eth0</name>
-  </interface>
-  <interface template:stmt-extend="interface-type-mtu">
-    <name>eth1</name>
-    <mtu>9122</mtu>
-    <description template:operation-tag="delete">MTU value is set by template</description>
-  </interface>
-</interfaces>
+   That said, if a template is applied in the configuration data tree,
+   the results of the template configuration merging with configuration
+   explicitly provided by the client MUST always be valid, as defined in
+   Section 8.1 of [RFC7950].
 
-   And it renders the following expanded configuration:
-
-   <interfaces>
-     <interface>
-       <name>eth0</name>
-       <type>ianaift:ethernetCsmacd</type>
-       <mtu>1500</mtu>
-       <description>MTU value is set by template</description>
-     </interface>
-     <interface>
-       <name>eth1</name>
-       <type>ianaift:ethernetCsmacd</type>
-       <mtu>9122</mtu>
-     </interface>
-   </interfaces>
-
-5.3.  List/leaf-list Reordering
-
-   There may be a desire to reorder some existing list/leaf-list entries
-   defined in an existing template, or specify the ordering of new
-   instances when they are created.  It only applies to lists and leaf-
-   lists indicated with the "ordered-by user" statement.
-
-   The reordering of list/leaf-list entry data is flagged by declaring
-   the metadata object called "operation-tag" with different values.
-   The "operation-tag" used for reordering has one of the following
-   values:
-
-   *  position-first:  The attached entry is positioned as the first
-         entry in the list/leaf-list.  There must be no more than one
-         entry that is annotated as "position-first" within the same
-         operation request.
-
-   *  position-last:  The attached entry is positioned as the last entry
-         in the list/leaf-list.  There must be no more than one entry
-         that is annotated as "position-last" within the same operation
-         request.
-
-   *  position-before:  The attached entry is positioned before some
-         other specified entries in the list/leaf-list.  This value MUST
-         be followed by one or more space-seperated key values to
-         indicate the entries that the attached entry is just positioned
-         before.  The "position-before" metadata and key values are
-         seperated by colon ":".  There must not be any other entries
-         that use "position-before" to target the entry attached as
-         "position-first" within the same operation rquest.
-
-   *  position-after:  The attached entry is positioned after some other
-         specified entries in the list/leaf-list.  This value MUST be
-         followed by one or more space-seperated key values to indicate
-         the entries that the attached entry is just positioned after.
-         The "position-after" metadata and key values are seperated by
-         colon ":".  There must not be any other entries that use
-         "position-after" to target the entry attached as "position-
-         last" within the same operation request.
-
-   For example, the following template provides the user-ordered ACL
-   configuration:
-
-   <templates>
-     <template>
-       <id>ACL-rules-template</id>
-       <acls>
-         <acl>
-           <name>allow-access-from-tcp</name>
-           <matches>
-             <protocol>tcp</protocol>
-           </matches>
-           <action>permit</action>
-         </acl>
-         <acl>
-           <name>allow-access-from-udp</name>
-           <matches>
-             <protocol>udp</protocol>
-           </matches>
-           <action>permit</action>
-         </acl>
-       </acls>
-     </template>
-   </templates>
-
-   If the client wants to create another template with an additional ACL
-   entry named "deny-traffic-from-ftp" ordered as the first entry and
-   ACL entry named "allow-access-from-tcp" as the last one:
-
-   <templates>
-     <template>
-       <id>ACL-rules-template2</id>
-       <acls xmlns:template="urn:ietf:params:xml:ns:yang:ietf-template"
-         template:stmt-extend="acl-rule-template">
-         <acl template:operation-tag="position-first">
-           <name>deny-traffic-from-ftp</name>
-           <matches>
-             <protocol>ftp</protocol>
-           </matches>
-         </acl>
-         <acl template:operation-tag="position-last">
-           <name>allow-access-from-tcp</name>
-         </acl>
-       </acls>
-     </template>
-   </templates>
-
-   The client may also deliver the configuration defined in template
-   "acl-rule-template" with some other additional ACL entries that is
-   properly ordered:
-
-<acls xmlns:template="urn:ietf:params:xml:ns:yang:ietf-template"
-  template:stmt-extend="acl-rule-template">
-  <acl template:operation-tag="position-before:\
-    'allow-access-from-tcp allow-access-from-udp'">
-    <name>deny-access-to-ipv4</name>
-    <matches>
-      <destination-ipv4-network>192.0.2.0/24</destination-ipv4-network>
-    </matches>
-  </acl>
-  <acl template:operation-tag="position-after:'deny-access-to-ipv4'">
-    <name>deny-access-to-ipv6</name>
-    <matches>
-      <destination-ipv6-network>2001:db8::/32</destination-ipv6-network>
-    </matches>
-  </acl>
-</acls>
-
-   The applied ACL configuration renders the following expanded
-   configuration:
-
-<acls>
-  <acl>
-    <name>deny-access-to-ipv4</name>
-    <matches>
-      <destination-ipv4-network>192.0.2.0/24</destination-ipv4-network>
-    </matches>
-  </acl>
-  <acl>
-    <name>deny-access-to-ipv6</name>
-    <matches>
-      <destination-ipv6-network>2001:db8::/32</destination-ipv6-network>
-    </matches>
-  </acl>
-  <acl>
-    <name>allow-access-from-tcp</name>
-    <matches>
-      <protocol>tcp</protocol>
-    </matches>
-    <action>permit</action>
-  </acl>
-  <acl>
-    <name>allow-access-from-udp</name>
-    <matches>
-      <protocol>udp</protocol>
-    </matches>
-    <action>permit</action>
-  </acl>
-</acls>
-
-6.  Interaction with NMDA datastores
+4.  Interaction with NMDA datastores
 
    Some implementation may have predefined configuration templates for
    the convenience of clients, which are present in <system> (if
@@ -558,23 +377,13 @@ Table of Contents
    is inherited or overridden by the node instance MUST be expanded in
    <intended>.
 
-      Editor's Note: The read-back of <running> might break legacy
-      clients that don't understand template?
+5.  Interaction with Non-NMDA datastores
 
-7.  Different Levels of Templates
+   TBC
 
-   The configuration templates may be defined at different levels,
-   depending on where it is used and maintained.  For exmaple, A
-   network-level template maintained by the software-defined networking
-   (SDN) [RFC7149] [RFC7426] controller defines configuration that may
-   be shared by multiple network elements.  While device-level template
-   maintained by the network element defines configuration that can only
-   be applied to specific network element.  Refer to Appendix B for
-   examples of network-level templates.
+6.  The "ietf-template" YANG Module
 
-8.  The "ietf-template" YANG Module
-
-8.1.  Data Model Overview
+6.1.  Data Model Overview
 
    The following tree diagram [RFC8340] illustrates the "ietf-template"
    module:
@@ -592,7 +401,7 @@ Table of Contents
       Editor's Note: Should the 'stmt-extend' and 'operation-tag'
       metadata annotations be defined here?
 
-8.2.  YANG Module
+6.2.  YANG Module
 
    <CODE BEGINS> file "ietf-template@2024-08-27.yang"
    module ietf-template {
@@ -700,13 +509,13 @@ Table of Contents
    }
    <CODE ENDS>
 
-9.  Security Considerations
+7.  Security Considerations
 
    TODO Security
 
-10.  IANA Considerations
+8.  IANA Considerations
 
-10.1.  The "IETF XML" Registry
+8.1.  The "IETF XML" Registry
 
    This document registers the following URI in the "IETF XML Registry"
    [RFC3688].
@@ -715,7 +524,7 @@ Table of Contents
            Registrant Contact: The IESG.
            XML: N/A, the requested URI is an XML namespace.
 
-10.2.  The "YANG Module Names" Registry
+8.2.  The "YANG Module Names" Registry
 
    This document registers the following YANG module in the "YANG Module
    Names" registry [RFC6020].
@@ -726,9 +535,9 @@ Table of Contents
            maintained by IANA? N
            reference:          RFC XXXX
 
-11.  References
+9.  References
 
-11.1.  Normative References
+9.1.  Normative References
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -761,33 +570,22 @@ Table of Contents
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
 
-11.2.  Informative References
+9.2.  Informative References
 
    [I-D.ietf-netmod-system-config]
               Ma, Q., Wu, Q., and C. Feng, "System-defined
               Configuration", Work in Progress, Internet-Draft, draft-
-              ietf-netmod-system-config-09, 29 September 2024,
+              ietf-netmod-system-config-12, 12 February 2025,
               <https://datatracker.ietf.org/doc/html/draft-ietf-netmod-
-              system-config-09>.
+              system-config-12>.
 
    [I-D.ietf-opsawg-ntw-attachment-circuit]
               Boucadair, M., Roberts, R., de Dios, O. G., Barguil, S.,
               and B. Wu, "A Network YANG Data Model for Attachment
               Circuits", Work in Progress, Internet-Draft, draft-ietf-
-              opsawg-ntw-attachment-circuit-13, 5 September 2024,
+              opsawg-ntw-attachment-circuit-16, 23 January 2025,
               <https://datatracker.ietf.org/doc/html/draft-ietf-opsawg-
-              ntw-attachment-circuit-13>.
-
-   [RFC7149]  Boucadair, M. and C. Jacquenet, "Software-Defined
-              Networking: A Perspective from within a Service Provider
-              Environment", RFC 7149, DOI 10.17487/RFC7149, March 2014,
-              <https://www.rfc-editor.org/rfc/rfc7149>.
-
-   [RFC7426]  Haleplidis, E., Ed., Pentikousis, K., Ed., Denazis, S.,
-              Hadi Salim, J., Meyer, D., and O. Koufopavlou, "Software-
-              Defined Networking (SDN): Layers and Architecture
-              Terminology", RFC 7426, DOI 10.17487/RFC7426, January
-              2015, <https://www.rfc-editor.org/rfc/rfc7426>.
+              ntw-attachment-circuit-16>.
 
    [RFC7952]  Lhotka, L., "Defining and Using Metadata with YANG",
               RFC 7952, DOI 10.17487/RFC7952, August 2016,
@@ -802,24 +600,7 @@ Table of Contents
               (NMDA)", RFC 8342, DOI 10.17487/RFC8342, March 2018,
               <https://www.rfc-editor.org/rfc/rfc8342>.
 
-Appendix A.  template Syntax
-
-   Some implementations support richer syntax in the template definition
-   so that the use of configuration template could be more flexible.
-
-A.1.  Variable Declaration
-
-   TBD
-
-A.2.  Loop Statement
-
-   TBD
-
-A.3.  If-Else Statement
-
-   TBD
-
-Appendix B.  Usage Examples
+Appendix A.  Usage Examples
 
    This section provides some examples to show the use of templates.
    JSON encodings are used to not imply a preference in this document.
@@ -867,7 +648,7 @@ Appendix B.  Usage Examples
      }
    }
 
-B.1.  Creating Templates
+A.1.  Creating Templates
 
    The NTP configuration on multiple network devices may be consistent.
    To create a template for NTP configuration, the following template
@@ -908,10 +689,10 @@ B.1.  Creating Templates
       }
   }
 
-B.2.  Inheriting Templates
+A.2.  Applying Templates
 
    The operator may create another template with an additional NTP
-   server instance when inheriting the template created in Appendix B.1.
+   server instance when inheriting the template created in Appendix A.1.
    The configuration is shown as follows:
 
 {
@@ -1132,9 +913,9 @@ B.2.  Inheriting Templates
        ]
    }
 
-B.3.  Overriding Templates
+A.3.  Overriding Templates
 
-   The client may override the template created in Appendix B.1 to
+   The client may override the template created in Appendix A.1 to
    specify the NTP server named "ntp-server-2" as the perferred one for
    device "ne-4":
 
@@ -1214,16 +995,7 @@ Acknowledgments
 
    TODO acknowledge.
 
-Authors' Addresses
-
-   Qiufang Ma
-   Huawei
-   101 Software Avenue, Yuhua District
-   Nanjing, Jiangsu
-   210012
-   China
-   Email: maqiufang1@huawei.com
-
+Contributors
 
    Qin Wu
    Huawei
@@ -1232,3 +1004,14 @@ Authors' Addresses
    210012
    China
    Email: bill.wu@huawei.com
+
+
+Author's Address
+
+   Qiufang Ma (editor)
+   Huawei
+   101 Software Avenue, Yuhua District
+   Jiangsu
+   210012
+   China
+   Email: maqiufang1@huawei.com
