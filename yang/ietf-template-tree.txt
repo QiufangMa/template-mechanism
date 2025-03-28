@@ -1,4 +1,4 @@
-module: ietf-template
+module: ietf-config-template
   +--rw templates
      +--rw template* [id]
         +--rw id                 string

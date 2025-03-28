@@ -20,12 +20,20 @@ author:
 -
    fullname: Qiufang Ma
    organization: Huawei
-   role: editor
    street: 101 Software Avenue, Yuhua District
    city: Jiangsu
    code: 210012
    country: China
    email: maqiufang1@huawei.com
+-
+  fullname: Robert Wills
+  organization: Cisco Systems
+  email: rowills@cisco.com
+-
+  fullname: Deepak Rajaram
+  organization: Nokia
+  city: Chennai
+  email: deepak.rajaram@nokia.com
 
 contributor:
 -
@@ -36,6 +44,16 @@ contributor:
    code: 210012
    country: China
    email: bill.wu@huawei.com
+-
+  fullname: Robert Peschi
+  organization: Nokia
+  city: Antwerp
+  email: robert.peschi@nokia.com
+-
+  fullname: Shiya Ashraf
+  organization: Nokia
+  city: Antwerp
+  email: shiya.ashraf@nokia.com
 
 normative:
 
@@ -54,28 +72,24 @@ and ensure consistency of it.
 
 # Introduction
 
-It is not unusual for the YANG data model {{!RFC7950}} to define some shared profiles that could
-be referenced in order to simplify the configuration of network services or functionalities.
-For example, {{?I-D.ietf-opsawg-ntw-attachment-circuit}} defines a set of profiles
-at the network level which could be referred to under the node level to factorize
-some common configuration shared by a group of attachment circuits (ACs).
+This document considers the case of some YANG-defined data on a NETCONF {{!RFC6241}}
+or RESTCONF {{!RFC8040}} server, that is massively replicated and each replication
+instance requires individual configuration with only limited variation.
 
-However, it is not trivial to always take care of the definition of shared profiles/policies/templates during the design of every data model.
-There is a desire to make use of common YANG-based templates without relying on
-specific definition in YANG data models.
+Having a user or an application that repetively configures each data instance can
+become complex and prone to errors. This approach may lead to issues, such as low efficiency,
+inconsistency, and increased memory usage on the device due to the large size of
+the running datastore. These challenges only intensify as the system scales.
 
-NMDA {{?RFC8342}} allows the configuration templates to be defined in \<running\>
-and expanded in \<intended\>, but it does not specify details about how configuration
-templates could be created and applied.
-
-This document defines the use of configuration templates in the context of YANG-driven
+This document defines a mechanism called "YANG configuration template" for YANG-driven
 network management protocols such as NETCONF {{!RFC6241}} and RESTCONF {{!RFC8040}}.
-By defining a common set of nodes as a configuration template and applying the
-configuration template repeatedly, it avoids the redundant definition of identical
-configuration and also ensures consistency of it. Configuration template could
-be used based on any existing YANG data models, this document doesn't make any
-assumption on the YANG data model design, i.e., it does not rely on the shared profile/group
-defined in the YANG data model.
+A "YANG configuration template" includes a set of node instances that the server is instructed
+to define and repeatedly apply to generate copies of it, though, the client may override
+some of these values on an individual copy basis.
+
+The template technique detailed in this document does not suffer from the drawbacks
+mentioned earlier where the management client needs to explicitly provide all
+configuration nodes.
 
 
 ## Editorial Note (To be removed by RFC Editor)
@@ -397,11 +411,11 @@ Configuration template which is inherited or overridden by the node instance MUS
 
 TBC
 
-# The "ietf-template" YANG Module {#template-yang}
+# The "ietf-config-template" YANG Module {#template-yang}
 
 ## Data Model Overview
 
-The following tree diagram {{?RFC8340}} illustrates the "ietf-template" module:
+The following tree diagram {{?RFC8340}} illustrates the "ietf-config-template" module:
 
 ~~~~
 {::include ./yang/ietf-template-tree.txt}
@@ -412,7 +426,7 @@ The following tree diagram {{?RFC8340}} illustrates the "ietf-template" module:
 ## YANG Module
 
 ~~~~
-<CODE BEGINS> file "ietf-template@2024-08-27.yang"
+<CODE BEGINS> file "ietf-template@2025-03-28.yang"
 {::include-fold ./yang/ietf-config-template.yang}
 <CODE ENDS>
 ~~~~
@@ -428,7 +442,7 @@ TODO Security
    This document registers the following URI in the "IETF XML Registry" {{!RFC3688}}.
 
 ~~~~
-        URI: urn:ietf:params:xml:ns:yang:ietf-template
+        URI: urn:ietf:params:xml:ns:yang:ietf-config-template
         Registrant Contact: The IESG.
         XML: N/A, the requested URI is an XML namespace.
 ~~~~
@@ -439,8 +453,8 @@ TODO Security
    registry {{!RFC6020}}.
 
 ~~~~
-        name:               ietf-template
-        namespace:          urn:ietf:params:xml:ns:yang:ietf-template
+        name:               ietf-config-template
+        namespace:          urn:ietf:params:xml:ns:yang:ietf-config-template
         prefix:             template
         maintained by IANA? N
         reference:          RFC XXXX
@@ -815,4 +829,14 @@ It is equivalent to the configuration as follows:
 # Acknowledgments
 {:numbered="false"}
 
-TODO acknowledge.
+The author would like to thank Lou Berger, Jason Sterne, Kent Watsen, and Robert
+Wilton for comments and contributions made during interim meetings.
+
+The author would like to acknowledge the following drafts and
+presenters for kick-starting discussions on Yang Templates:
+
+*  draft-ma-netmod-yang-config-template-00
+
+*  draft-rajaram-netmod-yang-cfg-template-framework-00
+
+*  Jan Lindblad
