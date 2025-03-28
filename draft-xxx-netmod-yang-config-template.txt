@@ -4,8 +4,8 @@
 
 Network Modeling                                              Q. Ma, Ed.
 Internet-Draft                                                    Huawei
-Intended status: Standards Track                        28 February 2025
-Expires: 1 September 2025
+Intended status: Standards Track                           28 March 2025
+Expires: 29 September 2025
 
 
                              YANG Templates
@@ -46,7 +46,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 1 September 2025.
+   This Internet-Draft will expire on 29 September 2025.
 
 Copyright Notice
 
@@ -67,27 +67,33 @@ Table of Contents
    1.  Introduction
      1.1.  Editorial Note (To be removed by RFC Editor)
    2.  Conventions and Definitions
-   3.  YANG Template Solution
-     3.1.  Defining Templates
-       3.1.1.  Templates with Regular Expressions
+   3.  Requirements
+     3.1.  Defining and Managing Templates
      3.2.  Applying Templates
-       3.2.1.  The "stmt-extend" Metadata
-       3.2.2.  Template Precedence Rules
-     3.3.  Overriding Templates
-     3.4.  Expanding Templates
-     3.5.  Validity of Templates
-   4.  Interaction with NMDA datastores
-   5.  Interaction with Non-NMDA datastores
-   6.  The "ietf-template" YANG Module
-     6.1.  Data Model Overview
-     6.2.  YANG Module
-   7.  Security Considerations
-   8.  IANA Considerations
-     8.1.  The "IETF XML" Registry
-     8.2.  The "YANG Module Names" Registry
-   9.  References
-     9.1.  Normative References
-     9.2.  Informative References
+     3.3.  Producing the Intended Datastore
+     3.4.  Pattern Matching in Templates
+     3.5.  Off-box Template Expansion
+   4.  YANG Template Solution
+     4.1.  Defining Templates
+       4.1.1.  Templates with Regular Expressions
+     4.2.  Applying Templates
+       4.2.1.  The "stmt-extend" Metadata
+       4.2.2.  Template Precedence Rules
+     4.3.  Overriding Templates
+     4.4.  Expanding Templates
+     4.5.  Validity of Templates
+   5.  Interaction with NMDA datastores
+   6.  Interaction with Non-NMDA datastores
+   7.  The "ietf-template" YANG Module
+     7.1.  Data Model Overview
+     7.2.  YANG Module
+   8.  Security Considerations
+   9.  IANA Considerations
+     9.1.  The "IETF XML" Registry
+     9.2.  The "YANG Module Names" Registry
+   10. References
+     10.1.  Normative References
+     10.2.  Informative References
    Appendix A.  Usage Examples
      A.1.  Creating Templates
      A.2.  Applying Templates
@@ -140,7 +146,7 @@ Table of Contents
 
    *  XXXX --> the assigned RFC number for this draft
 
-   *  2024-08-27 --> the actual date of the publication of this document
+   *  2025-03-28 --> the actual date of the publication of this document
 
 2.  Conventions and Definitions
 
@@ -170,12 +176,93 @@ Table of Contents
    parent template:  A configuration template that is an inherited
       template.
 
-3.  YANG Template Solution
+3.  Requirements
 
-3.1.  Defining Templates
+3.1.  Defining and Managing Templates
+
+   Templates can be used with any Yang module.  They contain nodes of
+   configuration data, and are stored persistently in the running
+   datastore of the device.
+
+   A client can view and manipulate a template, including the
+   configuration inside it, by manipulating it in the <running>
+   datastore.  In this sense, a template and its contents behaves like
+   any other subtree of configuration.
+
+3.2.  Applying Templates
+
+   A template can be applied to zero or more nodes in the <running>
+   datastore.  Each node can have zero or more templates applied to it,
+   and the order they are applied is specified by the client.  The order
+   is important when determining the final intended configuration -- see
+   the next section.
+
+   Templates can be applied at multiple points in the hierachy.  The
+   next section states the requirements when a node applies a template
+   and it has an ancestor that also applies a template.
+
+   When viewing the <running> datastore, there is a mechanism to see
+   which templates have been applied to each node, and in which order.
+
+3.3.  Producing the Intended Datastore
+
+   The device's <intended> datastore is the result of combining all the
+   applications of templates together with non-template config.  This is
+   called "expanding out" the templates.
+
+   The intended configuration inside a subtree is the result of taking
+   the relevant contents of every template applied to the subtree's root
+   node and its ancestors, and combining it with the (non-template) data
+   nodes inside the subtree.
+
+   A node inside a subtree may be present in multiple templates that
+   have been applied, and/or it may be present as non-template config
+   inside the subtree.  The requirements for combining the templates and
+   the non-template config together are as follows:
+
+   *  The value of a node in the <intended> configuration is determined
+      by using precedence to decide where to take the value from.
+
+   *  Non-template config always has the highest precedence.
+
+   *  When templates are applied to multiple ancestors, the innermost
+      ancestor takes precedence.
+
+   *  When multiple templates are applied to a particular node, the
+      order of application (as indicated by the client when applying the
+      templates) determines the precedence within that node.
+
+   Whenever the contents of a template is updated in <running>, the
+   result of expanding out the template appears in <intended> and takes
+   effect on the device.
+
+3.4.  Pattern Matching in Templates
+
+   The configuration inside a template definition can contain values for
+   list keys that are simple regular expressions, using a limited subset
+   of regular expression syntax.  This controls which list entries that
+   subtree of the template takes effect for when it is applied.
+
+   An example of this would be to have a template that is applied to a
+   top-level "interfaces" container, but the template only takes effect
+   for certain interface names that match the regular expression.
+
+3.5.  Off-box Template Expansion
+
+   If the client knows the contents of the <running> datastore (non-
+   template config, template definitions and template applications), it
+   must be possible for the client to calculate the result of template
+   expansion.
+
+   In other words, the outcome of template expansion depends solely on
+   the <running> datastore and not the state of the device.
+
+4.  YANG Template Solution
+
+4.1.  Defining Templates
 
    A configuration template must first be defined before it can be
-   inherited Section 3.2.  The creation, modification, and deletion of
+   inherited Section 4.2.  The creation, modification, and deletion of
    configuration templates are achieved by network management operations
    via NETCONF or RESTCONF protocols.  The content of the configuration
    template must be an instantiated chunk of data starting from any
@@ -198,13 +285,13 @@ Table of Contents
                  Figure 1: Example of An Interface template
 
    The YANG data model of configuration templates is defined in
-   Section 6.
+   Section 7.
 
-3.1.1.  Templates with Regular Expressions
+4.1.1.  Templates with Regular Expressions
 
    TBC
 
-3.2.  Applying Templates
+4.2.  Applying Templates
 
    This document allows configuration templates to be inherited by
    configuration nodes in the data tree at corresponding level.
@@ -225,7 +312,7 @@ Table of Contents
    Any modification to the parent template also applies where the
    template is inherited.
 
-3.2.1.  The "stmt-extend" Metadata
+4.2.1.  The "stmt-extend" Metadata
 
    Template inheritance is indicated by declaring the metadata object
    called "stmt-extend".
@@ -272,11 +359,11 @@ Table of Contents
      </interface>
    </interfaces>
 
-3.2.2.  Template Precedence Rules
+4.2.2.  Template Precedence Rules
 
    TBC
 
-3.3.  Overriding Templates
+4.3.  Overriding Templates
 
    If there is some further configuration data that needs to be created
    but not included in the parent template, it can be provided at the
@@ -339,11 +426,11 @@ Table of Contents
    </interface>
  </interfaces>
 
-3.4.  Expanding Templates
+4.4.  Expanding Templates
 
    TBC
 
-3.5.  Validity of Templates
+4.5.  Validity of Templates
 
    The contents of the template alone is not always sufficient to
    enforce the constraints of the data model.  Some constraints may
@@ -360,7 +447,7 @@ Table of Contents
    explicitly provided by the client MUST always be valid, as defined in
    Section 8.1 of [RFC7950].
 
-4.  Interaction with NMDA datastores
+5.  Interaction with NMDA datastores
 
    Some implementation may have predefined configuration templates for
    the convenience of clients, which are present in <system> (if
@@ -377,13 +464,13 @@ Table of Contents
    is inherited or overridden by the node instance MUST be expanded in
    <intended>.
 
-5.  Interaction with Non-NMDA datastores
+6.  Interaction with Non-NMDA datastores
 
    TBC
 
-6.  The "ietf-template" YANG Module
+7.  The "ietf-template" YANG Module
 
-6.1.  Data Model Overview
+7.1.  Data Model Overview
 
    The following tree diagram [RFC8340] illustrates the "ietf-template"
    module:
@@ -401,12 +488,12 @@ Table of Contents
       Editor's Note: Should the 'stmt-extend' and 'operation-tag'
       metadata annotations be defined here?
 
-6.2.  YANG Module
+7.2.  YANG Module
 
    <CODE BEGINS> file "ietf-template@2024-08-27.yang"
-   module ietf-template {
+   module ietf-config-template {
      yang-version 1.1;
-     namespace "urn:ietf:params:xml:ns:yang:ietf-template";
+     namespace "urn:ietf:params:xml:ns:yang:ietf-config-template";
      prefix template;
 
      import ietf-yang-types {
@@ -427,7 +514,7 @@ Table of Contents
        "This module defines a template list with a RPC to expand
         the template.
 
-        Copyright (c) 2024 IETF Trust and the persons identified
+        Copyright (c) 2025 IETF Trust and the persons identified
         as authors of the code. All rights reserved.
 
         Redistribution and use in source and binary forms, with
@@ -448,7 +535,7 @@ Table of Contents
         (RFC 8174) when, and only when, they appear in all
         capitals, as shown here.";
 
-      revision 2024-08-27 {
+      revision 2025-03-28 {
         description
           "Initial revision.";
         reference
@@ -509,13 +596,13 @@ Table of Contents
    }
    <CODE ENDS>
 
-7.  Security Considerations
+8.  Security Considerations
 
    TODO Security
 
-8.  IANA Considerations
+9.  IANA Considerations
 
-8.1.  The "IETF XML" Registry
+9.1.  The "IETF XML" Registry
 
    This document registers the following URI in the "IETF XML Registry"
    [RFC3688].
@@ -524,7 +611,7 @@ Table of Contents
            Registrant Contact: The IESG.
            XML: N/A, the requested URI is an XML namespace.
 
-8.2.  The "YANG Module Names" Registry
+9.2.  The "YANG Module Names" Registry
 
    This document registers the following YANG module in the "YANG Module
    Names" registry [RFC6020].
@@ -535,9 +622,9 @@ Table of Contents
            maintained by IANA? N
            reference:          RFC XXXX
 
-9.  References
+10.  References
 
-9.1.  Normative References
+10.1.  Normative References
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -570,7 +657,7 @@ Table of Contents
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
 
-9.2.  Informative References
+10.2.  Informative References
 
    [I-D.ietf-netmod-system-config]
               Ma, Q., Wu, Q., and C. Feng, "System-defined
