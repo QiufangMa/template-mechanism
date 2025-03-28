@@ -6,6 +6,8 @@
 <meta content="initial-scale=1.0" name="viewport">
 <title>YANG Templates</title>
 <meta content="Qiufang Ma" name="author">
+<meta content="Robert Wills" name="author">
+<meta content="Deepak Rajaram" name="author">
 <meta content="
        NETCONF and RESTCONF protocols provide programmatic operation interfaces for accessing
 configuration data modeled by YANG. This document defines the use of YANG-based
@@ -1053,7 +1055,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <td class="right">March 2025</td>
 </tr></thead>
 <tfoot><tr>
-<td class="left">Ma</td>
+<td class="left">Ma, et al.</td>
 <td class="center">Expires 29 September 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
@@ -1073,12 +1075,19 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
 <dd class="expires"><time datetime="2025-09-29">29 September 2025</time></dd>
-<dt class="label-authors">Author:</dt>
+<dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
-      <div class="author-name">Q. Ma, <span class="editor">Ed.</span>
-</div>
+      <div class="author-name">Q. Ma</div>
 <div class="org">Huawei</div>
+</div>
+<div class="author">
+      <div class="author-name">R. Wills</div>
+<div class="org">Cisco Systems</div>
+</div>
+<div class="author">
+      <div class="author-name">D. Rajaram</div>
+<div class="org">Nokia</div>
 </div>
 </dd>
 </dl>
@@ -1222,7 +1231,7 @@ and ensure consistency of it.<a href="#section-abstract-1" class="pilcrow">¶</a
             <p id="section-toc.1-1.6.1"><a href="#section-6" class="auto internal xref">6</a>.  <a href="#name-interaction-with-non-nmda-d" class="internal xref">Interaction with Non-NMDA datastores</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7">
-            <p id="section-toc.1-1.7.1"><a href="#section-7" class="auto internal xref">7</a>.  <a href="#name-the-ietf-template-yang-modu" class="internal xref">The "ietf-template" YANG Module</a></p>
+            <p id="section-toc.1-1.7.1"><a href="#section-7" class="auto internal xref">7</a>.  <a href="#name-the-ietf-config-template-ya" class="internal xref">The "ietf-config-template" YANG Module</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.1">
                 <p id="section-toc.1-1.7.2.1.1"><a href="#section-7.1" class="auto internal xref">7.1</a>.  <a href="#name-data-model-overview" class="internal xref">Data Model Overview</a></p>
@@ -1278,7 +1287,7 @@ and ensure consistency of it.<a href="#section-abstract-1" class="pilcrow">¶</a
             <p id="section-toc.1-1.13.1"><a href="#appendix-C" class="auto internal xref"></a><a href="#name-contributors" class="internal xref">Contributors</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14">
-            <p id="section-toc.1-1.14.1"><a href="#appendix-D" class="auto internal xref"></a><a href="#name-authors-address" class="internal xref">Author's Address</a></p>
+            <p id="section-toc.1-1.14.1"><a href="#appendix-D" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
 </li>
         </ul>
 </nav>
@@ -1289,25 +1298,21 @@ and ensure consistency of it.<a href="#section-abstract-1" class="pilcrow">¶</a
       <h2 id="name-introduction">
 <a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
       </h2>
-<p id="section-1-1">It is not unusual for the YANG data model <span>[<a href="#RFC7950" class="cite xref">RFC7950</a>]</span> to define some shared profiles that could
-be referenced in order to simplify the configuration of network services or functionalities.
-For example, <span>[<a href="#I-D.ietf-opsawg-ntw-attachment-circuit" class="cite xref">I-D.ietf-opsawg-ntw-attachment-circuit</a>]</span> defines a set of profiles
-at the network level which could be referred to under the node level to factorize
-some common configuration shared by a group of attachment circuits (ACs).<a href="#section-1-1" class="pilcrow">¶</a></p>
-<p id="section-1-2">However, it is not trivial to always take care of the definition of shared profiles/policies/templates during the design of every data model.
-There is a desire to make use of common YANG-based templates without relying on
-specific definition in YANG data models.<a href="#section-1-2" class="pilcrow">¶</a></p>
-<p id="section-1-3">NMDA <span>[<a href="#RFC8342" class="cite xref">RFC8342</a>]</span> allows the configuration templates to be defined in &lt;running&gt;
-and expanded in &lt;intended&gt;, but it does not specify details about how configuration
-templates could be created and applied.<a href="#section-1-3" class="pilcrow">¶</a></p>
-<p id="section-1-4">This document defines the use of configuration templates in the context of YANG-driven
+<p id="section-1-1">This document considers the case of some YANG-defined data on a NETCONF <span>[<a href="#RFC6241" class="cite xref">RFC6241</a>]</span>
+or RESTCONF <span>[<a href="#RFC8040" class="cite xref">RFC8040</a>]</span> server, that is massively replicated and each replication
+instance requires individual configuration with only limited variation.<a href="#section-1-1" class="pilcrow">¶</a></p>
+<p id="section-1-2">Having a user or an application that repetively configures each data instance can
+become complex and prone to errors. This approach may lead to issues, such as low efficiency,
+inconsistency, and increased memory usage on the device due to the large size of
+the running datastore. These challenges only intensify as the system scales.<a href="#section-1-2" class="pilcrow">¶</a></p>
+<p id="section-1-3">This document defines a mechanism called "YANG configuration template" for YANG-driven
 network management protocols such as NETCONF <span>[<a href="#RFC6241" class="cite xref">RFC6241</a>]</span> and RESTCONF <span>[<a href="#RFC8040" class="cite xref">RFC8040</a>]</span>.
-By defining a common set of nodes as a configuration template and applying the
-configuration template repeatedly, it avoids the redundant definition of identical
-configuration and also ensures consistency of it. Configuration template could
-be used based on any existing YANG data models, this document doesn't make any
-assumption on the YANG data model design, i.e., it does not rely on the shared profile/group
-defined in the YANG data model.<a href="#section-1-4" class="pilcrow">¶</a></p>
+A "YANG configuration template" includes a set of node instances that the server is instructed
+to define and repeatedly apply to generate copies of it, though, the client may override
+some of these values on an individual copy basis.<a href="#section-1-3" class="pilcrow">¶</a></p>
+<p id="section-1-4">The template technique detailed in this document does not suffer from the drawbacks
+mentioned earlier where the management client needs to explicitly provide all
+configuration nodes.<a href="#section-1-4" class="pilcrow">¶</a></p>
 <div id="editorial-note-to-be-removed-by-rfc-editor">
 <section id="section-1.1">
         <h3 id="name-editorial-note-to-be-remove">
@@ -1709,18 +1714,18 @@ Configuration template which is inherited or overridden by the node instance <sp
 </div>
 <div id="template-yang">
 <section id="section-7">
-      <h2 id="name-the-ietf-template-yang-modu">
-<a href="#section-7" class="section-number selfRef">7. </a><a href="#name-the-ietf-template-yang-modu" class="section-name selfRef">The "ietf-template" YANG Module</a>
+      <h2 id="name-the-ietf-config-template-ya">
+<a href="#section-7" class="section-number selfRef">7. </a><a href="#name-the-ietf-config-template-ya" class="section-name selfRef">The "ietf-config-template" YANG Module</a>
       </h2>
 <div id="data-model-overview">
 <section id="section-7.1">
         <h3 id="name-data-model-overview">
 <a href="#section-7.1" class="section-number selfRef">7.1. </a><a href="#name-data-model-overview" class="section-name selfRef">Data Model Overview</a>
         </h3>
-<p id="section-7.1-1">The following tree diagram <span>[<a href="#RFC8340" class="cite xref">RFC8340</a>]</span> illustrates the "ietf-template" module:<a href="#section-7.1-1" class="pilcrow">¶</a></p>
+<p id="section-7.1-1">The following tree diagram <span>[<a href="#RFC8340" class="cite xref">RFC8340</a>]</span> illustrates the "ietf-config-template" module:<a href="#section-7.1-1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-7.1-2">
 <pre>
-module: ietf-template
+module: ietf-config-template
   +--rw templates
      +--rw template* [id]
         +--rw id                 string
@@ -1744,7 +1749,7 @@ module: ietf-template
 <a href="#section-7.2" class="section-number selfRef">7.2. </a><a href="#name-yang-module" class="section-name selfRef">YANG Module</a>
         </h3>
 <div class="breakable sourcecode" id="section-7.2-1">
-<pre>&lt;CODE BEGINS&gt; file "ietf-template@2024-08-27.yang"
+<pre>&lt;CODE BEGINS&gt; file "ietf-template@2025-03-28.yang"
 
 module ietf-config-template {
   yang-version 1.1;
@@ -1878,7 +1883,7 @@ module ietf-config-template {
 <p id="section-9.1-1">This document registers the following URI in the "IETF XML Registry" <span>[<a href="#RFC3688" class="cite xref">RFC3688</a>]</span>.<a href="#section-9.1-1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-9.1-2">
 <pre>
-        URI: urn:ietf:params:xml:ns:yang:ietf-template
+        URI: urn:ietf:params:xml:ns:yang:ietf-config-template
         Registrant Contact: The IESG.
         XML: N/A, the requested URI is an XML namespace.
 </pre><a href="#section-9.1-2" class="pilcrow">¶</a>
@@ -1894,8 +1899,8 @@ module ietf-config-template {
    registry <span>[<a href="#RFC6020" class="cite xref">RFC6020</a>]</span>.<a href="#section-9.2-1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-9.2-2">
 <pre>
-        name:               ietf-template
-        namespace:          urn:ietf:params:xml:ns:yang:ietf-template
+        name:               ietf-config-template
+        namespace:          urn:ietf:params:xml:ns:yang:ietf-config-template
         prefix:             template
         maintained by IANA? N
         reference:          RFC XXXX
@@ -1957,21 +1962,13 @@ module ietf-config-template {
         <dd>
 <span class="refAuthor">Ma, Q.</span>, <span class="refAuthor">Wu, Q.</span>, and <span class="refAuthor">C. Feng</span>, <span class="refTitle">"System-defined Configuration"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-netmod-system-config-12</span>, <time datetime="2025-02-12" class="refDate">12 February 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-netmod-system-config-12">https://datatracker.ietf.org/doc/html/draft-ietf-netmod-system-config-12</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="I-D.ietf-opsawg-ntw-attachment-circuit">[I-D.ietf-opsawg-ntw-attachment-circuit]</dt>
-        <dd>
-<span class="refAuthor">Boucadair, M.</span>, <span class="refAuthor">Roberts, R.</span>, <span class="refAuthor">de Dios, O. G.</span>, <span class="refAuthor">Barguil, S.</span>, and <span class="refAuthor">B. Wu</span>, <span class="refTitle">"A Network YANG Data Model for Attachment Circuits"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-opsawg-ntw-attachment-circuit-16</span>, <time datetime="2025-01-23" class="refDate">23 January 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-opsawg-ntw-attachment-circuit-16">https://datatracker.ietf.org/doc/html/draft-ietf-opsawg-ntw-attachment-circuit-16</a>&gt;</span>. </dd>
-<dd class="break"></dd>
 <dt id="RFC7952">[RFC7952]</dt>
         <dd>
 <span class="refAuthor">Lhotka, L.</span>, <span class="refTitle">"Defining and Using Metadata with YANG"</span>, <span class="seriesInfo">RFC 7952</span>, <span class="seriesInfo">DOI 10.17487/RFC7952</span>, <time datetime="2016-08" class="refDate">August 2016</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7952">https://www.rfc-editor.org/rfc/rfc7952</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC8340">[RFC8340]</dt>
-        <dd>
-<span class="refAuthor">Bjorklund, M.</span> and <span class="refAuthor">L. Berger, Ed.</span>, <span class="refTitle">"YANG Tree Diagrams"</span>, <span class="seriesInfo">BCP 215</span>, <span class="seriesInfo">RFC 8340</span>, <span class="seriesInfo">DOI 10.17487/RFC8340</span>, <time datetime="2018-03" class="refDate">March 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8340">https://www.rfc-editor.org/rfc/rfc8340</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="RFC8342">[RFC8342]</dt>
       <dd>
-<span class="refAuthor">Bjorklund, M.</span>, <span class="refAuthor">Schoenwaelder, J.</span>, <span class="refAuthor">Shafer, P.</span>, <span class="refAuthor">Watsen, K.</span>, and <span class="refAuthor">R. Wilton</span>, <span class="refTitle">"Network Management Datastore Architecture (NMDA)"</span>, <span class="seriesInfo">RFC 8342</span>, <span class="seriesInfo">DOI 10.17487/RFC8342</span>, <time datetime="2018-03" class="refDate">March 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8342">https://www.rfc-editor.org/rfc/rfc8342</a>&gt;</span>. </dd>
+<span class="refAuthor">Bjorklund, M.</span> and <span class="refAuthor">L. Berger, Ed.</span>, <span class="refTitle">"YANG Tree Diagrams"</span>, <span class="seriesInfo">BCP 215</span>, <span class="seriesInfo">RFC 8340</span>, <span class="seriesInfo">DOI 10.17487/RFC8340</span>, <time datetime="2018-03" class="refDate">March 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8340">https://www.rfc-editor.org/rfc/rfc8340</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 </dl>
 </section>
@@ -2405,7 +2402,21 @@ the NTP server named "ntp-server-2" as the perferred one for device "ne-4":<a hr
       <h2 id="name-acknowledgments">
 <a href="#name-acknowledgments" class="section-name selfRef">Acknowledgments</a>
       </h2>
-<p id="appendix-B-1">TODO acknowledge.<a href="#appendix-B-1" class="pilcrow">¶</a></p>
+<p id="appendix-B-1">The author would like to thank Lou Berger, Jason Sterne, Kent Watsen, and Robert
+Wilton for comments and contributions made during interim meetings.<a href="#appendix-B-1" class="pilcrow">¶</a></p>
+<p id="appendix-B-2">The author would like to acknowledge the following drafts and
+presenters for kick-starting discussions on Yang Templates:<a href="#appendix-B-2" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-B-3.1">
+          <p id="appendix-B-3.1.1">draft-ma-netmod-yang-config-template-00<a href="#appendix-B-3.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-B-3.2">
+          <p id="appendix-B-3.2.1">draft-rajaram-netmod-yang-cfg-template-framework-00<a href="#appendix-B-3.2.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-B-3.3">
+          <p id="appendix-B-3.3.1">Jan Lindblad<a href="#appendix-B-3.3.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
 </section>
 </div>
 <div id="contributors">
@@ -2425,15 +2436,33 @@ the NTP server named "ntp-server-2" as the perferred one for device "ne-4":<a hr
 <a href="mailto:bill.wu@huawei.com" class="email">bill.wu@huawei.com</a>
 </div>
 </address>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Robert Peschi</span></div>
+<div dir="auto" class="left"><span class="org">Nokia</span></div>
+<div dir="auto" class="left"><span class="locality">Antwerp</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:robert.peschi@nokia.com" class="email">robert.peschi@nokia.com</a>
+</div>
+</address>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Shiya Ashraf</span></div>
+<div dir="auto" class="left"><span class="org">Nokia</span></div>
+<div dir="auto" class="left"><span class="locality">Antwerp</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:shiya.ashraf@nokia.com" class="email">shiya.ashraf@nokia.com</a>
+</div>
+</address>
 </section>
 </div>
 <div id="authors-addresses">
 <section id="appendix-D">
-      <h2 id="name-authors-address">
-<a href="#name-authors-address" class="section-name selfRef">Author's Address</a>
+      <h2 id="name-authors-addresses">
+<a href="#name-authors-addresses" class="section-name selfRef">Authors' Addresses</a>
       </h2>
 <address class="vcard">
-        <div dir="auto" class="left"><span class="fn nameRole">Qiufang Ma (<span class="role">editor</span>)</span></div>
+        <div dir="auto" class="left"><span class="fn nameRole">Qiufang Ma</span></div>
 <div dir="auto" class="left"><span class="org">Huawei</span></div>
 <div dir="auto" class="left"><span class="street-address">101 Software Avenue, Yuhua District</span></div>
 <div dir="auto" class="left"><span class="locality">Jiangsu</span></div>
@@ -2442,6 +2471,23 @@ the NTP server named "ntp-server-2" as the perferred one for device "ne-4":<a hr
 <div class="email">
 <span>Email:</span>
 <a href="mailto:maqiufang1@huawei.com" class="email">maqiufang1@huawei.com</a>
+</div>
+</address>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Robert Wills</span></div>
+<div dir="auto" class="left"><span class="org">Cisco Systems</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:rowills@cisco.com" class="email">rowills@cisco.com</a>
+</div>
+</address>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Deepak Rajaram</span></div>
+<div dir="auto" class="left"><span class="org">Nokia</span></div>
+<div dir="auto" class="left"><span class="locality">Chennai</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:deepak.rajaram@nokia.com" class="email">deepak.rajaram@nokia.com</a>
 </div>
 </address>
 </section>

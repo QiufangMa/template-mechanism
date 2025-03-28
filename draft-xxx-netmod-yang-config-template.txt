@@ -2,10 +2,13 @@
 
 
 
-Network Modeling                                              Q. Ma, Ed.
+Network Modeling                                                   Q. Ma
 Internet-Draft                                                    Huawei
-Intended status: Standards Track                           28 March 2025
-Expires: 29 September 2025
+Intended status: Standards Track                                R. Wills
+Expires: 29 September 2025                                 Cisco Systems
+                                                              D. Rajaram
+                                                                   Nokia
+                                                           28 March 2025
 
 
                              YANG Templates
@@ -84,7 +87,7 @@ Table of Contents
      4.5.  Validity of Templates
    5.  Interaction with NMDA datastores
    6.  Interaction with Non-NMDA datastores
-   7.  The "ietf-template" YANG Module
+   7.  The "ietf-config-template" YANG Module
      7.1.  Data Model Overview
      7.2.  YANG Module
    8.  Security Considerations
@@ -100,37 +103,32 @@ Table of Contents
      A.3.  Overriding Templates
    Acknowledgments
    Contributors
-   Author's Address
+   Authors' Addresses
 
 1.  Introduction
 
-   It is not unusual for the YANG data model [RFC7950] to define some
-   shared profiles that could be referenced in order to simplify the
-   configuration of network services or functionalities.  For example,
-   [I-D.ietf-opsawg-ntw-attachment-circuit] defines a set of profiles at
-   the network level which could be referred to under the node level to
-   factorize some common configuration shared by a group of attachment
-   circuits (ACs).
+   This document considers the case of some YANG-defined data on a
+   NETCONF [RFC6241] or RESTCONF [RFC8040] server, that is massively
+   replicated and each replication instance requires individual
+   configuration with only limited variation.
 
-   However, it is not trivial to always take care of the definition of
-   shared profiles/policies/templates during the design of every data
-   model.  There is a desire to make use of common YANG-based templates
-   without relying on specific definition in YANG data models.
+   Having a user or an application that repetively configures each data
+   instance can become complex and prone to errors.  This approach may
+   lead to issues, such as low efficiency, inconsistency, and increased
+   memory usage on the device due to the large size of the running
+   datastore.  These challenges only intensify as the system scales.
 
-   NMDA [RFC8342] allows the configuration templates to be defined in
-   <running> and expanded in <intended>, but it does not specify details
-   about how configuration templates could be created and applied.
+   This document defines a mechanism called "YANG configuration
+   template" for YANG-driven network management protocols such as
+   NETCONF [RFC6241] and RESTCONF [RFC8040].  A "YANG configuration
+   template" includes a set of node instances that the server is
+   instructed to define and repeatedly apply to generate copies of it,
+   though, the client may override some of these values on an individual
+   copy basis.
 
-   This document defines the use of configuration templates in the
-   context of YANG-driven network management protocols such as NETCONF
-   [RFC6241] and RESTCONF [RFC8040].  By defining a common set of nodes
-   as a configuration template and applying the configuration template
-   repeatedly, it avoids the redundant definition of identical
-   configuration and also ensures consistency of it.  Configuration
-   template could be used based on any existing YANG data models, this
-   document doesn't make any assumption on the YANG data model design,
-   i.e., it does not rely on the shared profile/group defined in the
-   YANG data model.
+   The template technique detailed in this document does not suffer from
+   the drawbacks mentioned earlier where the management client needs to
+   explicitly provide all configuration nodes.
 
 1.1.  Editorial Note (To be removed by RFC Editor)
 
@@ -468,14 +466,14 @@ Table of Contents
 
    TBC
 
-7.  The "ietf-template" YANG Module
+7.  The "ietf-config-template" YANG Module
 
 7.1.  Data Model Overview
 
-   The following tree diagram [RFC8340] illustrates the "ietf-template"
-   module:
+   The following tree diagram [RFC8340] illustrates the "ietf-config-
+   template" module:
 
-   module: ietf-template
+   module: ietf-config-template
      +--rw templates
         +--rw template* [id]
            +--rw id                 string
@@ -490,7 +488,7 @@ Table of Contents
 
 7.2.  YANG Module
 
-   <CODE BEGINS> file "ietf-template@2024-08-27.yang"
+   <CODE BEGINS> file "ietf-template@2025-03-28.yang"
    module ietf-config-template {
      yang-version 1.1;
      namespace "urn:ietf:params:xml:ns:yang:ietf-config-template";
@@ -607,7 +605,7 @@ Table of Contents
    This document registers the following URI in the "IETF XML Registry"
    [RFC3688].
 
-           URI: urn:ietf:params:xml:ns:yang:ietf-template
+           URI: urn:ietf:params:xml:ns:yang:ietf-config-template
            Registrant Contact: The IESG.
            XML: N/A, the requested URI is an XML namespace.
 
@@ -616,11 +614,11 @@ Table of Contents
    This document registers the following YANG module in the "YANG Module
    Names" registry [RFC6020].
 
-           name:               ietf-template
-           namespace:          urn:ietf:params:xml:ns:yang:ietf-template
-           prefix:             template
-           maintained by IANA? N
-           reference:          RFC XXXX
+        name:               ietf-config-template
+        namespace:          urn:ietf:params:xml:ns:yang:ietf-config-template
+        prefix:             template
+        maintained by IANA? N
+        reference:          RFC XXXX
 
 10.  References
 
@@ -666,14 +664,6 @@ Table of Contents
               <https://datatracker.ietf.org/doc/html/draft-ietf-netmod-
               system-config-12>.
 
-   [I-D.ietf-opsawg-ntw-attachment-circuit]
-              Boucadair, M., Roberts, R., de Dios, O. G., Barguil, S.,
-              and B. Wu, "A Network YANG Data Model for Attachment
-              Circuits", Work in Progress, Internet-Draft, draft-ietf-
-              opsawg-ntw-attachment-circuit-16, 23 January 2025,
-              <https://datatracker.ietf.org/doc/html/draft-ietf-opsawg-
-              ntw-attachment-circuit-16>.
-
    [RFC7952]  Lhotka, L., "Defining and Using Metadata with YANG",
               RFC 7952, DOI 10.17487/RFC7952, August 2016,
               <https://www.rfc-editor.org/rfc/rfc7952>.
@@ -681,11 +671,6 @@ Table of Contents
    [RFC8340]  Bjorklund, M. and L. Berger, Ed., "YANG Tree Diagrams",
               BCP 215, RFC 8340, DOI 10.17487/RFC8340, March 2018,
               <https://www.rfc-editor.org/rfc/rfc8340>.
-
-   [RFC8342]  Bjorklund, M., Schoenwaelder, J., Shafer, P., Watsen, K.,
-              and R. Wilton, "Network Management Datastore Architecture
-              (NMDA)", RFC 8342, DOI 10.17487/RFC8342, March 2018,
-              <https://www.rfc-editor.org/rfc/rfc8342>.
 
 Appendix A.  Usage Examples
 
@@ -1080,7 +1065,18 @@ A.3.  Overriding Templates
 
 Acknowledgments
 
-   TODO acknowledge.
+   The author would like to thank Lou Berger, Jason Sterne, Kent Watsen,
+   and Robert Wilton for comments and contributions made during interim
+   meetings.
+
+   The author would like to acknowledge the following drafts and
+   presenters for kick-starting discussions on Yang Templates:
+
+   *  draft-ma-netmod-yang-config-template-00
+
+   *  draft-rajaram-netmod-yang-cfg-template-framework-00
+
+   *  Jan Lindblad
 
 Contributors
 
@@ -1093,12 +1089,35 @@ Contributors
    Email: bill.wu@huawei.com
 
 
-Author's Address
+   Robert Peschi
+   Nokia
+   Antwerp
+   Email: robert.peschi@nokia.com
 
-   Qiufang Ma (editor)
+
+   Shiya Ashraf
+   Nokia
+   Antwerp
+   Email: shiya.ashraf@nokia.com
+
+
+Authors' Addresses
+
+   Qiufang Ma
    Huawei
    101 Software Avenue, Yuhua District
    Jiangsu
    210012
    China
    Email: maqiufang1@huawei.com
+
+
+   Robert Wills
+   Cisco Systems
+   Email: rowills@cisco.com
+
+
+   Deepak Rajaram
+   Nokia
+   Chennai
+   Email: deepak.rajaram@nokia.com
