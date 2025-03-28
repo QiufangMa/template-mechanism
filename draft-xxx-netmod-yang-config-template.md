@@ -124,13 +124,13 @@ configuration data, and are stored persistently in the running
 datastore of the device.
 
 A client can view and manipulate a template, including the
-configuration inside it, by manipulating it in the <running>
+configuration inside it, by manipulating it in the \<running\>
 datastore.  In this sense, a template and its contents behaves like
 any other subtree of configuration.
 
 ## Applying Templates
 
-A template can be applied to zero or more nodes in the <running>
+A template can be applied to zero or more nodes in the \<running\>
 datastore.  Each node can have zero or more templates applied to it,
 and the order they are applied is specified by the client.  The order
 is important when determining the final intended configuration -- see
@@ -140,12 +140,12 @@ Templates can be applied at multiple points in the hierachy.  The
 next section states the requirements when a node applies a template
 and it has an ancestor that also applies a template.
 
-When viewing the <running> datastore, there is a mechanism to see
+When viewing the \<running\> datastore, there is a mechanism to see
 which templates have been applied to each node, and in which order.
 
 ## Producing the Intended Datastore
 
-The device's <intended> datastore is the result of combining all the
+The device's \<intended\> datastore is the result of combining all the
 applications of templates together with non-template config.  This is
 called "expanding out" the templates.
 
@@ -159,7 +159,7 @@ have been applied, and/or it may be present as non-template config
 inside the subtree.  The requirements for combining the templates and
 the non-template config together are as follows:
 
-*  The value of a node in the <intended> configuration is determined
+*  The value of a node in the \<intended\> configuration is determined
    by using precedence to decide where to take the value from.
 
 *  Non-template config always has the highest precedence.
@@ -171,8 +171,8 @@ the non-template config together are as follows:
    order of application (as indicated by the client when applying the
    templates) determines the precedence within that node.
 
-Whenever the contents of a template is updated in <running>, the
-result of expanding out the template appears in <intended> and takes
+Whenever the contents of a template is updated in \<running\>, the
+result of expanding out the template appears in \<intended\> and takes
 effect on the device.
 
 ## Pattern Matching in Templates
@@ -183,12 +183,12 @@ of regular expression syntax.  This controls which list entries that
 subtree of the template takes effect for when it is applied.
 
 An example of this would be to have a template that is applied to a
-top-level <interfaces> container, but the template only takes effect
+top-level "interfaces" container, but the template only takes effect
 for certain interface names that match the regular expression.
 
 ## Off-box Template Expansion
 
-If the client knows the contents of the <running> datastore (non-
+If the client knows the contents of the \<running\> datastore (non-
 template config, template definitions and template applications), it
 must be possible for the client to calculate the result of template
 expansion.
