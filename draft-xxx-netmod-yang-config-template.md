@@ -194,7 +194,7 @@ must be possible for the client to calculate the result of template
 expansion.
 
 In other words, the outcome of template expansion depends solely on
-the <running> datastore and not the state of the device.
+the \<running\> datastore and not the state of the device.
 
 # YANG Template Solution
 
