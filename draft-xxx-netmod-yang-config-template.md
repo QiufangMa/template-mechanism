@@ -77,6 +77,7 @@ be used based on any existing YANG data models, this document doesn't make any
 assumption on the YANG data model design, i.e., it does not rely on the shared profile/group
 defined in the YANG data model.
 
+
 ## Editorial Note (To be removed by RFC Editor)
 
 Note to the RFC Editor: This section is to be removed prior to publication.
@@ -89,7 +90,7 @@ elsewhere in this document.
 Please apply the following replacements:
 
    * XXXX --> the assigned RFC number for this draft
-   * 2024-08-27 --> the actual date of the publication of this document
+   * 2025-03-28 --> the actual date of the publication of this document
 
 # Conventions and Definitions
 
@@ -113,6 +114,87 @@ inherited template:
 
 parent template:
 : A configuration template that is an inherited template.
+
+# Requirements {#requirements}
+
+## Defining and Managing Templates
+
+Templates can be used with any Yang module.  They contain nodes of
+configuration data, and are stored persistently in the running
+datastore of the device.
+
+A client can view and manipulate a template, including the
+configuration inside it, by manipulating it in the <running>
+datastore.  In this sense, a template and its contents behaves like
+any other subtree of configuration.
+
+## Applying Templates
+
+A template can be applied to zero or more nodes in the <running>
+datastore.  Each node can have zero or more templates applied to it,
+and the order they are applied is specified by the client.  The order
+is important when determining the final intended configuration -- see
+the next section.
+
+Templates can be applied at multiple points in the hierachy.  The
+next section states the requirements when a node applies a template
+and it has an ancestor that also applies a template.
+
+When viewing the <running> datastore, there is a mechanism to see
+which templates have been applied to each node, and in which order.
+
+## Producing the Intended Datastore
+
+The device's <intended> datastore is the result of combining all the
+applications of templates together with non-template config.  This is
+called "expanding out" the templates.
+
+The intended configuration inside a subtree is the result of taking
+the relevant contents of every template applied to the subtree's root
+node and its ancestors, and combining it with the (non-template) data
+nodes inside the subtree.
+
+A node inside a subtree may be present in multiple templates that
+have been applied, and/or it may be present as non-template config
+inside the subtree.  The requirements for combining the templates and
+the non-template config together are as follows:
+
+*  The value of a node in the <intended> configuration is determined
+   by using precedence to decide where to take the value from.
+
+*  Non-template config always has the highest precedence.
+
+*  When templates are applied to multiple ancestors, the innermost
+   ancestor takes precedence.
+
+*  When multiple templates are applied to a particular node, the
+   order of application (as indicated by the client when applying the
+   templates) determines the precedence within that node.
+
+Whenever the contents of a template is updated in <running>, the
+result of expanding out the template appears in <intended> and takes
+effect on the device.
+
+## Pattern Matching in Templates
+
+The configuration inside a template definition can contain values for
+list keys that are simple regular expressions, using a limited subset
+of regular expression syntax.  This controls which list entries that
+subtree of the template takes effect for when it is applied.
+
+An example of this would be to have a template that is applied to a
+top-level <interfaces> container, but the template only takes effect
+for certain interface names that match the regular expression.
+
+## Off-box Template Expansion
+
+If the client knows the contents of the <running> datastore (non-
+template config, template definitions and template applications), it
+must be possible for the client to calculate the result of template
+expansion.
+
+In other words, the outcome of template expansion depends solely on
+the <running> datastore and not the state of the device.
 
 # YANG Template Solution
 
