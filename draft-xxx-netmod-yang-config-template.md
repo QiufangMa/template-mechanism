@@ -16,44 +16,41 @@ keyword:
  - template
  - NMDA
 
-author:
--
-   fullname: Qiufang Ma
-   organization: Huawei
-   street: 101 Software Avenue, Yuhua District
-   city: Jiangsu
-   code: 210012
-   country: China
-   email: maqiufang1@huawei.com
--
-  fullname: Robert Wills
-  organization: Cisco Systems
-  email: rowills@cisco.com
--
-  fullname: Deepak Rajaram
-  organization: Nokia
-  city: Chennai
-  email: deepak.rajaram@nokia.com
+ author:
+ -
+    fullname: Qiufang Ma
+    organization: Huawei
+    role: editor
+    street: 101 Software Avenue, Yuhua District
+    city: Jiangsu
+    code: 210012
+    country: China
+    email: maqiufang1@huawei.com
 
-contributor:
--
-   fullname: Qin Wu
-   organization: Huawei
-   street: 101 Software Avenue, Yuhua District
-   city: Jiangsu
-   code: 210012
-   country: China
-   email: bill.wu@huawei.com
--
-  fullname: Robert Peschi
-  organization: Nokia
-  city: Antwerp
-  email: robert.peschi@nokia.com
--
-  fullname: Shiya Ashraf
-  organization: Nokia
-  city: Antwerp
-  email: shiya.ashraf@nokia.com
+ -
+    fullname: Robert Wills
+    organization: Cisco
+    role: editor
+    country: United Kingdom
+    email: rowills@cisco.com
+
+ -
+    fullname: Deepak Rajaram
+    organization: Nokia
+    role: editor
+    country: India
+    email: deepak.rajaram@nokia.com
+
+ contributor:
+ -
+    fullname: Qin Wu
+    organization: Huawei
+    street: 101 Software Avenue, Yuhua District
+    city: Jiangsu
+    code: 210012
+    country: China
+    email: bill.wu@huawei.com
+
 
 normative:
 
@@ -66,30 +63,42 @@ NETCONF and RESTCONF protocols provide programmatic operation interfaces for acc
 configuration data modeled by YANG. This document defines the use of YANG-based
 configuration template mechanism so that the configuration data could be defined as template
 and applied repeatedly to avoid the redundant definition of identical Configuration
-and ensure consistency of it.
+and ensure consistency of it. This approach is both convenient and efficient,
+as it minimizes the size of the running datastore and reduces network provisioning time.
 
 --- middle
 
 # Introduction
 
-This document considers the case of some YANG-defined data on a NETCONF {{!RFC6241}}
-or RESTCONF {{!RFC8040}} server, that is massively replicated and each replication
-instance requires individual configuration with only limited variation.
+This document considers the case of a device that contains a functional entity, characterized
+by a well-defined data nodes pattern, that is massively replicated and where each replication
+instance needs individual configuration with only limited variation.Having a device manager
+that repetitively configures each data node for every functional instance can become complex
+and prone to errors. This approach may lead to issues, such as extended configuration times,
+increased memory usage on the device, and inefficient YANG validation processes due to the
+large size of the running data store. These challenges only intensify as the system scales.
+This document proposes a technique to improve this, which is based on 'YANG templates'
+that results in a smaller running data store even when the device is very large.
 
-Having a user or an application that repetively configures each data instance can
-become complex and prone to errors. This approach may lead to issues, such as low efficiency,
-inconsistency, and increased memory usage on the device due to the large size of
-the running datastore. These challenges only intensify as the system scales.
+A 'YANG template' is the configuration of a functional entity that the device is instructed
+to replicate multiple times to generate copies of the entity. The technique that is outlined
+in this document allows to generate copies with the same data node values as in the template
+with the possibility, though, to overrule some of these values on an individual copy basis.
 
-This document defines a mechanism called "YANG configuration template" for YANG-driven
+This document describes a mechanism whereby nodes of configuration data can be placed into templates,
+and templates can be applied to subtrees in a configuration datastore.
+When a template is applied to a subtree, the configuration in the template takes effect for that subtree
+(unless other configuration takes precedence, as described later in this document)
+
+NMDA {{?RFC8342}} allows the configuration templates to be defined in \<running\>
+and expanded in \<intended\>, but it does not specify details about how configuration
+templates could be created and applied.
+
+This document defines the use of configuration templates in the context of YANG-driven
 network management protocols such as NETCONF {{!RFC6241}} and RESTCONF {{!RFC8040}}.
-A "YANG configuration template" includes a set of node instances that the server is instructed
-to define and repeatedly apply to generate copies of it, though, the client may override
-some of these values on an individual copy basis.
-
-The template technique detailed in this document does not suffer from the drawbacks
-mentioned earlier where the management client needs to explicitly provide all
-configuration nodes.
+Configuration template could be used based on any existing YANG data models,
+this document doesn't make any assumption on the YANG data model design,
+i.e., it does not rely on the shared profile/group defined in the YANG data model.
 
 
 ## Editorial Note (To be removed by RFC Editor)
@@ -130,6 +139,13 @@ parent template:
 : A configuration template that is an inherited template.
 
 # Requirements {#requirements}
+
+This section describes the requirements that the Yang Templates solution must
+satisfy. These requirements were all discussed in the Interim Meetings, and a
+rough consensus was reached on each of them by the participants in the meetings.
+A general theme of the Yang Templates work is to come up with a "Minimal Viable
+Product" that is useful but not over-complicated. More advanced features could be
+considered as extensions in later drafts.
 
 ## Defining and Managing Templates
 
