@@ -16,40 +16,40 @@ keyword:
  - template
  - NMDA
 
- author:
- -
-    fullname: Qiufang Ma
-    organization: Huawei
-    role: editor
-    street: 101 Software Avenue, Yuhua District
-    city: Jiangsu
-    code: 210012
-    country: China
-    email: maqiufang1@huawei.com
+author:
+-
+   fullname: Qiufang Ma
+   organization: Huawei
+   role: editor
+   street: 101 Software Avenue, Yuhua District
+   city: Jiangsu
+   code: 210012
+   country: China
+   email: maqiufang1@huawei.com
 
- -
-    fullname: Robert Wills
-    organization: Cisco
-    role: editor
-    country: United Kingdom
-    email: rowills@cisco.com
+-
+   fullname: Robert Wills
+   organization: Cisco
+   role: editor
+   country: United Kingdom
+   email: rowills@cisco.com
 
- -
-    fullname: Deepak Rajaram
-    organization: Nokia
-    role: editor
-    country: India
-    email: deepak.rajaram@nokia.com
+-
+   fullname: Deepak Rajaram
+   organization: Nokia
+   role: editor
+   country: India
+   email: deepak.rajaram@nokia.com
 
- contributor:
- -
-    fullname: Qin Wu
-    organization: Huawei
-    street: 101 Software Avenue, Yuhua District
-    city: Jiangsu
-    code: 210012
-    country: China
-    email: bill.wu@huawei.com
+contributor:
+-
+   fullname: Qin Wu
+   organization: Huawei
+   street: 101 Software Avenue, Yuhua District
+   city: Jiangsu
+   code: 210012
+   country: China
+   email: bill.wu@huawei.com
 
 
 normative:
