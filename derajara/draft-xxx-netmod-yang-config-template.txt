@@ -5,10 +5,10 @@
 Network Modeling                                                   Q. Ma
 Internet-Draft                                                    Huawei
 Intended status: Standards Track                                R. Wills
-Expires: 17 October 2025                                   Cisco Systems
+Expires: 18 October 2025                                   Cisco Systems
                                                               D. Rajaram
                                                                    Nokia
-                                                           15 April 2025
+                                                           16 April 2025
 
 
                              YANG Templates
@@ -49,7 +49,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 17 October 2025.
+   This Internet-Draft will expire on 18 October 2025.
 
 Copyright Notice
 
