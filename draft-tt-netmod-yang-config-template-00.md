@@ -379,7 +379,7 @@ The following tree diagram {{?RFC8340}} illustrates the "ietf-template" module:
 
 ~~~~
 <CODE BEGINS> file "ietf-template@2024-08-27.yang"
-{::include-fold ./yang/ietf-template.yang}
+{::include-fold ./yang/ietf-config-template.yang}
 <CODE ENDS>
 ~~~~
 
