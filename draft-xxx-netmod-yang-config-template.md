@@ -80,15 +80,12 @@ large size of the running data store. These challenges only intensify as the sys
 This document proposes a technique to improve this, which is based on 'YANG templates'
 that results in a smaller running data store even when the device is very large.
 
-A 'YANG template' is the configuration of a functional entity that the device is instructed
-to replicate multiple times to generate copies of the entity. The technique that is outlined
-in this document allows to generate copies with the same data node values as in the template
-with the possibility, though, to overrule some of these values on an individual copy basis.
-
-This document describes a mechanism whereby nodes of configuration data can be placed into templates,
-and templates can be applied to subtrees in a configuration datastore.
-When a template is applied to a subtree, the configuration in the template takes effect for that subtree
-(unless other configuration takes precedence, as described later in this document)
+```suggestion
+A 'YANG template' is a fragment of configuration that the device is instructed to
+replicate multiple times to generate copies of the configuration.  This allows
+repetitive subtrees of configuration to be written only once, in the template.
+Individual instantiations of a template can override the values of nodes where
+this is required, or add new instance-specific nodes.
 
 NMDA {{?RFC8342}} allows the configuration templates to be defined in \<running\>
 and expanded in \<intended\>, but it does not specify details about how configuration
