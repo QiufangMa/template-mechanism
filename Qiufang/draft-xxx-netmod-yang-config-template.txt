@@ -5,10 +5,10 @@
 Network Modeling                                              Q. Ma, Ed.
 Internet-Draft                                                    Huawei
 Intended status: Standards Track                           R. Wills, Ed.
-Expires: 18 October 2025                                           Cisco
+Expires: 24 November 2025                                          Cisco
                                                          D. Rajaram, Ed.
                                                                    Nokia
-                                                           16 April 2025
+                                                             23 May 2025
 
 
                              YANG Templates
@@ -51,7 +51,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 18 October 2025.
+   This Internet-Draft will expire on 24 November 2025.
 
 Copyright Notice
 
@@ -123,19 +123,12 @@ Table of Contents
    based on 'YANG templates' that results in a smaller running data
    store even when the device is very large.
 
-   A 'YANG template' is the configuration of a functional entity that
+   ```suggestion A 'YANG template' is a fragment of configuration that
    the device is instructed to replicate multiple times to generate
-   copies of the entity.  The technique that is outlined in this
-   document allows to generate copies with the same data node values as
-   in the template with the possibility, though, to overrule some of
-   these values on an individual copy basis.
-
-   This document describes a mechanism whereby nodes of configuration
-   data can be placed into templates, and templates can be applied to
-   subtrees in a configuration datastore.  When a template is applied to
-   a subtree, the configuration in the template takes effect for that
-   subtree (unless other configuration takes precedence, as described
-   later in this document)
+   copies of the configuration.  This allows repetitive subtrees of
+   configuration to be written only once, in the template.  Individual
+   instantiations of a template can override the values of nodes where
+   this is required, or add new instance-specific nodes.
 
    NMDA [RFC8342] allows the configuration templates to be defined in
    <running> and expanded in <intended>, but it does not specify details
