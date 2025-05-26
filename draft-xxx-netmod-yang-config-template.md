@@ -63,8 +63,7 @@ NETCONF and RESTCONF protocols provide programmatic operation interfaces for acc
 configuration data modeled by YANG. This document defines the use of YANG-based
 configuration template mechanism so that the configuration data could be defined as template
 and applied repeatedly to avoid the redundant definition of identical Configuration
-and ensure consistency of it. This approach is both convenient and efficient,
-as it minimizes the size of the running datastore and reduces network provisioning time.
+and ensure the consistency of it.  This approach is convenient and efficient, because it minimizes duplication in the running datastore.
 
 --- middle
 
