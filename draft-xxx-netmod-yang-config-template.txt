@@ -120,12 +120,12 @@ Table of Contents
    templates", that results in a smaller running datastore even when the
    configuration in <running> is large.
 
-   ```suggestion A 'YANG template' is a fragment of configuration that
-   the device is instructed to replicate multiple times to generate
-   copies of the configuration.  This allows repetitive subtrees of
-   configuration to be written only once, in the template.  Individual
-   instantiations of a template can override the values of nodes where
-   this is required, or add new instance-specific nodes.
+   A 'YANG template' is a fragment of configuration that the device is
+   instructed to replicate multiple times to generate copies of the
+   configuration.  This allows repetitive subtrees of configuration to
+   be written only once, in the template.  Individual instantiations of
+   a template can override the values of nodes where this is required,
+   or add new instance-specific nodes.
 
    NMDA [RFC8342] allows the configuration templates to be defined in
    <running> and expanded in <intended>, but it does not specify details
