@@ -2,13 +2,13 @@
 
 
 
-Network Modeling                                                   Q. Ma
+Network Modeling                                              Q. Ma, Ed.
 Internet-Draft                                                    Huawei
-Intended status: Standards Track                                R. Wills
-Expires: 29 September 2025                                 Cisco Systems
-                                                              D. Rajaram
+Intended status: Standards Track                           R. Wills, Ed.
+Expires: 27 November 2025                                          Cisco
+                                                         D. Rajaram, Ed.
                                                                    Nokia
-                                                           28 March 2025
+                                                             26 May 2025
 
 
                              YANG Templates
@@ -21,7 +21,9 @@ Abstract
    document defines the use of YANG-based configuration template
    mechanism so that the configuration data could be defined as template
    and applied repeatedly to avoid the redundant definition of identical
-   Configuration and ensure consistency of it.
+   Configuration and ensure the consistency of it.  This approach is
+   convenient and efficient, because it minimizes duplication in the
+   running datastore.
 
 Discussion Venues
 
@@ -49,7 +51,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 29 September 2025.
+   This Internet-Draft will expire on 27 November 2025.
 
 Copyright Notice
 
@@ -107,28 +109,34 @@ Table of Contents
 
 1.  Introduction
 
-   This document considers the case of some YANG-defined data on a
-   NETCONF [RFC6241] or RESTCONF [RFC8040] server, that is massively
-   replicated and each replication instance requires individual
-   configuration with only limited variation.
+   This document considers the case of a datastore that contains
+   multiple subtrees with similar or identical nodes within them, such
+   that the datastore contains repetitive data with limited variation.
+   If a client has to repeatedly configure the same nodes for each
+   subtree, this can become complex, error-prone, and mask the intent of
+   the client.
 
-   Having a user or an application that repetively configures each data
-   instance can become complex and prone to errors.  This approach may
-   lead to issues, such as low efficiency, inconsistency, and increased
-   memory usage on the device due to the large size of the running
-   datastore.  These challenges only intensify as the system scales.
+   This document proposes a solution to improve this, called "YANG
+   templates", that results in a smaller running datastore even when the
+   configuration in <running> is large.
 
-   This document defines a mechanism called "YANG configuration
-   template" for YANG-driven network management protocols such as
-   NETCONF [RFC6241] and RESTCONF [RFC8040].  A "YANG configuration
-   template" includes a set of node instances that the server is
-   instructed to define and repeatedly apply to generate copies of it,
-   though, the client may override some of these values on an individual
-   copy basis.
+   ```suggestion A 'YANG template' is a fragment of configuration that
+   the device is instructed to replicate multiple times to generate
+   copies of the configuration.  This allows repetitive subtrees of
+   configuration to be written only once, in the template.  Individual
+   instantiations of a template can override the values of nodes where
+   this is required, or add new instance-specific nodes.
 
-   The template technique detailed in this document does not suffer from
-   the drawbacks mentioned earlier where the management client needs to
-   explicitly provide all configuration nodes.
+   NMDA [RFC8342] allows the configuration templates to be defined in
+   <running> and expanded in <intended>, but it does not specify details
+   about how configuration templates could be created and applied.
+
+   This document defines the use of configuration templates in the
+   context of YANG-driven network management protocols such as NETCONF
+   [RFC6241] and RESTCONF [RFC8040].  Configuration template could be
+   used based on any existing YANG data models, this document doesn't
+   make any assumption on the YANG data model design, i.e., it does not
+   rely on the shared profile/group defined in the YANG data model.
 
 1.1.  Editorial Note (To be removed by RFC Editor)
 
@@ -175,6 +183,14 @@ Table of Contents
       template.
 
 3.  Requirements
+
+   This section describes the requirements that the Yang Templates
+   solution must satisfy.  These requirements were all discussed in the
+   Interim Meetings, and a rough consensus was reached on each of them
+   by the participants in the meetings.  A general theme of the Yang
+   Templates work is to come up with a "Minimal Viable Product" that is
+   useful but not over-complicated.  More advanced features could be
+   considered as extensions in later drafts.
 
 3.1.  Defining and Managing Templates
 
@@ -672,6 +688,11 @@ Table of Contents
               BCP 215, RFC 8340, DOI 10.17487/RFC8340, March 2018,
               <https://www.rfc-editor.org/rfc/rfc8340>.
 
+   [RFC8342]  Bjorklund, M., Schoenwaelder, J., Shafer, P., Watsen, K.,
+              and R. Wilton, "Network Management Datastore Architecture
+              (NMDA)", RFC 8342, DOI 10.17487/RFC8342, March 2018,
+              <https://www.rfc-editor.org/rfc/rfc8342>.
+
 Appendix A.  Usage Examples
 
    This section provides some examples to show the use of templates.
@@ -1089,21 +1110,9 @@ Contributors
    Email: bill.wu@huawei.com
 
 
-   Robert Peschi
-   Nokia
-   Antwerp
-   Email: robert.peschi@nokia.com
-
-
-   Shiya Ashraf
-   Nokia
-   Antwerp
-   Email: shiya.ashraf@nokia.com
-
-
 Authors' Addresses
 
-   Qiufang Ma
+   Qiufang Ma (editor)
    Huawei
    101 Software Avenue, Yuhua District
    Jiangsu
@@ -1112,12 +1121,13 @@ Authors' Addresses
    Email: maqiufang1@huawei.com
 
 
-   Robert Wills
-   Cisco Systems
+   Robert Wills (editor)
+   Cisco
+   United Kingdom
    Email: rowills@cisco.com
 
 
-   Deepak Rajaram
+   Deepak Rajaram (editor)
    Nokia
-   Chennai
+   India
    Email: deepak.rajaram@nokia.com
