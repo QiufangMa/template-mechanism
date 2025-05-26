@@ -1301,29 +1301,27 @@ and ensure the consistency of it.  This approach is convenient and efficient, be
       <h2 id="name-introduction">
 <a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
       </h2>
-<p id="section-1-1">This document considers the case of a device that contains a functional entity, characterized
-by a well-defined data nodes pattern, that is massively replicated and where each replication
-instance needs individual configuration with only limited variation.Having a device manager
-that repetitively configures each data node for every functional instance can become complex
-and prone to errors. This approach may lead to issues, such as extended configuration times,
-increased memory usage on the device, and inefficient YANG validation processes due to the
-large size of the running data store. These challenges only intensify as the system scales.
-This document proposes a technique to improve this, which is based on 'YANG templates'
-that results in a smaller running data store even when the device is very large.<a href="#section-1-1" class="pilcrow">¶</a></p>
-<p id="section-1-2">```suggestion
+<p id="section-1-1">This document considers the case of a datastore that contains multiple subtrees
+with similar or identical nodes within them, such that the datastore contains
+repetitive data with limited variation. If a client has to repeatedly configure the
+same nodes for each subtree, this can become complex, error-prone, and mask
+the intent of the client.<a href="#section-1-1" class="pilcrow">¶</a></p>
+<p id="section-1-2">This document proposes a solution to improve this, called "YANG templates",
+that results in a smaller running datastore even when the configuration in &lt;running&gt; is large.<a href="#section-1-2" class="pilcrow">¶</a></p>
+<p id="section-1-3">```suggestion
 A 'YANG template' is a fragment of configuration that the device is instructed to
 replicate multiple times to generate copies of the configuration.  This allows
 repetitive subtrees of configuration to be written only once, in the template.
 Individual instantiations of a template can override the values of nodes where
-this is required, or add new instance-specific nodes.<a href="#section-1-2" class="pilcrow">¶</a></p>
-<p id="section-1-3">NMDA <span>[<a href="#RFC8342" class="cite xref">RFC8342</a>]</span> allows the configuration templates to be defined in &lt;running&gt;
+this is required, or add new instance-specific nodes.<a href="#section-1-3" class="pilcrow">¶</a></p>
+<p id="section-1-4">NMDA <span>[<a href="#RFC8342" class="cite xref">RFC8342</a>]</span> allows the configuration templates to be defined in &lt;running&gt;
 and expanded in &lt;intended&gt;, but it does not specify details about how configuration
-templates could be created and applied.<a href="#section-1-3" class="pilcrow">¶</a></p>
-<p id="section-1-4">This document defines the use of configuration templates in the context of YANG-driven
+templates could be created and applied.<a href="#section-1-4" class="pilcrow">¶</a></p>
+<p id="section-1-5">This document defines the use of configuration templates in the context of YANG-driven
 network management protocols such as NETCONF <span>[<a href="#RFC6241" class="cite xref">RFC6241</a>]</span> and RESTCONF <span>[<a href="#RFC8040" class="cite xref">RFC8040</a>]</span>.
 Configuration template could be used based on any existing YANG data models,
 this document doesn't make any assumption on the YANG data model design,
-i.e., it does not rely on the shared profile/group defined in the YANG data model.<a href="#section-1-4" class="pilcrow">¶</a></p>
+i.e., it does not rely on the shared profile/group defined in the YANG data model.<a href="#section-1-5" class="pilcrow">¶</a></p>
 <div id="editorial-note-to-be-removed-by-rfc-editor">
 <section id="section-1.1">
         <h3 id="name-editorial-note-to-be-remove">
