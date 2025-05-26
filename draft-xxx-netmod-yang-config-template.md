@@ -69,15 +69,14 @@ and ensure the consistency of it.  This approach is convenient and efficient, be
 
 # Introduction
 
-This document considers the case of a device that contains a functional entity, characterized
-by a well-defined data nodes pattern, that is massively replicated and where each replication
-instance needs individual configuration with only limited variation.Having a device manager
-that repetitively configures each data node for every functional instance can become complex
-and prone to errors. This approach may lead to issues, such as extended configuration times,
-increased memory usage on the device, and inefficient YANG validation processes due to the
-large size of the running data store. These challenges only intensify as the system scales.
-This document proposes a technique to improve this, which is based on 'YANG templates'
-that results in a smaller running data store even when the device is very large.
+This document considers the case of a datastore that contains multiple subtrees
+with similar or identical nodes within them, such that the datastore contains
+repetitive data with limited variation. If a client has to repeatedly configure the
+same nodes for each subtree, this can become complex, error-prone, and mask
+the intent of the client.
+
+This document proposes a solution to improve this, called "YANG templates",
+that results in a smaller running datastore even when the configuration in \<running\> is large.
 
 ```suggestion
 A 'YANG template' is a fragment of configuration that the device is instructed to
