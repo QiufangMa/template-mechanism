@@ -78,7 +78,6 @@ the intent of the client.
 This document proposes a solution to improve this, called "YANG templates",
 that results in a smaller running datastore even when the configuration in \<running\> is large.
 
-```suggestion
 A 'YANG template' is a fragment of configuration that the device is instructed to
 replicate multiple times to generate copies of the configuration.  This allows
 repetitive subtrees of configuration to be written only once, in the template.
