@@ -5,10 +5,10 @@
 Network Modeling                                              Q. Ma, Ed.
 Internet-Draft                                                    Huawei
 Intended status: Standards Track                           R. Wills, Ed.
-Expires: 24 November 2025                                          Cisco
+Expires: 27 November 2025                                          Cisco
                                                          D. Rajaram, Ed.
                                                                    Nokia
-                                                             23 May 2025
+                                                             26 May 2025
 
 
                              YANG Templates
@@ -21,9 +21,9 @@ Abstract
    document defines the use of YANG-based configuration template
    mechanism so that the configuration data could be defined as template
    and applied repeatedly to avoid the redundant definition of identical
-   Configuration and ensure consistency of it.  This approach is both
-   convenient and efficient, as it minimizes the size of the running
-   datastore and reduces network provisioning time.
+   Configuration and ensure the consistency of it.  This approach is
+   convenient and efficient, because it minimizes duplication in the
+   running datastore.
 
 Discussion Venues
 
@@ -51,7 +51,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 24 November 2025.
+   This Internet-Draft will expire on 27 November 2025.
 
 Copyright Notice
 
