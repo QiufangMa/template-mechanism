@@ -302,13 +302,13 @@ And the above interface configuration renders the following expanded configurati
     <name>eth0</name>
     <type>ethernetCsmacd</type>
     <mtu>1500</mtu>
-    <description>template-set type and mtu for ethernet</description>    
+    <description>template-set type and mtu for ethernet</description>
   </interface>
   <interface>
     <name>eth1</name>
     <type>ethernetCsmacd</type>
     <mtu>1500</mtu>
-    <description>template-set type and mtu for ethernet</description>    
+    <description>template-set type and mtu for ethernet</description>
   </interface>
 </interfaces>
 ~~~~
@@ -361,13 +361,13 @@ And the above interface configuration renders the following expanded configurati
     <name>eth0</name>
     <type>ethernetCsmacd</type>
     <mtu>1500</mtu>
-    <description>template-set type and mtu for ethernet</description>    
+    <description>template-set type and mtu for ethernet</description>
   </interface>
   <interface>
     <name>eth1</name>
     <type>ethernetCsmacd</type>
     <mtu>9122</mtu>
-    <description>MTU value is set explicitly</description>    
+    <description>MTU value is set explicitly</description>
   </interface>
 </interfaces>
 ~~~~
