@@ -12,7 +12,7 @@ Expires: 15 August 2026                                           Huawei
 
 
                       YANG Configuration Templates
-              draft-tt-netmod-yang-config-template-latest
+              draft-tt-netmod-yang-config-templates-latest
 
 Abstract
 
