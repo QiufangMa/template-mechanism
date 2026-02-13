@@ -1,9 +1,7 @@
 module: ietf-config-template
   +--rw templates
      +--rw template* [id]
-        +--rw id                 string
-        +--rw description?       string
-        +--rw content?           <anydata>
-        +--ro last-modified?     yang:timestamp
-        +--ro parent-template*   -> ../../template/id
-        +--ro inherited-by*      union
+        +--rw id               string
+        +--rw description?     string
+        +--rw content?         <anydata>
+        +--ro last-modified?   yang:timestamp

@@ -1,9 +1,9 @@
 ---
-title: "YANG Templates"
+title: "YANG Configuration Templates"
 abbrev: "template"
 category: std
 
-docname: draft-xxx-netmod-yang-config-template-latest
+docname: draft-tt-netmod-yang-config-templates-latest
 submissiontype: IETF  # also: "independent", "editorial", "IAB", or "IRTF"
 number:
 date:
@@ -18,22 +18,26 @@ keyword:
 
 author:
 -
+   fullname: Robert Wills
+   organization: Cisco
+   role: editor
+   country: United Kingdom
+   email: rowills@cisco.com
+-
    fullname: Qiufang Ma
    organization: Huawei
+   role: editor
    street: 101 Software Avenue, Yuhua District
    city: Jiangsu
    code: 210012
    country: China
    email: maqiufang1@huawei.com
 -
-  fullname: Robert Wills
-  organization: Cisco Systems
-  email: rowills@cisco.com
--
-  fullname: Deepak Rajaram
-  organization: Nokia
-  city: Chennai
-  email: deepak.rajaram@nokia.com
+   fullname: Deepak Rajaram
+   organization: Nokia
+   role: editor
+   country: India
+   email: deepak.rajaram@nokia.com
 
 contributor:
 -
@@ -44,16 +48,7 @@ contributor:
    code: 210012
    country: China
    email: bill.wu@huawei.com
--
-  fullname: Robert Peschi
-  organization: Nokia
-  city: Antwerp
-  email: robert.peschi@nokia.com
--
-  fullname: Shiya Ashraf
-  organization: Nokia
-  city: Antwerp
-  email: shiya.ashraf@nokia.com
+
 
 normative:
 
@@ -62,34 +57,46 @@ informative:
 
 --- abstract
 
-NETCONF and RESTCONF protocols provide programmatic operation interfaces for accessing
-configuration data modeled by YANG. This document defines the use of YANG-based
-configuration template mechanism so that the configuration data could be defined as template
-and applied repeatedly to avoid the redundant definition of identical Configuration
-and ensure consistency of it.
+   NETCONF and RESTCONF protocols provide programmatic interfaces for
+   accessing configuration data modeled by YANG.  This document defines
+   the use of a YANG-based configuration template mechanism whereby
+   configuration data can be defined in one or more templates and
+   applied repeatedly.  This avoids the redundant definition of
+   identical configuration and ensures the consistency of it, thus
+   allowing devices to be managed more conveniently and efficiently.
 
 --- middle
 
 # Introduction
 
-This document considers the case of some YANG-defined data on a NETCONF {{!RFC6241}}
-or RESTCONF {{!RFC8040}} server, that is massively replicated and each replication
-instance requires individual configuration with only limited variation.
+   This document considers the case of a datastore that contains
+   multiple subtrees with similar or identical nodes within them, such
+   that the datastore contains repetitive data with limited variation.
+   If a client has to repeatedly configure the same nodes for each
+   subtree, this can become complex, error-prone, and masks the intent
+   of the client.
 
-Having a user or an application that repetively configures each data instance can
-become complex and prone to errors. This approach may lead to issues, such as low efficiency,
-inconsistency, and increased memory usage on the device due to the large size of
-the running datastore. These challenges only intensify as the system scales.
+   This document proposes a solution to improve this, called
+   "Configuration Templates", that results in a smaller running
+   datastore even when the configuration in \<running\> is large.
 
-This document defines a mechanism called "YANG configuration template" for YANG-driven
-network management protocols such as NETCONF {{!RFC6241}} and RESTCONF {{!RFC8040}}.
-A "YANG configuration template" includes a set of node instances that the server is instructed
-to define and repeatedly apply to generate copies of it, though, the client may override
-some of these values on an individual copy basis.
+   A Configuration Template is a fragment of configuration that the
+   device is instructed to replicate multiple times to generate copies
+   of the configuration.  This allows repetitive subtrees of
+   configuration to be written only once, in the template.  When needed,
+   individual instantiations of a template can override the values of
+   nodes, or add new instance-specific nodes.
 
-The template technique detailed in this document does not suffer from the drawbacks
-mentioned earlier where the management client needs to explicitly provide all
-configuration nodes.
+   NMDA {{?RFC8342}} allows the configuration templates to be defined in
+   \<running\> and expanded in \<intended\>, but it does not specify details
+   about how configuration templates could be created and applied.
+
+   This document defines the use of configuration templates in the
+   context of YANG-driven network management protocols such as NETCONF
+   {{!RFC6241}} and RESTCONF {{!RFC8040}}.  Configuration templates can be
+   used with any YANG data model, this document doesn't make any
+   assumption on the YANG data model design, i.e. it does not rely on a
+   shared profile/group being defined in the YANG data model.
 
 
 ## Editorial Note (To be removed by RFC Editor)
@@ -104,7 +111,7 @@ elsewhere in this document.
 Please apply the following replacements:
 
    * XXXX --> the assigned RFC number for this draft
-   * 2025-03-28 --> the actual date of the publication of this document
+   * 2025-05-28 --> the actual date of the publication of this document
 
 # Conventions and Definitions
 
@@ -117,45 +124,48 @@ This document uses the YANG terminology defined in {{Section 3 of !RFC7950}}.
 
 Besides, this document defines the following terminology:
 
-configuration template:
-: A chunk of reusable configuration data that could be applied to the configuration
-  repeatedly, in order to simplify the delivery of network configuration and
-  ensure the consistency of it. A configuration template can also be called
-  "template" for short.
-
-inherited template:
-: A configuration template that is applied in the configuration data tree.
-
-parent template:
-: A configuration template that is an inherited template.
+Configuration Template:
+: A chunk of reusable configuration data that
+      could be applied to the configuration repeatedly, in order to
+      simplify the delivery of network configuration and ensure the
+      consistency of it.  A configuration template may also be called
+      "template" or "YANG template" throughout this document.
 
 # Requirements {#requirements}
 
+This section describes the requirements that the Configuration
+  Templates solution must satisfy.  These requirements were all
+  discussed in the Interim Meetings, and a rough consensus was reached
+  on each of them by the participants in the meetings.  A general theme
+  of the Configuration Templates work is to come up with a "Minimal
+  Viable Product" that is useful but not over-complicated.  More
+  advanced features could be considered as extensions in later drafts.
+
 ## Defining and Managing Templates
 
-Templates can be used with any Yang module.  They contain nodes of
-configuration data, and are stored persistently in the running
-datastore of the device.
+Templates can be used with any YANG module.  They contain nodes of
+  configuration data, and are stored persistently in the running
+  datastore of the device.
 
-A client can view and manipulate a template, including the
-configuration inside it, by manipulating it in the \<running\>
-datastore.  In this sense, a template and its contents behaves like
-any other subtree of configuration.
+  A client can view and manipulate a template, including the
+  configuration inside it, by manipulating it in the \<running\>
+  datastore.  In this sense, a template and its contents behaves like
+  any other subtree of configuration.
 
 ## Applying Templates
 
 A template can be applied to zero or more nodes in the \<running\>
-datastore.  Each node can have zero or more templates applied to it,
-and the order they are applied is specified by the client.  The order
-is important when determining the final intended configuration -- see
-the next section.
+  datastore.  Each node can have zero or more templates applied to it,
+  and the order they are applied is specified by the client.  The order
+  is important when determining the final intended configuration -- see
+  the next section.
 
-Templates can be applied at multiple points in the hierachy.  The
-next section states the requirements when a node applies a template
-and it has an ancestor that also applies a template.
+  Templates can be applied at multiple points in the hierachy.  The
+  next section states the requirements when a node applies a template
+  and it has an ancestor that also applies a template.
 
-When viewing the \<running\> datastore, there is a mechanism to see
-which templates have been applied to each node, and in which order.
+  When viewing the \<running\> datastore, there is a mechanism to see
+  which templates have been applied to each node, and in which order.
 
 ## Producing the Intended Datastore
 
@@ -194,7 +204,8 @@ effect on the device.
 The configuration inside a template definition can contain values for
 list keys that are simple regular expressions, using a limited subset
 of regular expression syntax.  This controls which list entries that
-subtree of the template takes effect for when it is applied.
+particular subtree of the template takes effect for when the template
+is applied.
 
 An example of this would be to have a template that is applied to a
 top-level "interfaces" container, but the template only takes effect
@@ -210,202 +221,338 @@ expansion.
 In other words, the outcome of template expansion depends solely on
 the \<running\> datastore and not the state of the device.
 
-# YANG Template Solution
+# Configuration Template Solution
 
 ## Defining Templates
 
-A configuration template must first be defined before it can be inherited {{inheriting-temp}}. The creation,
-modification, and deletion of configuration templates are achieved by network
-management operations via NETCONF or RESTCONF protocols. The content of the configuration
+A configuration template must first be defined before it can be applied (see {{inheriting-temp}}). The creation,
+modification, and deletion of configuration templates is achieved by network
+management operations via NETCONF or RESTCONF protocols. The contents of the configuration
 template must be an instantiated chunk of data starting from any level node in the module hierarchies.
 
-For example, {{temp-ex-interface}} provides an interface configuration template
-that sets "mtu" as 1500 for ethernet interfaces:
-
-~~~~
-<templates>
-  <template>
-    <id>interface-type-mtu</id>
-    <interface>
-      <type>ianaift:ethernetCsmacd</type>
-      <mtu>1500</mtu>
-      <description>MTU value is set by template</description>
-    </interface>
-  </template>
-</templates>
-~~~~
-{: #temp-ex-interface title="Example of An Interface template"}
+(Editor's note: more work may be needed here to ensure the template
+is a valid subtree of config from a schema perspective.  This may
+mean we need a way of saying where the root of the template is in the
+schema, for example with a set of "outer" nodes with
+operation="none").
 
 The YANG data model of configuration templates is defined in {{template-yang}}.
 
 ### Templates with Regular Expressions
 
-TBC
+Simple regular expressions can be used to restrict which list entries
+a template takes effect for.
+
+(Editor's note: more work is needed here to define the exact
+ semantics of this.  Also, the regular expressions will be very simple
+ (again, this needs to be defined), and therefore it may be better to
+ call them 'globs' or 'patterns')
+
+ For example, Figure 1 provides an interface configuration template
+ that sets "type" as ethernetCsmacd and "mtu" as 1500 for interfaces
+ named with the prefix "eth":
+
+~~~~
+<templates xmlns="urn:ietf:params:xml:ns:yang:ietf-config-template">
+  <template>
+    <id>ethernet-interface</id>
+    <content>
+      <interfaces xmlns="urn:example:interface">
+        <interface>
+          <name>^eth.*</name>
+          <type>ethernetCsmacd</type>
+          <mtu>1500</mtu>
+        </interface>
+      </interfaces>
+    </content>
+  </template>
+</templates>
+~~~~
+{: #regex-example title="Example of An Interface template" artwork-align="center"}
 
 ## Applying Templates {#inheriting-temp}
 
-This document allows configuration templates to be inherited by
-configuration nodes in the data tree at corresponding level.
-
-If a configuration template is inherited by a node in the data tree, it acts as
-if the configuration defined in the template is contained and is
-merged with the configuration provided explicitly at the corresponding level in the data tree
-with the explicitly provided configuration takes precedence.
-
-If a configuration template is inherited by another new template,
-the configuration of the new template is the merging result of configuration defined
-in both templates with the new template takes precedence over its parent template.
-This is useful when some additional configuration is intended to be defined on the
-basis of the parent template.
-
-Any modification to the parent template also applies where the template is inherited.
+For each configuration node in the \<running\> datastore, one or more
+templates can be applied.  This causes configuration from the
+templates to be combined with child configuration in the \<running\>
+datastore to produce a final set of \<intended\> configuration that
+will be used by the device.
 
 
-### The "stmt-extend" Metadata
+### The "apply-templates" Metadata
 
-Template inheritance is indicated by declaring the metadata object called "stmt-extend".
+Template application is indicated using the "apply-templates"
+metadata.  The value of this is a list of space-separated template
+identifiers.  If the template is applied to a node in the data tree,
+the metadata object is added to that specific node.
 
-If the template is inherited by a node in the data tree, the metadata object is added
-to that specific node.
-
-If the template is inherited by other templates, the metadata object is added to
-the node at corresponding level of the template contents.
-
-
-The "stmt-extend" metadata MUST have only one value to specify the parent template
-identifier that is inherited. The encoding of "stmt-extend" metadata object follows the way defined
+The encoding of "apply-templates" metadata object follows the way defined
 in {{Section 5 of ?RFC7952}}.
 
-For example, a client may configure physically present interfaces "eth0" and "eth1"
-with the list node "interface" inheriting the template defined in {{temp-ex-interface}}:
+For example, the following interface configuration may be provided
+with the container node "interfaces" applying the template defined in
+{{regex-example}}:
 
 ~~~~
-<interfaces xmlns:template="urn:ietf:params:xml:ns:yang:ietf-template">
-  <interface template:stmt-extend="interface-type-mtu">
-    <name>eth0</name>
-  </interface>
-  <interface template:stmt-extend="interface-type-mtu">
-    <name>eth1</name>
-  </interface>
-</interfaces>
+    <interfaces xmlns="urn:example:interface"
+      xmlns:ct="urn:ietf:params:xml:ns:yang:ietf-config-template"
+      ct:apply-templates="ethernet-interface">
+      <interface>
+        <name>loopback0</name>
+      </interface>
+      <interface>
+        <name>eth0</name>
+      </interface>
+      <interface>
+        <name>eth1</name>
+      </interface>
+    </interfaces>
 ~~~~
 
 And the above interface configuration renders the following expanded configuration:
 
 ~~~~
-<interfaces>
-  <interface>
-    <name>eth0</name>
-    <type>ianaift:ethernetCsmacd</type>
-    <mtu>1500</mtu>
-    <description>MTU value is set by template</description>
-  </interface>
-  <interface>
-    <name>eth1</name>
-    <type>ianaift:ethernetCsmacd</type>
-    <mtu>1500</mtu>
-    <description>MTU value is set by template</description>
-  </interface>
-</interfaces>
+    <interfaces xmlns="urn:example:interface">
+      <interface>
+        <name>loopback0</name>
+      </interface>
+      <interface>
+        <name>eth0</name>
+        <type>ethernetCsmacd</type>
+        <mtu>1500</mtu>
+      </interface>
+      <interface>
+        <name>eth1</name>
+        <type>ethernetCsmacd</type>
+        <mtu>1500</mtu>
+      </interface>
+    </interfaces>
 ~~~~
 
-### Template Precedence Rules
+### Creating, editing and deleting the "apply-templates" metadata
 
-TBC
+The apply-templates metadata can be modified by the client by
+specifying it as an attribute in an \<edit-config\> request.  There are
+three cases:
+
+*  The apply-templates attribute is specified and the value is non-
+   empty (i.e. a list of templates to apply to the node).  The apply-
+   templates metadata is changed to match the value in the request.
+
+*  The apply-templates attribute is specified and the value is the
+   empty string.  The apply-templates metadata is removed and thus no
+   templates are applied to the node.
+
+*  The apply-templates attribute not specified.  The apply-templates
+   metadata currently present on the node (if any) is unchanged.
+
+For example, this request creates a single loopback0 interface and
+applies template t1 to the interfaces container:
+
+~~~~
+    <edit-config>
+      ...
+      <config>
+        <interfaces xmlns="urn:example:interface"
+                    ct:apply-templates="t1">
+          <interface>
+            <name>loopback0</name>
+          </interface>
+        </interfaces>
+      </config>
+    </edit-config>
+~~~~
+
+This request also applies template t2 to the interfaces container:
+
+~~~~
+    <edit-config>
+      ...
+      <config>
+        <interfaces xmlns="urn:example:interface"
+                    ct:apply-templates="t1 t2" />
+      </config>
+    </edit-config>
+~~~~
+
+After this request, \<running\> is as follows:
+
+~~~~
+    <interfaces xmlns="urn:example:interface"
+                ct:apply-templates="t1 t1">
+      <interface>
+        <name>loopback0</name>
+      </interface>
+    </interfaces>
+~~~~
+
+This request adds a new interface list entry, and leaves the applied
+templates unchanged:
+
+~~~~
+    <edit-config>
+      ...
+      <config>
+        <interfaces xmlns="urn:example:interface">
+          <interface>
+            <name>eth0</name>
+          </interface>
+        </interfaces>
+      </config>
+    </edit-config>
+~~~~
+
+After this request, \<running\> is as follows:
+
+~~~~
+    <interfaces xmlns="urn:example:interface"
+                ct:apply-templates="t1 t1">
+      <interface>
+        <name>loopback0</name>
+      </interface>
+      <interface>
+        <name>eth0</name>
+      </interface>
+    </interfaces>
+~~~~
+
+Finally, this request deletes all the templates, and leaves the list
+entries unchanged:
+
+~~~~
+    <edit-config>
+      ...
+      <config>
+        <interfaces xmlns="urn:example:interface"
+                    ct:apply-templates="" />
+        </interfaces>
+      </config>
+    </edit-config>
+~~~~
+
+After this request, \<running\> is as follows:
+
+~~~~
+    <interfaces xmlns="urn:example:interface">
+      <interface>
+        <name>loopback0</name>
+      </interface>
+      <interface>
+        <name>eth0</name>
+      </interface>
+    </interfaces>
+~~~~
 
 ## Overriding Templates {#overriding-temp}
 
-If there is some further configuration data that needs to be created but not included
-in the parent template, it can be provided at the corresponding level when
-inheriting the configuration template. For example, the client may want to define
-another template and provide an additional "enabled" leaf value
-on the basis of template defined in {{temp-ex-interface}}:
+The client may want to to override some configuration in a template
+ when it is applied to a particular node in \<running\>.  The client can
+ achieve this by providing the desired value at the corresponding
+ level when applying the template.  Configuration explicitly provided
+ by the client always takes precedence over the same node defined in
+ template.
+
+ A template node can be overriden by having its value changed, but it
+ can't be deleted.
+
+ As an example of overriding a node in a template, a client may
+ configure physically present interfaces "eth0" and "eth1" inheriting
+ the template defined in Figure 1, but the "mtu" value of "eth1" needs
+ to be 9122:
 
 ~~~~
-<templates>
-  <template>
-    <id>interface-type-mtu-enabled</id>
-    <interface xmlns:template="urn:ietf:params:xml:ns:yang:ietf-template"
-               template:stmt-extend="interface-type-mtu">
-      <enabled>true</enabled>
-    </interface>
-  </template>
-</templates>
+    <interfaces xmlns="urn:example:interface"
+      xmlns:ct="urn:ietf:params:xml:ns:yang:ietf-config-template"
+      ct:apply-templates="ethernet-interface">
+      <interface>
+        <name>loopback0</name>
+      </interface>
+      <interface>
+        <name>eth0</name>
+      </interface>
+      <interface>
+        <name>eth1</name>
+        <mtu>9122</mtu>
+      </interface>
+    </interfaces>
 ~~~~
 
-And the above interface configuration defined in the template
-"interface-type-mtu-enabled" renders the following expanded configuration:
+ And the above interface configuration renders the following expanded
+ configuration:
 
 ~~~~
-<interface>
-  <type>ianaift:ethernetCsmacd</type>
-  <mtu>1500</mtu>
-  <description>MTU value is set by template</description>
-  <enabled>true</enabled>
-</interface>
-~~~~
-
-{{template-inherits}} provides more examples of inheriting an existing template by indicating
-the "stmt-extend" metadata object.
-
-It may be desired to override some configuration in an existing template when it is interited.
-This may be achieved by directly editing the configuration template that is inherited,
-however, the parent template may have also been inherited by other instance nodes or
-templates, and direct modification of the parent template may yield unexpected results.
-
-This document allows a configuration template to be overridden by
-configuration explicitly provided by the client.
-
-If there is some configuration values that need to be modified, the desired value
-can be provided at the corresponding level when inheriting the configuation template.
-
-For example, a client may configure physically present interfaces "eth0" and "eth1"
-inheriting the template defined in {{temp-ex-interface}}, but the "mtu" value of "eth1"
-needs to be 9122, and the "description" value also needs to be modified accordingly:
-
-~~~~
-<interfaces xmlns:template="urn:ietf:params:xml:ns:yang:ietf-template">
-  <interface template:stmt-extend="interface-type-mtu">
-    <name>eth0</name>
-  </interface>
-  <interface template:stmt-extend="interface-type-mtu">
-    <name>eth1</name>
-    <mtu>9122</mtu>
-    <description>MTU value is set explicitly</description>
-  </interface>
-</interfaces>
+    <interfaces xmlns="urn:example:interface">
+      <interface>
+        <name>loopback0</name>
+      </interface>
+      <interface>
+        <name>eth0</name>
+        <type>ethernetCsmacd</type>
+        <mtu>1500</mtu>
+      </interface>
+      <interface>
+        <name>eth1</name>
+        <type>ethernetCsmacd</type>
+        <mtu>9122</mtu>
+      </interface>
+    </interfaces>
 ~~~~
 
 ## Expanding Templates
 
-TBC
+When a configuration template is applied to a node in the data tree,
+it acts as if the configuration defined in the template is merged
+with the configuration provided explicitly at the corresponding level
+in the data tree, with the explicitly provided configuration taking
+precedence.
+
+The rules for deriving the \<running\> configuration are as follows:
+
+*  The value of a node in the \<intended\> configuration is determined
+   by using precedence to decide where to take the value from.
+
+*  Non-template config always has the highest precedence.
+
+*  When templates are applied to multiple ancestors, the innermost
+   ancestor takes precedence.
+
+*  When multiple templates are applied to a particular node, the
+   order of application (as indicated by the client when applying the
+   templates) determines the precedence within that node.
+
+Whenever the contents of a template is updated in \<running\>, the
+result of expanding out the template appears in \<intended\> and takes
+effect on the device.
 
 ## Validity of Templates
 
-The contents of the template alone is not always sufficient to enforce the constraints
-of the data model. Some constraints may depend on configuration outside of the
-templates to satisfy, e.g., a list may contain a mandatory leaf node which is not
-defined in the template but explicitly provided by the client. However, servers
-should parse the template and enforce the constraints if it is possible during the
-processing of template creation, e.g., servers may validate type constraints for the leaf,
-including those defined in the type's "range", "length", and "pattern" properties.
+The contents of the template alone is not always sufficient to
+enforce the constraints of the data model.  Some constraints may
+depend on configuration outside of the templates to satisfy, e.g., a
+list may contain a mandatory leaf node which is not defined in the
+template but explicitly provided by the client.  However, servers
+SHOULD parse the template and enforce the constraints if it is
+possible during the processing of template creation, e.g., servers
+may validate type constraints for the leaf, including those defined
+in the type's "range", "length", and "pattern" properties.
 
-That said, if a template is applied in the configuration data tree, the results of the template
-configuration merging with configuration explicitly provided by the client MUST
-always be valid, as defined in {{Section 8.1 of !RFC7950}}.
+That said, if a template is applied in the configuration data tree,
+the results of the template configuration merging with configuration
+explicitly provided by the client MUST always be valid, as defined in
+{{Section 8.1 of !RFC7950}}.
 
 # Interaction with NMDA datastores
 
-Some implementation may have predefined configuration templates for the convenience
+Some implementations may have predefined configuration templates for the convenience
 of clients, which are present in \<system\> (if implemented, see {{?I-D.ietf-netmod-system-config}}).
 In addition, clients can always define their own templates in \<running\>.
-However, configuration template data defined by "ietf-template" YANG data model
+However, configuration template data defined by "ietf-config-template" YANG data model
 should not be visible in \<operational\> until being inherited by a node in the data tree.
 
-If a node in the data tree inherits a configuration template, the configuration
-template does not expand in \<running\>, a read back of \<running\> returns what is
-sent by the client with the "stmt-extend" metadata attached to the specific node.
-Configuration template which is inherited or overridden by the node instance MUST be expanded in \<intended\>.
+If a node in the data tree applies a configuration template, the configuration
+template does not expand in \<running\>. A read of \<running\> returns what is
+sent by the client with the "apply-templates" metadata attached to the specific node.
+A configuration template which is inherited or overridden by the node instance MUST be expanded in \<intended\>.
 
 # Interaction with Non-NMDA datastores
 
@@ -421,12 +568,16 @@ The following tree diagram {{?RFC8340}} illustrates the "ietf-config-template" m
 {::include ./yang/ietf-template-tree.txt}
 ~~~~
 
-> Editor's Note: Should the 'stmt-extend' and 'operation-tag' metadata annotations be defined here?
+> Editor's Note: Should we use the RFC7952 metadata annotation for the 'apply-templates' metadata here?
+
+> Editor's Note: the current definition of template configuration
+      uses anydata, but this may not be able to be validated at template
+      definition time because anydata is opaque.
 
 ## YANG Module
 
 ~~~~
-<CODE BEGINS> file "ietf-template@2025-03-28.yang"
+<CODE BEGINS> file "ietf-template@2025-05-28.yang"
 {::include-fold ./yang/ietf-config-template.yang}
 <CODE ENDS>
 ~~~~
@@ -455,7 +606,7 @@ TODO Security
 ~~~~
         name:               ietf-config-template
         namespace:          urn:ietf:params:xml:ns:yang:ietf-config-template
-        prefix:             template
+        prefix:             ct
         maintained by IANA? N
         reference:          RFC XXXX
 ~~~~
@@ -463,6 +614,7 @@ TODO Security
 
 --- back
 
+<!--
 # Usage Examples {#appendix-network}
 
 This section provides some examples to show the use of templates.
@@ -825,6 +977,7 @@ It is equivalent to the configuration as follows:
     ]
 }
 ~~~~
+-->
 
 # Acknowledgments
 {:numbered="false"}
@@ -838,5 +991,7 @@ presenters for kick-starting discussions on Yang Templates:
 *  draft-ma-netmod-yang-config-template-00
 
 *  draft-rajaram-netmod-yang-cfg-template-framework-00
+
+*  draft-wills-netmod-yang-templates-00
 
 *  Jan Lindblad
