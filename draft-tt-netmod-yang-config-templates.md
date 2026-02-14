@@ -526,8 +526,8 @@ effect on the device.
 
 ## Deletion of Templates
 
-After a template has been applied to a node in the data tree, 
-the template configuraion itself MAY be allowed to be deleted 
+After a template has been applied to a node in the data tree,
+the template configuration itself MAY be allowed to be deleted
 while the expanded configuration still remains in the intended.
 
 ## Validity of Templates
