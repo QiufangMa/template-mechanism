@@ -5,10 +5,10 @@
 Network Modeling                                           R. Wills, Ed.
 Internet-Draft                                                     Cisco
 Intended status: Standards Track                              Q. Ma, Ed.
-Expires: 17 August 2026                                           Huawei
+Expires: 18 August 2026                                           Huawei
                                                          D. Rajaram, Ed.
                                                                    Nokia
-                                                        13 February 2026
+                                                        14 February 2026
 
 
                       YANG Configuration Templates
@@ -50,7 +50,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 17 August 2026.
+   This Internet-Draft will expire on 18 August 2026.
 
 Copyright Notice
 
@@ -86,7 +86,8 @@ Table of Contents
                metadata
      4.3.  Overriding Templates
      4.4.  Expanding Templates
-     4.5.  Validity of Templates
+     4.5.  Deletion of Templates
+     4.6.  Validity of Templates
    5.  Interaction with NMDA datastores
    6.  Interaction with Non-NMDA datastores
    7.  The "ietf-config-template" YANG Module
@@ -545,7 +546,13 @@ Table of Contents
    result of expanding out the template appears in <intended> and takes
    effect on the device.
 
-4.5.  Validity of Templates
+4.5.  Deletion of Templates
+
+   After a template has been applied to a node in the data tree, the
+   template configuration itself MAY be allowed to be deleted while the
+   expanded configuration still remains in the intended.
+
+4.6.  Validity of Templates
 
    The contents of the template alone is not always sufficient to
    enforce the constraints of the data model.  Some constraints may
