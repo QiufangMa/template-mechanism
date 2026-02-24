@@ -152,7 +152,7 @@ Templates can be used with any YANG module.  They contain nodes of
   datastore.  In this sense, a template and its contents behaves like
   any other subtree of configuration.
 
-## Applying Templates
+## Applying Templates {#template-inherits}
 
 A template can be applied to zero or more nodes in the \<running\>
   datastore.  Each node can have zero or more templates applied to it,
@@ -693,7 +693,7 @@ template for NTP configuration, the following template configuration might be se
 }
 ~~~~
 
-## Applying Templates {#template-inherits}
+## Applying Templates
 
 The operator may create another template with an additional NTP server instance
 when inheriting the template created in {{template-creation}}. The configuration
