@@ -629,9 +629,9 @@ This appendix aims to track which of identified requirements have been addressed
 | R6: Support basic programmatic elements in templates | N | Seems to add some complexity |
 | R7: Allow a server to constrain which nodes can be templates consumer | N | Not explicitly mentioned, added in an operational consideration section? |
 | R7: Configuration with both expanded and unexpanded templates is able to be returned | Y | Do support but not explicitly stated |
-| R8: <running> contains the unexpanded template | Y | see {{interact-NMDA}}, consider also stating explicitly in {{template-inherits}} |
-| R9: <intended> contains the expanded template | Y | see {{interact-NMDA}}, consider also stating explicitly in {{template-inherits}} |
-| R10: Enables off-box template expansion of <running> | Y | but not explicitly stated, consider adding some text in {{expand-templates}}? |
+| R8: \<running\> contains the unexpanded template | Y | see {{interact-NMDA}}, consider also stating explicitly in {{template-inherits}} |
+| R9: \<intended\> contains the expanded template | Y | see {{interact-NMDA}}, consider also stating explicitly in {{template-inherits}} |
+| R10: Enables off-box template expansion of \<running\> | Y | but not explicitly stated, consider adding some text in {{expand-templates}}? |
 | R11: Support limited regex in templates | Y | But needs more work, see {{regex}} |
 | R12: Have a precedence rule when multiple templates are applied at a single node | Y | See {{expand-templates}} |
 | R13: The innermost template takes precedence when templates are applied at multiple ancestor nodes | Y | See {{expand-templates}} |
