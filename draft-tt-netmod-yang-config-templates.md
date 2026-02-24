@@ -223,12 +223,12 @@ the \<running\> datastore and not the state of the device.
 
 # Configuration Template Solution
 
-## Defining Templates
+## Defining Templates {#define-templates}
 
 A configuration template must first be defined before it can be applied (see {{inheriting-temp}}). The creation,
 modification, and deletion of configuration templates is achieved by network
 management operations via NETCONF or RESTCONF protocols. The contents of the configuration
-template must be an instantiated chunk of data starting from any level node in the module hierarchies.
+template must be an instantiated chunk of data starting from any level node in the hierarchies of any YANG data model.
 
 (Editor's note: more work may be needed here to ensure the template
 is a valid subtree of config from a schema perspective.  This may
@@ -238,7 +238,7 @@ operation="none").
 
 The YANG data model of configuration templates is defined in {{template-yang}}.
 
-### Templates with Regular Expressions
+### Templates with Regular Expressions {#regex}
 
 Simple regular expressions can be used to restrict which list entries
 a template takes effect for.
@@ -498,7 +498,7 @@ The client may want to to override some configuration in a template
     </interfaces>
 ~~~~
 
-## Expanding Templates
+## Expanding Templates {#expand-templates}
 
 When a configuration template is applied to a node in the data tree,
 it acts as if the configuration defined in the template is merged
@@ -541,7 +541,7 @@ the results of the template configuration merging with configuration
 explicitly provided by the client MUST always be valid, as defined in
 {{Section 8.1 of !RFC7950}}.
 
-# Interaction with NMDA datastores
+# Interaction with NMDA datastores {#interact-NMDA}
 
 Some implementations may have predefined configuration templates for the convenience
 of clients, which are present in \<system\> (if implemented, see {{?I-D.ietf-netmod-system-config}}).
@@ -554,7 +554,7 @@ template does not expand in \<running\>. A read of \<running\> returns what is
 sent by the client with the "apply-templates" metadata attached to the specific node.
 A configuration template which is inherited or overridden by the node instance MUST be expanded in \<intended\>.
 
-# Interaction with Non-NMDA datastores
+# Interaction with Non-NMDA datastores {#interact-non-NMDA}
 
 TBC
 
@@ -613,6 +613,32 @@ TODO Security
 
 
 --- back
+
+# Requirement Implementation Status
+
+Note to the RFC Editor: Please remove this section before publication.
+
+This appendix aims to track which of identified requirements have been addressed in the current version, and, where applicable, how they are fulfilled by the proposed mechanism.
+
+| Requirement | Fulfilled | Requirement Description |
+| R1: Allowed Multiple templates to be applied at a single node | Y | see {{inheriting-temp}} |
+| R2: Templates must work with any YANG module | Y | see {{define-templates}} |
+| R3: Templates must be validated when defined | N | Needs further discussion, see Editor's note from {{define-templates}} |
+| R4: Local-config overrides template-config | Y | see {{overriding-temp}} |
+| R5: Living template: modified template data gets expanded for all consumers | Y | see {{expand-templates}} |
+| R6: Support basic programmatic elements in templates | N | Seems to add some complexity |
+| R7: Allow a server to constrain which nodes can be templates consumer | N | Not explicitly mentioned, added in an operational consideration section? |
+| R7: Configuration with both expanded and unexpanded templates is able to be returned | Y | Do support but not explicitly stated |
+| R8: <running> contains the unexpanded template | Y | see {{interact-NMDA}}, consider also stating explicitly in {{template-inherits}} |
+| R9: <intended> contains the expanded template | Y | see {{interact-NMDA}}, consider also stating explicitly in {{template-inherits}} |
+| R10: Enables off-box template expansion of <running> | Y | but not explicitly stated, consider adding some text in {{expand-templates}}? |
+| R11: Support limited regex in templates | Y | But needs more work, see {{regex}} |
+| R12: Have a precedence rule when multiple templates are applied at a single node | Y | See {{expand-templates}} |
+| R13: The innermost template takes precedence when templates are applied at multiple ancestor nodes | Y | See {{expand-templates}} |
+| R14: Enable non-NMDA servers to return the expanded data | N | have a dedicated section ({{interact-non-NMDA}}) for this, but empty now |
+| Not discussed: R15: exclude templates applied at ancestor nodes | N | Seems to add some complexity, needs further discussion |
+| Not discussed: R16: Annotations to determine which template a node was applied from | N | Needs further discussion |
+
 
 <!--
 # Usage Examples {#appendix-network}
