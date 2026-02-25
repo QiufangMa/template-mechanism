@@ -582,6 +582,16 @@ The following tree diagram {{?RFC8340}} illustrates the "ietf-config-template" m
 <CODE ENDS>
 ~~~~
 
+
+# Operational Considerations
+
+Implementations MAY restrict the applications of configuration templates to some specific nodes in the YANG data tree. Restrictions should be applied consistently across all client operations. Any attempts to apply a template to a restricted node will be rejected. Implementations are recommended to expose the list of configuration nodes that do not support template application, any mechanisms to achieve this are outside the scope of this document.
+
+Configuration templates are designed to remain unexpanded in \<running\>. This ensures storage efficiency and preserves the client control over \<running\>, i.e., reads of \<running\> returns the client-submitted configuration with the "apply-template" metadata attached to targets nodes. Any configuration template that is applied in the data tree MUST be expanded in \<intended\>, which holds a merged result of template and configuration explicitly provided by clients.
+
+Implementations MAY differ in whether the configuration templates themselves appear in \<intended\>, independent of whether the templates are applied. Implementations MAY also support conditional visibility, where templates appear in \<intended\> only when they are applied by at least one node via the "apply-template" annotation. Regardless of the approach chosen, implementations MUST ensure the behavior is consistent and deterministic, and SHOULD be documented to allow clients to rely on predictable operational behaviors.
+
+
 # Security Considerations
 
 TODO Security
