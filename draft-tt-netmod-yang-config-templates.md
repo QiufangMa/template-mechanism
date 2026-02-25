@@ -534,7 +534,10 @@ template but explicitly provided by the client.  However, servers
 SHOULD parse the template and enforce the constraints if it is
 possible during the processing of template creation, e.g., servers
 may validate type constraints for the leaf, including those defined
-in the type's "range", "length", and "pattern" properties.
+in the type's "range", "length", and "pattern" properties. Implementations
+may also consider using mechanism defined in {{?I-D.netmod-yang-anydata-validation}} to validate anydata.
+
+> Editor's Note: Should the validity of template configuration be mandatory or optional?
 
 That said, if a template is applied in the configuration data tree,
 the results of the template configuration merging with configuration
