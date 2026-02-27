@@ -506,7 +506,8 @@ with the configuration provided explicitly at the corresponding level
 in the data tree, with the explicitly provided configuration taking
 precedence.
 
-The rules for deriving the \<running\> configuration are as follows:
+the process of expanding templates to derive \<intended\> is deterministic and depends solely on the contents of \<running\>. 
+The process rules are as follows:
 
 *  The value of a node in the \<intended\> configuration is determined
    by using precedence to decide where to take the value from.
@@ -519,6 +520,9 @@ The rules for deriving the \<running\> configuration are as follows:
 *  When multiple templates are applied to a particular node, the
    order of application (as indicated by the client when applying the
    templates) determines the precedence within that node.
+
+If a client has knowledge of the complete contents of \<running\>,
+it can calculate the exact result of template expansion, independent of the server's operational state.
 
 Whenever the contents of a template is updated in \<running\>, the
 result of expanding out the template appears in \<intended\> and takes
@@ -627,17 +631,17 @@ This appendix aims to track which of identified requirements have been addressed
 | R4: Local-config overrides template-config | Y | see {{overriding-temp}} |
 | R5: Living template: modified template data gets expanded for all consumers | Y | see {{expand-templates}} |
 | R6: Support basic programmatic elements in templates | N | Seems to add some complexity |
-| R7: Allow a server to constrain which nodes can be templates consumer | N | Not explicitly mentioned, added in an operational consideration section? |
-| R7: Configuration with both expanded and unexpanded templates is able to be returned | Y | Do support but not explicitly stated |
-| R8: \<running\> contains the unexpanded template | Y | see {{interact-NMDA}}, consider also stating explicitly in {{template-inherits}} |
-| R9: \<intended\> contains the expanded template | Y | see {{interact-NMDA}}, consider also stating explicitly in {{template-inherits}} |
-| R10: Enables off-box template expansion of \<running\> | Y | but not explicitly stated, consider adding some text in {{expand-templates}}? |
-| R11: Support limited regex in templates | Y | But needs more work, see {{regex}} |
-| R12: Have a precedence rule when multiple templates are applied at a single node | Y | See {{expand-templates}} |
-| R13: The innermost template takes precedence when templates are applied at multiple ancestor nodes | Y | See {{expand-templates}} |
-| R14: Enable non-NMDA servers to return the expanded data | N | have a dedicated section ({{interact-non-NMDA}}) for this, but empty now |
-| Not discussed: R15: exclude templates applied at ancestor nodes | N | Seems to add some complexity, needs further discussion |
-| Not discussed: R16: Annotations to determine which template a node was applied from | N | Needs further discussion |
+| R7: Allow a server to constrain which nodes can be templates consumer | Y | See {{operational-consideration}} |
+| R8: Configuration with both expanded and unexpanded templates is able to be returned | Y | see {{interact-NMDA}} and {{operational-consideration}} |
+| R9: \<running\> contains the unexpanded template | Y | see {{interact-NMDA}}, also stated explicitly in {{operational-consideration}} |
+| R10: \<intended\> contains the expanded template | Y | see {{interact-NMDA}}, also stated explicitly in {{operational-consideration}} |
+| R11: Enables off-box template expansion of \<running\> | Y | see {{expand-templates}} |
+| R12: Support limited regex in templates | Y | But needs more work, see {{regex}} |
+| R13: Have a precedence rule when multiple templates are applied at a single node | Y | See {{expand-templates}} |
+| R14: The innermost template takes precedence when templates are applied at multiple ancestor nodes | Y | See {{expand-templates}} |
+| R15: Enable non-NMDA servers to return the expanded data | N | have a dedicated section ({{interact-non-NMDA}}) for this, but empty now |
+| Not discussed: R16: exclude templates applied at ancestor nodes | N | Seems to add some complexity, needs further discussion |
+| Not discussed: R17: Annotations to determine which template a node was applied from | N | Needs further discussion |
 
 
 <!--
