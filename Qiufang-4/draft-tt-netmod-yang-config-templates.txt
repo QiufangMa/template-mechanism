@@ -5,10 +5,10 @@
 Network Modeling                                           R. Wills, Ed.
 Internet-Draft                                                     Cisco
 Intended status: Standards Track                              Q. Ma, Ed.
-Expires: 29 August 2026                                           Huawei
+Expires: 31 August 2026                                           Huawei
                                                          D. Rajaram, Ed.
                                                                    Nokia
-                                                        25 February 2026
+                                                        27 February 2026
 
 
                       YANG Configuration Templates
@@ -50,7 +50,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 29 August 2026.
+   This Internet-Draft will expire on 31 August 2026.
 
 Copyright Notice
 
@@ -704,12 +704,13 @@ Table of Contents
    achieve this are outside the scope of this document.
 
    Configuration templates are designed to remain unexpanded in
-   <running>.  This ensures storage efficiency and preserves the client
-   control over <running>, i.e., reads of <running> returns the client-
-   submitted configuration with the "apply-template" metadata attached
-   to targets nodes.  Any configuration template that is applied in the
-   data tree MUST be expanded in <intended>, which holds a merged result
-   of template and configuration explicitly provided by clients.
+   <running>.  This ensures storage efficiency and preserves the
+   client's control over <running>, i.e., reads of <running> returns the
+   client-submitted configuration with the "apply-templates" metadata
+   attached to target nodes.  Any configuration template that is applied
+   in the data tree MUST be expanded in <intended>, which holds a merged
+   result of template expansion and configuration explicitly provided by
+   clients.
 
    Implementations MAY differ in whether the configuration templates
    themselves appear in <intended>, independent of whether the templates
