@@ -1281,13 +1281,16 @@ svg :is([fill="white"], [fill^="#fff"]) {
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12">
-            <p id="section-toc.1-1.12.1"><a href="#appendix-A" class="auto internal xref"></a><a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
+            <p id="section-toc.1-1.12.1"><a href="#appendix-A" class="auto internal xref">Appendix A</a>.  <a href="#name-requirement-implementation-" class="internal xref">Requirement Implementation Status</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13">
-            <p id="section-toc.1-1.13.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-contributors" class="internal xref">Contributors</a></p>
+            <p id="section-toc.1-1.13.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14">
-            <p id="section-toc.1-1.14.1"><a href="#appendix-C" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
+            <p id="section-toc.1-1.14.1"><a href="#appendix-C" class="auto internal xref"></a><a href="#name-contributors" class="internal xref">Contributors</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15">
+            <p id="section-toc.1-1.15.1"><a href="#appendix-D" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
 </li>
         </ul>
 </nav>
@@ -1397,7 +1400,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
   any other subtree of configuration.<a href="#section-3.1-2" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="applying-templates">
+<div id="template-inherits">
 <section id="section-3.2">
         <h3 id="name-applying-templates">
 <a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-applying-templates" class="section-name selfRef">Applying Templates</a>
@@ -1488,7 +1491,7 @@ the &lt;running&gt; datastore and not the state of the device.<a href="#section-
       <h2 id="name-configuration-template-solu">
 <a href="#section-4" class="section-number selfRef">4. </a><a href="#name-configuration-template-solu" class="section-name selfRef">Configuration Template Solution</a>
       </h2>
-<div id="defining-templates">
+<div id="define-templates">
 <section id="section-4.1">
         <h3 id="name-defining-templates">
 <a href="#section-4.1" class="section-number selfRef">4.1. </a><a href="#name-defining-templates" class="section-name selfRef">Defining Templates</a>
@@ -1496,14 +1499,14 @@ the &lt;running&gt; datastore and not the state of the device.<a href="#section-
 <p id="section-4.1-1">A configuration template must first be defined before it can be applied (see <a href="#inheriting-temp" class="auto internal xref">Section 4.2</a>). The creation,
 modification, and deletion of configuration templates is achieved by network
 management operations via NETCONF or RESTCONF protocols. The contents of the configuration
-template must be an instantiated chunk of data starting from any level node in the module hierarchies.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
+template must be an instantiated chunk of data starting from any level node in the hierarchies of any YANG data model.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
 <p id="section-4.1-2">(Editor's note: more work may be needed here to ensure the template
 is a valid subtree of config from a schema perspective.  This may
 mean we need a way of saying where the root of the template is in the
 schema, for example with a set of "outer" nodes with
 operation="none").<a href="#section-4.1-2" class="pilcrow">¶</a></p>
 <p id="section-4.1-3">The YANG data model of configuration templates is defined in <a href="#template-yang" class="auto internal xref">Section 7</a>.<a href="#section-4.1-3" class="pilcrow">¶</a></p>
-<div id="templates-with-regular-expressions">
+<div id="regex">
 <section id="section-4.1.1">
           <h4 id="name-templates-with-regular-expr">
 <a href="#section-4.1.1" class="section-number selfRef">4.1.1. </a><a href="#name-templates-with-regular-expr" class="section-name selfRef">Templates with Regular Expressions</a>
@@ -1798,7 +1801,7 @@ entries unchanged:<a href="#section-4.2.2-15" class="pilcrow">¶</a></p>
 </div>
 </section>
 </div>
-<div id="expanding-templates">
+<div id="expand-templates">
 <section id="section-4.4">
         <h3 id="name-expanding-templates">
 <a href="#section-4.4" class="section-number selfRef">4.4. </a><a href="#name-expanding-templates" class="section-name selfRef">Expanding Templates</a>
@@ -1808,7 +1811,8 @@ it acts as if the configuration defined in the template is merged
 with the configuration provided explicitly at the corresponding level
 in the data tree, with the explicitly provided configuration taking
 precedence.<a href="#section-4.4-1" class="pilcrow">¶</a></p>
-<p id="section-4.4-2">The rules for deriving the &lt;running&gt; configuration are as follows:<a href="#section-4.4-2" class="pilcrow">¶</a></p>
+<p id="section-4.4-2">the process of expanding templates to derive &lt;intended&gt; is deterministic and depends solely on the contents of &lt;running&gt;.
+The process rules are as follows:<a href="#section-4.4-2" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-4.4-3.1">
             <p id="section-4.4-3.1.1">The value of a node in the &lt;intended&gt; configuration is determined
@@ -1827,9 +1831,11 @@ order of application (as indicated by the client when applying the
 templates) determines the precedence within that node.<a href="#section-4.4-3.4.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-4.4-4">Whenever the contents of a template is updated in &lt;running&gt;, the
+<p id="section-4.4-4">If a client has knowledge of the complete contents of &lt;running&gt;,
+it can calculate the exact result of template expansion, independent of the server's operational state.<a href="#section-4.4-4" class="pilcrow">¶</a></p>
+<p id="section-4.4-5">Whenever the contents of a template is updated in &lt;running&gt;, the
 result of expanding out the template appears in &lt;intended&gt; and takes
-effect on the device.<a href="#section-4.4-4" class="pilcrow">¶</a></p>
+effect on the device.<a href="#section-4.4-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="deletion-of-templates">
@@ -1870,7 +1876,7 @@ explicitly provided by the client <span class="bcp14">MUST</span> always be vali
 </div>
 </section>
 </div>
-<div id="interaction-with-nmda-datastores">
+<div id="interact-NMDA">
 <section id="section-5">
       <h2 id="name-interaction-with-nmda-datas">
 <a href="#section-5" class="section-number selfRef">5. </a><a href="#name-interaction-with-nmda-datas" class="section-name selfRef">Interaction with NMDA datastores</a>
@@ -1886,7 +1892,7 @@ sent by the client with the "apply-templates" metadata attached to the specific 
 A configuration template which is inherited or overridden by the node instance <span class="bcp14">MUST</span> be expanded in &lt;intended&gt;.<a href="#section-5-2" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="interaction-with-non-nmda-datastores">
+<div id="interact-non-NMDA">
 <section id="section-6">
       <h2 id="name-interaction-with-non-nmda-d">
 <a href="#section-6" class="section-number selfRef">6. </a><a href="#name-interaction-with-non-nmda-d" class="section-name selfRef">Interaction with Non-NMDA datastores</a>
@@ -2159,33 +2165,152 @@ module ietf-config-template {
 </div>
 </section>
 </div>
-<div id="acknowledgments">
+<div id="requirement-implementation-status">
 <section id="appendix-A">
+      <h2 id="name-requirement-implementation-">
+<a href="#appendix-A" class="section-number selfRef">Appendix A. </a><a href="#name-requirement-implementation-" class="section-name selfRef">Requirement Implementation Status</a>
+      </h2>
+<p id="appendix-A-1">Note to the RFC Editor: Please remove this section before publication.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
+<p id="appendix-A-2">This appendix aims to track which of identified requirements have been addressed in the current version, and, where applicable, how they are fulfilled by the proposed mechanism.<a href="#appendix-A-2" class="pilcrow">¶</a></p>
+<table class="center" id="table-1">
+        <caption><a href="#table-1" class="selfRef">Table 1</a></caption>
+<thead>
+          <tr>
+            <th class="text-left" rowspan="1" colspan="1">Requirement</th>
+            <th class="text-left" rowspan="1" colspan="1">Fulfilled</th>
+            <th class="text-left" rowspan="1" colspan="1">Requirement Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">R1: Allowed Multiple templates to be applied at a single node</td>
+            <td class="text-left" rowspan="1" colspan="1">Y</td>
+            <td class="text-left" rowspan="1" colspan="1">see <a href="#inheriting-temp" class="auto internal xref">Section 4.2</a>
+</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">R2: Templates must work with any YANG module</td>
+            <td class="text-left" rowspan="1" colspan="1">Y</td>
+            <td class="text-left" rowspan="1" colspan="1">see <a href="#define-templates" class="auto internal xref">Section 4.1</a>
+</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">R3: Templates must be validated when defined</td>
+            <td class="text-left" rowspan="1" colspan="1">N</td>
+            <td class="text-left" rowspan="1" colspan="1">Needs further discussion, see Editor's note from <a href="#define-templates" class="auto internal xref">Section 4.1</a>
+</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">R4: Local-config overrides template-config</td>
+            <td class="text-left" rowspan="1" colspan="1">Y</td>
+            <td class="text-left" rowspan="1" colspan="1">see <a href="#overriding-temp" class="auto internal xref">Section 4.3</a>
+</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">R5: Living template: modified template data gets expanded for all consumers</td>
+            <td class="text-left" rowspan="1" colspan="1">Y</td>
+            <td class="text-left" rowspan="1" colspan="1">see <a href="#expand-templates" class="auto internal xref">Section 4.4</a>
+</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">R6: Support basic programmatic elements in templates</td>
+            <td class="text-left" rowspan="1" colspan="1">N</td>
+            <td class="text-left" rowspan="1" colspan="1">Seems to add some complexity</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">R7: Allow a server to constrain which nodes can be templates consumer</td>
+            <td class="text-left" rowspan="1" colspan="1">Y</td>
+            <td class="text-left" rowspan="1" colspan="1">See <a href="#operational-consideration" class="auto internal xref">Section 8</a>
+</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">R8: Configuration with both expanded and unexpanded templates is able to be returned</td>
+            <td class="text-left" rowspan="1" colspan="1">Y</td>
+            <td class="text-left" rowspan="1" colspan="1">see <a href="#interact-NMDA" class="auto internal xref">Section 5</a> and <a href="#operational-consideration" class="auto internal xref">Section 8</a>
+</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">R9: &lt;running&gt; contains the unexpanded template</td>
+            <td class="text-left" rowspan="1" colspan="1">Y</td>
+            <td class="text-left" rowspan="1" colspan="1">see <a href="#interact-NMDA" class="auto internal xref">Section 5</a>, also stated explicitly in <a href="#operational-consideration" class="auto internal xref">Section 8</a>
+</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">R10: &lt;intended&gt; contains the expanded template</td>
+            <td class="text-left" rowspan="1" colspan="1">Y</td>
+            <td class="text-left" rowspan="1" colspan="1">see <a href="#interact-NMDA" class="auto internal xref">Section 5</a>, also stated explicitly in <a href="#operational-consideration" class="auto internal xref">Section 8</a>
+</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">R11: Enables off-box template expansion of &lt;running&gt;</td>
+            <td class="text-left" rowspan="1" colspan="1">Y</td>
+            <td class="text-left" rowspan="1" colspan="1">see <a href="#expand-templates" class="auto internal xref">Section 4.4</a>
+</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">R12: Support limited regex in templates</td>
+            <td class="text-left" rowspan="1" colspan="1">Y</td>
+            <td class="text-left" rowspan="1" colspan="1">But needs more work, see <a href="#regex" class="auto internal xref">Section 4.1.1</a>
+</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">R13: Have a precedence rule when multiple templates are applied at a single node</td>
+            <td class="text-left" rowspan="1" colspan="1">Y</td>
+            <td class="text-left" rowspan="1" colspan="1">See <a href="#expand-templates" class="auto internal xref">Section 4.4</a>
+</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">R14: The innermost template takes precedence when templates are applied at multiple ancestor nodes</td>
+            <td class="text-left" rowspan="1" colspan="1">Y</td>
+            <td class="text-left" rowspan="1" colspan="1">See <a href="#expand-templates" class="auto internal xref">Section 4.4</a>
+</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">R15: Enable non-NMDA servers to return the expanded data</td>
+            <td class="text-left" rowspan="1" colspan="1">N</td>
+            <td class="text-left" rowspan="1" colspan="1">have a dedicated section (<a href="#interact-non-NMDA" class="auto internal xref">Section 6</a>) for this, but empty now</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">Not discussed: R16: exclude templates applied at ancestor nodes</td>
+            <td class="text-left" rowspan="1" colspan="1">N</td>
+            <td class="text-left" rowspan="1" colspan="1">Seems to add some complexity, needs further discussion</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">Not discussed: R17: Annotations to determine which template a node was applied from</td>
+            <td class="text-left" rowspan="1" colspan="1">N</td>
+            <td class="text-left" rowspan="1" colspan="1">Needs further discussion</td>
+          </tr>
+        </tbody>
+      </table>
+</section>
+</div>
+<div id="acknowledgments">
+<section id="appendix-B">
       <h2 id="name-acknowledgments">
 <a href="#name-acknowledgments" class="section-name selfRef">Acknowledgments</a>
       </h2>
-<p id="appendix-A-1">The author would like to thank Lou Berger, Jason Sterne, Kent Watsen, and Robert
-Wilton for comments and contributions made during interim meetings.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
-<p id="appendix-A-2">The author would like to acknowledge the following drafts and
-presenters for kick-starting discussions on Yang Templates:<a href="#appendix-A-2" class="pilcrow">¶</a></p>
+<p id="appendix-B-1">The author would like to thank Lou Berger, Jason Sterne, Kent Watsen, and Robert
+Wilton for comments and contributions made during interim meetings.<a href="#appendix-B-1" class="pilcrow">¶</a></p>
+<p id="appendix-B-2">The author would like to acknowledge the following drafts and
+presenters for kick-starting discussions on Yang Templates:<a href="#appendix-B-2" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="appendix-A-3.1">
-          <p id="appendix-A-3.1.1">draft-ma-netmod-yang-config-template-00<a href="#appendix-A-3.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="appendix-B-3.1">
+          <p id="appendix-B-3.1.1">draft-ma-netmod-yang-config-template-00<a href="#appendix-B-3.1.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="appendix-A-3.2">
-          <p id="appendix-A-3.2.1">draft-rajaram-netmod-yang-cfg-template-framework-00<a href="#appendix-A-3.2.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="appendix-B-3.2">
+          <p id="appendix-B-3.2.1">draft-rajaram-netmod-yang-cfg-template-framework-00<a href="#appendix-B-3.2.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="appendix-A-3.3">
-          <p id="appendix-A-3.3.1">draft-wills-netmod-yang-templates-00<a href="#appendix-A-3.3.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="appendix-B-3.3">
+          <p id="appendix-B-3.3.1">draft-wills-netmod-yang-templates-00<a href="#appendix-B-3.3.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="appendix-A-3.4">
-          <p id="appendix-A-3.4.1">Jan Lindblad<a href="#appendix-A-3.4.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="appendix-B-3.4">
+          <p id="appendix-B-3.4.1">Jan Lindblad<a href="#appendix-B-3.4.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 </section>
 </div>
 <div id="contributors">
-<section id="appendix-B">
+<section id="appendix-C">
       <h2 id="name-contributors">
 <a href="#name-contributors" class="section-name selfRef">Contributors</a>
       </h2>
@@ -2204,7 +2329,7 @@ presenters for kick-starting discussions on Yang Templates:<a href="#appendix-A-
 </section>
 </div>
 <div id="authors-addresses">
-<section id="appendix-C">
+<section id="appendix-D">
       <h2 id="name-authors-addresses">
 <a href="#name-authors-addresses" class="section-name selfRef">Authors' Addresses</a>
       </h2>

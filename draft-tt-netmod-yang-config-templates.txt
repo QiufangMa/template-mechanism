@@ -101,6 +101,7 @@ Table of Contents
    11. References
      11.1.  Normative References
      11.2.  Informative References
+   Appendix A.  Requirement Implementation Status
    Acknowledgments
    Contributors
    Authors' Addresses
@@ -273,7 +274,7 @@ Table of Contents
    of configuration templates is achieved by network management
    operations via NETCONF or RESTCONF protocols.  The contents of the
    configuration template must be an instantiated chunk of data starting
-   from any level node in the module hierarchies.
+   from any level node in the hierarchies of any YANG data model.
 
    (Editor's note: more work may be needed here to ensure the template
    is a valid subtree of config from a schema perspective.  This may
@@ -534,7 +535,9 @@ Table of Contents
    in the data tree, with the explicitly provided configuration taking
    precedence.
 
-   The rules for deriving the <running> configuration are as follows:
+   the process of expanding templates to derive <intended> is
+   deterministic and depends solely on the contents of <running>.  The
+   process rules are as follows:
 
    *  The value of a node in the <intended> configuration is determined
       by using precedence to decide where to take the value from.
@@ -547,6 +550,10 @@ Table of Contents
    *  When multiple templates are applied to a particular node, the
       order of application (as indicated by the client when applying the
       templates) determines the precedence within that node.
+
+   If a client has knowledge of the complete contents of <running>, it
+   can calculate the exact result of template expansion, independent of
+   the server's operational state.
 
    Whenever the contents of a template is updated in <running>, the
    result of expanding out the template appears in <intended> and takes
@@ -823,6 +830,95 @@ Table of Contents
               and R. Wilton, "Network Management Datastore Architecture
               (NMDA)", RFC 8342, DOI 10.17487/RFC8342, March 2018,
               <https://www.rfc-editor.org/rfc/rfc8342>.
+
+Appendix A.  Requirement Implementation Status
+
+   Note to the RFC Editor: Please remove this section before
+   publication.
+
+   This appendix aims to track which of identified requirements have
+   been addressed in the current version, and, where applicable, how
+   they are fulfilled by the proposed mechanism.
+
+   +============================+===========+==========================+
+   | Requirement                | Fulfilled | Requirement              |
+   |                            |           | Description              |
+   +============================+===========+==========================+
+   | R1: Allowed Multiple       | Y         | see Section 4.2          |
+   | templates to be applied at |           |                          |
+   | a single node              |           |                          |
+   +----------------------------+-----------+--------------------------+
+   | R2: Templates must work    | Y         | see Section 4.1          |
+   | with any YANG module       |           |                          |
+   +----------------------------+-----------+--------------------------+
+   | R3: Templates must be      | N         | Needs further            |
+   | validated when defined     |           | discussion, see          |
+   |                            |           | Editor's note from       |
+   |                            |           | Section 4.1              |
+   +----------------------------+-----------+--------------------------+
+   | R4: Local-config overrides | Y         | see Section 4.3          |
+   | template-config            |           |                          |
+   +----------------------------+-----------+--------------------------+
+   | R5: Living template:       | Y         | see Section 4.4          |
+   | modified template data     |           |                          |
+   | gets expanded for all      |           |                          |
+   | consumers                  |           |                          |
+   +----------------------------+-----------+--------------------------+
+   | R6: Support basic          | N         | Seems to add some        |
+   | programmatic elements in   |           | complexity               |
+   | templates                  |           |                          |
+   +----------------------------+-----------+--------------------------+
+   | R7: Allow a server to      | Y         | See Section 8            |
+   | constrain which nodes can  |           |                          |
+   | be templates consumer      |           |                          |
+   +----------------------------+-----------+--------------------------+
+   | R8: Configuration with     | Y         | see Section 5 and        |
+   | both expanded and          |           | Section 8                |
+   | unexpanded templates is    |           |                          |
+   | able to be returned        |           |                          |
+   +----------------------------+-----------+--------------------------+
+   | R9: <running> contains the | Y         | see Section 5, also      |
+   | unexpanded template        |           | stated explicitly        |
+   |                            |           | in Section 8             |
+   +----------------------------+-----------+--------------------------+
+   | R10: <intended> contains   | Y         | see Section 5, also      |
+   | the expanded template      |           | stated explicitly        |
+   |                            |           | in Section 8             |
+   +----------------------------+-----------+--------------------------+
+   | R11: Enables off-box       | Y         | see Section 4.4          |
+   | template expansion of      |           |                          |
+   | <running>                  |           |                          |
+   +----------------------------+-----------+--------------------------+
+   | R12: Support limited regex | Y         | But needs more           |
+   | in templates               |           | work, see                |
+   |                            |           | Section 4.1.1            |
+   +----------------------------+-----------+--------------------------+
+   | R13: Have a precedence     | Y         | See Section 4.4          |
+   | rule when multiple         |           |                          |
+   | templates are applied at a |           |                          |
+   | single node                |           |                          |
+   +----------------------------+-----------+--------------------------+
+   | R14: The innermost         | Y         | See Section 4.4          |
+   | template takes precedence  |           |                          |
+   | when templates are applied |           |                          |
+   | at multiple ancestor nodes |           |                          |
+   +----------------------------+-----------+--------------------------+
+   | R15: Enable non-NMDA       | N         | have a dedicated         |
+   | servers to return the      |           | section (Section 6)      |
+   | expanded data              |           | for this, but empty      |
+   |                            |           | now                      |
+   +----------------------------+-----------+--------------------------+
+   | Not discussed: R16:        | N         | Seems to add some        |
+   | exclude templates applied  |           | complexity, needs        |
+   | at ancestor nodes          |           | further discussion       |
+   +----------------------------+-----------+--------------------------+
+   | Not discussed: R17:        | N         | Needs further            |
+   | Annotations to determine   |           | discussion               |
+   | which template a node was  |           |                          |
+   | applied from               |           |                          |
+   +----------------------------+-----------+--------------------------+
+
+                                  Table 1
 
 Acknowledgments
 
