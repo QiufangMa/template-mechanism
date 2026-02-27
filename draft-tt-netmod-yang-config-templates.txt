@@ -379,6 +379,11 @@ Table of Contents
       empty (i.e. a list of templates to apply to the node).  The apply-
       templates metadata is changed to match the value in the request.
 
+      Editor's Note: What if a specific node has some templates applied,
+      and another <edit-config> provides another set of values of apply-
+      template?  It is a merge or full replace?  Should this whole
+      solution be combined with NETCONF "operation" attribute?
+
    *  The apply-templates attribute is specified and the value is the
       empty string.  The apply-templates metadata is removed and thus no
       templates are applied to the node.
