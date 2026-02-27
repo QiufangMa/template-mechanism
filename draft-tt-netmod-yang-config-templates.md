@@ -528,7 +528,7 @@ effect on the device.
 
 After a template has been applied to a node in the data tree,
 the template configuration itself MAY be allowed to be deleted
-while the expanded configuration still remains in the intended.
+while the expanded configuration still remains in the intended datastore.
 
 ## Validity of Templates
 
