@@ -93,13 +93,14 @@ Table of Contents
    7.  The "ietf-config-template" YANG Module
      7.1.  Data Model Overview
      7.2.  YANG Module
-   8.  Security Considerations
-   9.  IANA Considerations
-     9.1.  The "IETF XML" Registry
-     9.2.  The "YANG Module Names" Registry
-   10. References
-     10.1.  Normative References
-     10.2.  Informative References
+   8.  Operational Considerations
+   9.  Security Considerations
+   10. IANA Considerations
+     10.1.  The "IETF XML" Registry
+     10.2.  The "YANG Module Names" Registry
+   11. References
+     11.1.  Normative References
+     11.2.  Informative References
    Acknowledgments
    Contributors
    Authors' Addresses
@@ -709,13 +710,41 @@ Table of Contents
    }
    <CODE ENDS>
 
-8.  Security Considerations
+8.  Operational Considerations
+
+   Implementations MAY restrict the applications of configuration
+   templates to some specific nodes in the YANG data tree.  Restrictions
+   should be applied consistently across all client operations.  Any
+   attempts to apply a template to a restricted node will be rejected.
+   Implementations are recommended to expose the list of configuration
+   nodes that do not support template application, any mechanisms to
+   achieve this are outside the scope of this document.
+
+   Configuration templates are designed to remain unexpanded in
+   <running>.  This ensures storage efficiency and preserves the
+   client's control over <running>, i.e., reads of <running> returns the
+   client-submitted configuration with the "apply-templates" metadata
+   attached to target nodes.  Any configuration template that is applied
+   in the data tree MUST be expanded in <intended>, which holds a merged
+   result of template expansion and configuration explicitly provided by
+   clients.
+
+   Implementations MAY differ in whether the configuration templates
+   themselves appear in <intended>, independent of whether the templates
+   are applied.  Implementations MAY also support conditional
+   visibility, where templates appear in <intended> only when they are
+   applied by at least one node via the "apply-templates" annotation.
+   Regardless of the approach chosen, implementations MUST ensure the
+   behavior is consistent and deterministic, and SHOULD be documented to
+   allow clients to rely on predictable operational behaviors.
+
+9.  Security Considerations
 
    TODO Security
 
-9.  IANA Considerations
+10.  IANA Considerations
 
-9.1.  The "IETF XML" Registry
+10.1.  The "IETF XML" Registry
 
    This document registers the following URI in the "IETF XML Registry"
    [RFC3688].
@@ -724,7 +753,7 @@ Table of Contents
            Registrant Contact: The IESG.
            XML: N/A, the requested URI is an XML namespace.
 
-9.2.  The "YANG Module Names" Registry
+10.2.  The "YANG Module Names" Registry
 
    This document registers the following YANG module in the "YANG Module
    Names" registry [RFC6020].
@@ -735,9 +764,9 @@ Table of Contents
         maintained by IANA? N
         reference:          RFC XXXX
 
-10.  References
+11.  References
 
-10.1.  Normative References
+11.1.  Normative References
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -770,7 +799,7 @@ Table of Contents
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
 
-10.2.  Informative References
+11.2.  Informative References
 
    [I-D.ietf-netmod-system-config]
               Ma, Q., Wu, Q., and C. Feng, "System-defined
