@@ -716,7 +716,7 @@ Table of Contents
    themselves appear in <intended>, independent of whether the templates
    are applied.  Implementations MAY also support conditional
    visibility, where templates appear in <intended> only when they are
-   applied by at least one node via the "apply-template" annotation.
+   applied by at least one node via the "apply-templates" annotation.
    Regardless of the approach chosen, implementations MUST ensure the
    behavior is consistent and deterministic, and SHOULD be documented to
    allow clients to rely on predictable operational behaviors.

@@ -2002,14 +2002,14 @@ module ietf-config-template {
 </div>
 </section>
 </div>
-<div id="operational-considerations">
+<div id="operational-consideration">
 <section id="section-8">
       <h2 id="name-operational-considerations">
 <a href="#section-8" class="section-number selfRef">8. </a><a href="#name-operational-considerations" class="section-name selfRef">Operational Considerations</a>
       </h2>
 <p id="section-8-1">Implementations <span class="bcp14">MAY</span> restrict the applications of configuration templates to some specific nodes in the YANG data tree. Restrictions should be applied consistently across all client operations. Any attempts to apply a template to a restricted node will be rejected. Implementations are recommended to expose the list of configuration nodes that do not support template application, any mechanisms to achieve this are outside the scope of this document.<a href="#section-8-1" class="pilcrow">¶</a></p>
 <p id="section-8-2">Configuration templates are designed to remain unexpanded in &lt;running&gt;. This ensures storage efficiency and preserves the client's control over &lt;running&gt;, i.e., reads of &lt;running&gt; returns the client-submitted configuration with the "apply-templates" metadata attached to target nodes. Any configuration template that is applied in the data tree <span class="bcp14">MUST</span> be expanded in &lt;intended&gt;, which holds a merged result of template expansion and configuration explicitly provided by clients.<a href="#section-8-2" class="pilcrow">¶</a></p>
-<p id="section-8-3">Implementations <span class="bcp14">MAY</span> differ in whether the configuration templates themselves appear in &lt;intended&gt;, independent of whether the templates are applied. Implementations <span class="bcp14">MAY</span> also support conditional visibility, where templates appear in &lt;intended&gt; only when they are applied by at least one node via the "apply-template" annotation. Regardless of the approach chosen, implementations <span class="bcp14">MUST</span> ensure the behavior is consistent and deterministic, and <span class="bcp14">SHOULD</span> be documented to allow clients to rely on predictable operational behaviors.<a href="#section-8-3" class="pilcrow">¶</a></p>
+<p id="section-8-3">Implementations <span class="bcp14">MAY</span> differ in whether the configuration templates themselves appear in &lt;intended&gt;, independent of whether the templates are applied. Implementations <span class="bcp14">MAY</span> also support conditional visibility, where templates appear in &lt;intended&gt; only when they are applied by at least one node via the "apply-templates" annotation. Regardless of the approach chosen, implementations <span class="bcp14">MUST</span> ensure the behavior is consistent and deterministic, and <span class="bcp14">SHOULD</span> be documented to allow clients to rely on predictable operational behaviors.<a href="#section-8-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="security-considerations">
