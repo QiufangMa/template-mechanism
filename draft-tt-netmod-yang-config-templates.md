@@ -152,7 +152,7 @@ Templates can be used with any YANG module.  They contain nodes of
   datastore.  In this sense, a template and its contents behaves like
   any other subtree of configuration.
 
-## Applying Templates
+## Applying Templates {#template-inherits}
 
 A template can be applied to zero or more nodes in the \<running\>
   datastore.  Each node can have zero or more templates applied to it,
@@ -223,12 +223,12 @@ the \<running\> datastore and not the state of the device.
 
 # Configuration Template Solution
 
-## Defining Templates
+## Defining Templates {#define-templates}
 
 A configuration template must first be defined before it can be applied (see {{inheriting-temp}}). The creation,
 modification, and deletion of configuration templates is achieved by network
 management operations via NETCONF or RESTCONF protocols. The contents of the configuration
-template must be an instantiated chunk of data starting from any level node in the module hierarchies.
+template must be an instantiated chunk of data starting from any level node in the hierarchies of any YANG data model.
 
 (Editor's note: more work may be needed here to ensure the template
 is a valid subtree of config from a schema perspective.  This may
@@ -238,7 +238,7 @@ operation="none").
 
 The YANG data model of configuration templates is defined in {{template-yang}}.
 
-### Templates with Regular Expressions
+### Templates with Regular Expressions {#regex}
 
 Simple regular expressions can be used to restrict which list entries
 a template takes effect for.
@@ -500,7 +500,7 @@ The client may want to to override some configuration in a template
     </interfaces>
 ~~~~
 
-## Expanding Templates
+## Expanding Templates {#expand-templates}
 
 When a configuration template is applied to a node in the data tree,
 it acts as if the configuration defined in the template is merged
@@ -508,7 +508,8 @@ with the configuration provided explicitly at the corresponding level
 in the data tree, with the explicitly provided configuration taking
 precedence.
 
-The rules for deriving the \<running\> configuration are as follows:
+the process of expanding templates to derive \<intended\> is deterministic and depends solely on the contents of \<running\>. 
+The process rules are as follows:
 
 *  The value of a node in the \<intended\> configuration is determined
    by using precedence to decide where to take the value from.
@@ -521,6 +522,9 @@ The rules for deriving the \<running\> configuration are as follows:
 *  When multiple templates are applied to a particular node, the
    order of application (as indicated by the client when applying the
    templates) determines the precedence within that node.
+
+If a client has knowledge of the complete contents of \<running\>,
+it can calculate the exact result of template expansion, independent of the server's operational state.
 
 Whenever the contents of a template is updated in \<running\>, the
 result of expanding out the template appears in \<intended\> and takes
@@ -552,7 +556,7 @@ the results of the template configuration merging with configuration
 explicitly provided by the client MUST always be valid, as defined in
 {{Section 8.1 of !RFC7950}}.
 
-# Interaction with NMDA datastores
+# Interaction with NMDA datastores {#interact-NMDA}
 
 Some implementations may have predefined configuration templates for the convenience
 of clients, which are present in \<system\> (if implemented, see {{?I-D.ietf-netmod-system-config}}).
@@ -565,7 +569,7 @@ template does not expand in \<running\>. A read of \<running\> returns what is
 sent by the client with the "apply-templates" metadata attached to the specific node.
 A configuration template which is inherited or overridden by the node instance MUST be expanded in \<intended\>.
 
-# Interaction with Non-NMDA datastores
+# Interaction with Non-NMDA datastores {#interact-non-NMDA}
 
 TBC
 
@@ -635,6 +639,32 @@ TODO Security
 
 --- back
 
+# Requirement Implementation Status
+
+Note to the RFC Editor: Please remove this section before publication.
+
+This appendix aims to track which of identified requirements have been addressed in the current version, and, where applicable, how they are fulfilled by the proposed mechanism.
+
+| Requirement | Fulfilled | Requirement Description |
+| R1: Allowed Multiple templates to be applied at a single node | Y | see {{inheriting-temp}} |
+| R2: Templates must work with any YANG module | Y | see {{define-templates}} |
+| R3: Templates must be validated when defined | N | Needs further discussion, see Editor's note from {{define-templates}} |
+| R4: Local-config overrides template-config | Y | see {{overriding-temp}} |
+| R5: Living template: modified template data gets expanded for all consumers | Y | see {{expand-templates}} |
+| R6: Support basic programmatic elements in templates | N | Seems to add some complexity |
+| R7: Allow a server to constrain which nodes can be templates consumer | Y | See {{operational-consideration}} |
+| R8: Configuration with both expanded and unexpanded templates is able to be returned | Y | see {{interact-NMDA}} and {{operational-consideration}} |
+| R9: \<running\> contains the unexpanded template | Y | see {{interact-NMDA}}, also stated explicitly in {{operational-consideration}} |
+| R10: \<intended\> contains the expanded template | Y | see {{interact-NMDA}}, also stated explicitly in {{operational-consideration}} |
+| R11: Enables off-box template expansion of \<running\> | Y | see {{expand-templates}} |
+| R12: Support limited regex in templates | Y | But needs more work, see {{regex}} |
+| R13: Have a precedence rule when multiple templates are applied at a single node | Y | See {{expand-templates}} |
+| R14: The innermost template takes precedence when templates are applied at multiple ancestor nodes | Y | See {{expand-templates}} |
+| R15: Enable non-NMDA servers to return the expanded data | N | have a dedicated section ({{interact-non-NMDA}}) for this, but empty now |
+| Not discussed: R16: exclude templates applied at ancestor nodes | N | Seems to add some complexity, needs further discussion |
+| Not discussed: R17: Annotations to determine which template a node was applied from | N | Needs further discussion |
+
+
 <!--
 # Usage Examples {#appendix-network}
 
@@ -688,7 +718,7 @@ template for NTP configuration, the following template configuration might be se
 }
 ~~~~
 
-## Applying Templates {#template-inherits}
+## Applying Templates
 
 The operator may create another template with an additional NTP server instance
 when inheriting the template created in {{template-creation}}. The configuration
