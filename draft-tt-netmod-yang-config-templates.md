@@ -524,6 +524,12 @@ Whenever the contents of a template is updated in \<running\>, the
 result of expanding out the template appears in \<intended\> and takes
 effect on the device.
 
+## Deletion of Templates
+
+After a template has been applied to a node in the data tree,
+the template configuration itself MAY be allowed to be deleted
+while the expanded configuration still remains in the intended datastore.
+
 ## Validity of Templates
 
 The contents of the template alone is not always sufficient to
