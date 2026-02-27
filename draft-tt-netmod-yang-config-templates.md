@@ -508,7 +508,7 @@ with the configuration provided explicitly at the corresponding level
 in the data tree, with the explicitly provided configuration taking
 precedence.
 
-the process of expanding templates to derive \<intended\> is deterministic and depends solely on the contents of \<running\>. 
+the process of expanding templates to derive \<intended\> is deterministic and depends solely on the contents of \<running\>.
 The process rules are as follows:
 
 *  The value of a node in the \<intended\> configuration is determined
