@@ -54,6 +54,17 @@ normative:
 
 informative:
 
+  XSD-TYPES:
+     title: "XML Schema Part 2: Datatypes Second Edition"
+     author:
+       -
+         name: Paul V. Biron
+       -
+         name: Kaiser Permanente
+       -
+         name: Ashok Malhotra
+     target: http://www.w3.org/TR/2004/REC-xmlschema-2-20041028
+     date: false
 
 --- abstract
 
@@ -238,19 +249,16 @@ operation="none").
 
 The YANG data model of configuration templates is defined in {{template-yang}}.
 
-### Templates with Regular Expressions {#regex}
+### Template Definition with Pattern Matching {#regex}
 
-Simple regular expressions can be used to restrict which list entries
-a template takes effect for.
+To allow a single template to apply to multiple instances with similar naming conventions without explicit replication, pattern matching may be used within key leafs to restrict which list entries a template takes effect for. It is used to restrict the built-in type "string", or types derived from "string", to values that match the pattern.
 
-(Editor's note: more work is needed here to define the exact
- semantics of this.  Also, the regular expressions will be very simple
- (again, this needs to be defined), and therefore it may be better to
- call them 'globs' or 'patterns')
+Any regular expression pattern MUST conform to {{!RFC9485}}, which defines
+a subset of XML Schema Definition (XSD) regular expressions {{XSD-TYPES}}.
 
- For example, Figure 1 provides an interface configuration template
+ For example, {{regex-example}} provides an interface configuration template
  that sets "type" as ethernetCsmacd and "mtu" as 1500 for interfaces
- named with the prefix "eth":
+ names match the pattern "eth.*", i.e., starting with the prefix "eth":
 
 ~~~~
 <templates xmlns="urn:ietf:params:xml:ns:yang:ietf-config-template">
@@ -259,7 +267,7 @@ a template takes effect for.
     <content>
       <interfaces xmlns="urn:example:interface">
         <interface>
-          <name>^eth.*</name>
+          <name>eth.*</name>
           <type>ethernetCsmacd</type>
           <mtu>1500</mtu>
         </interface>
@@ -657,7 +665,7 @@ This appendix aims to track which of identified requirements have been addressed
 | R9: \<running\> contains the unexpanded template | Y | see {{interact-NMDA}}, also stated explicitly in {{operational-consideration}} |
 | R10: \<intended\> contains the expanded template | Y | see {{interact-NMDA}}, also stated explicitly in {{operational-consideration}} |
 | R11: Enables off-box template expansion of \<running\> | Y | see {{expand-templates}} |
-| R12: Support limited regex in templates | Y | But needs more work, see {{regex}} |
+| R12: Support limited regex in templates | Y | see {{regex}} |
 | R13: Have a precedence rule when multiple templates are applied at a single node | Y | See {{expand-templates}} |
 | R14: The innermost template takes precedence when templates are applied at multiple ancestor nodes | Y | See {{expand-templates}} |
 | R15: Enable non-NMDA servers to return the expanded data | N | have a dedicated section ({{interact-non-NMDA}}) for this, but empty now |
