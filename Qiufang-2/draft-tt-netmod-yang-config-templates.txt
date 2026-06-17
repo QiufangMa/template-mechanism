@@ -5,10 +5,10 @@
 Network Modeling                                           R. Wills, Ed.
 Internet-Draft                                                     Cisco
 Intended status: Standards Track                              Q. Ma, Ed.
-Expires: 29 August 2026                                           Huawei
+Expires: 19 December 2026                                         Huawei
                                                          D. Rajaram, Ed.
                                                                    Nokia
-                                                        25 February 2026
+                                                            17 June 2026
 
 
                       YANG Configuration Templates
@@ -50,7 +50,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 29 August 2026.
+   This Internet-Draft will expire on 19 December 2026.
 
 Copyright Notice
 
@@ -79,26 +79,29 @@ Table of Contents
      3.5.  Off-box Template Expansion
    4.  Configuration Template Solution
      4.1.  Defining Templates
-       4.1.1.  Templates with Regular Expressions
+       4.1.1.  Template Definition with Pattern Matching
      4.2.  Applying Templates
        4.2.1.  The "apply-templates" Metadata
        4.2.2.  Creating, editing and deleting the "apply-templates"
                metadata
      4.3.  Overriding Templates
      4.4.  Expanding Templates
-     4.5.  Validity of Templates
+     4.5.  Deletion of Templates
+     4.6.  Validity of Templates
    5.  Interaction with NMDA datastores
    6.  Interaction with Non-NMDA datastores
    7.  The "ietf-config-template" YANG Module
      7.1.  Data Model Overview
      7.2.  YANG Module
-   8.  Security Considerations
-   9.  IANA Considerations
-     9.1.  The "IETF XML" Registry
-     9.2.  The "YANG Module Names" Registry
-   10. References
-     10.1.  Normative References
-     10.2.  Informative References
+   8.  Operational Considerations
+   9.  Security Considerations
+   10. IANA Considerations
+     10.1.  The "IETF XML" Registry
+     10.2.  The "YANG Module Names" Registry
+   11. References
+     11.1.  Normative References
+     11.2.  Informative References
+   Appendix A.  Requirement Implementation Status
    Acknowledgments
    Contributors
    Authors' Addresses
@@ -271,7 +274,7 @@ Table of Contents
    of configuration templates is achieved by network management
    operations via NETCONF or RESTCONF protocols.  The contents of the
    configuration template must be an instantiated chunk of data starting
-   from any level node in the module hierarchies.
+   from any level node in the hierarchies of any YANG data model.
 
    (Editor's note: more work may be needed here to ensure the template
    is a valid subtree of config from a schema perspective.  This may
@@ -282,19 +285,23 @@ Table of Contents
    The YANG data model of configuration templates is defined in
    Section 7.
 
-4.1.1.  Templates with Regular Expressions
+4.1.1.  Template Definition with Pattern Matching
 
-   Simple regular expressions can be used to restrict which list entries
-   a template takes effect for.
+   To allow a single template to apply to multiple instances with
+   similar naming conventions without explicit replication, pattern
+   matching may be used within key leafs to restrict which list entries
+   a template takes effect for.  It is used to restrict the built-in
+   type "string", or types derived from "string", to values that match
+   the pattern.
 
-   (Editor's note: more work is needed here to define the exact
-   semantics of this.  Also, the regular expressions will be very simple
-   (again, this needs to be defined), and therefore it may be better to
-   call them 'globs' or 'patterns')
+   Any regular expression pattern MUST conform to [RFC9485], which
+   defines a subset of XML Schema Definition (XSD) regular expressions
+   [XSD-TYPES].
 
    For example, Figure 1 provides an interface configuration template
    that sets "type" as ethernetCsmacd and "mtu" as 1500 for interfaces
-   named with the prefix "eth":
+   names match the pattern "eth.*", i.e., starting with the prefix
+   "eth":
 
    <templates xmlns="urn:ietf:params:xml:ns:yang:ietf-config-template">
      <template>
@@ -302,7 +309,7 @@ Table of Contents
        <content>
          <interfaces xmlns="urn:example:interface">
            <interface>
-             <name>^eth.*</name>
+             <name>eth.*</name>
              <type>ethernetCsmacd</type>
              <mtu>1500</mtu>
            </interface>
@@ -377,6 +384,11 @@ Table of Contents
    *  The apply-templates attribute is specified and the value is non-
       empty (i.e. a list of templates to apply to the node).  The apply-
       templates metadata is changed to match the value in the request.
+
+      Editor's Note: What if a specific node has some templates applied,
+      and another <edit-config> provides another set of values of apply-
+      template?  It is a merge or full replace?  Should this whole
+      solution be combined with NETCONF "operation" attribute?
 
    *  The apply-templates attribute is specified and the value is the
       empty string.  The apply-templates metadata is removed and thus no
@@ -527,7 +539,9 @@ Table of Contents
    in the data tree, with the explicitly provided configuration taking
    precedence.
 
-   The rules for deriving the <running> configuration are as follows:
+   the process of expanding templates to derive <intended> is
+   deterministic and depends solely on the contents of <running>.  The
+   process rules are as follows:
 
    *  The value of a node in the <intended> configuration is determined
       by using precedence to decide where to take the value from.
@@ -541,11 +555,21 @@ Table of Contents
       order of application (as indicated by the client when applying the
       templates) determines the precedence within that node.
 
+   If a client has knowledge of the complete contents of <running>, it
+   can calculate the exact result of template expansion, independent of
+   the server's operational state.
+
    Whenever the contents of a template is updated in <running>, the
    result of expanding out the template appears in <intended> and takes
    effect on the device.
 
-4.5.  Validity of Templates
+4.5.  Deletion of Templates
+
+   After a template has been applied to a node in the data tree, the
+   template configuration itself MAY be allowed to be deleted while the
+   expanded configuration still remains in the intended datastore.
+
+4.6.  Validity of Templates
 
    The contents of the template alone is not always sufficient to
    enforce the constraints of the data model.  Some constraints may
@@ -557,7 +581,7 @@ Table of Contents
    may validate type constraints for the leaf, including those defined
    in the type's "range", "length", and "pattern" properties.
    Implementations may also consider using mechanism defined in
-   [I-D.netmod-yang-anydata-validation] to validate anydata.
+   [I-D.ietf-netmod-yang-anydata-validation] to validate anydata.
 
       Editor's Note: Should the validity of template configuration be
       mandatory or optional?
@@ -697,13 +721,41 @@ Table of Contents
    }
    <CODE ENDS>
 
-8.  Security Considerations
+8.  Operational Considerations
+
+   Implementations MAY restrict the applications of configuration
+   templates to some specific nodes in the YANG data tree.  Restrictions
+   should be applied consistently across all client operations.  Any
+   attempts to apply a template to a restricted node will be rejected.
+   Implementations are recommended to expose the list of configuration
+   nodes that do not support template application, any mechanisms to
+   achieve this are outside the scope of this document.
+
+   Configuration templates are designed to remain unexpanded in
+   <running>.  This ensures storage efficiency and preserves the
+   client's control over <running>, i.e., reads of <running> returns the
+   client-submitted configuration with the "apply-templates" metadata
+   attached to target nodes.  Any configuration template that is applied
+   in the data tree MUST be expanded in <intended>, which holds a merged
+   result of template expansion and configuration explicitly provided by
+   clients.
+
+   Implementations MAY differ in whether the configuration templates
+   themselves appear in <intended>, independent of whether the templates
+   are applied.  Implementations MAY also support conditional
+   visibility, where templates appear in <intended> only when they are
+   applied by at least one node via the "apply-templates" annotation.
+   Regardless of the approach chosen, implementations MUST ensure the
+   behavior is consistent and deterministic, and SHOULD be documented to
+   allow clients to rely on predictable operational behaviors.
+
+9.  Security Considerations
 
    TODO Security
 
-9.  IANA Considerations
+10.  IANA Considerations
 
-9.1.  The "IETF XML" Registry
+10.1.  The "IETF XML" Registry
 
    This document registers the following URI in the "IETF XML Registry"
    [RFC3688].
@@ -712,7 +764,7 @@ Table of Contents
            Registrant Contact: The IESG.
            XML: N/A, the requested URI is an XML namespace.
 
-9.2.  The "YANG Module Names" Registry
+10.2.  The "YANG Module Names" Registry
 
    This document registers the following YANG module in the "YANG Module
    Names" registry [RFC6020].
@@ -723,9 +775,9 @@ Table of Contents
         maintained by IANA? N
         reference:          RFC XXXX
 
-10.  References
+11.  References
 
-10.1.  Normative References
+11.1.  Normative References
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -758,7 +810,12 @@ Table of Contents
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
 
-10.2.  Informative References
+   [RFC9485]  Bormann, C. and T. Bray, "I-Regexp: An Interoperable
+              Regular Expression Format", RFC 9485,
+              DOI 10.17487/RFC9485, October 2023,
+              <https://www.rfc-editor.org/rfc/rfc9485>.
+
+11.2.  Informative References
 
    [I-D.ietf-netmod-system-config]
               Ma, Q., Wu, Q., and C. Feng, "System-defined
@@ -767,8 +824,12 @@ Table of Contents
               <https://datatracker.ietf.org/doc/html/draft-ietf-netmod-
               system-config-20>.
 
-   [I-D.netmod-yang-anydata-validation]
-              "*** BROKEN REFERENCE ***".
+   [I-D.ietf-netmod-yang-anydata-validation]
+              Elhassany, A. and T. Graf, "Validating anydata in YANG
+              Library context", Work in Progress, Internet-Draft, draft-
+              ietf-netmod-yang-anydata-validation-00, 2 December 2025,
+              <https://datatracker.ietf.org/doc/html/draft-ietf-netmod-
+              yang-anydata-validation-00>.
 
    [RFC7952]  Lhotka, L., "Defining and Using Metadata with YANG",
               RFC 7952, DOI 10.17487/RFC7952, August 2016,
@@ -782,6 +843,99 @@ Table of Contents
               and R. Wilton, "Network Management Datastore Architecture
               (NMDA)", RFC 8342, DOI 10.17487/RFC8342, March 2018,
               <https://www.rfc-editor.org/rfc/rfc8342>.
+
+   [XSD-TYPES]
+              Biron, P. V., Permanente, K., and A. Malhotra, "XML Schema
+              Part 2: Datatypes Second Edition",
+              <http://www.w3.org/TR/2004/REC-xmlschema-2-20041028>.
+
+Appendix A.  Requirement Implementation Status
+
+   Note to the RFC Editor: Please remove this section before
+   publication.
+
+   This appendix aims to track which of identified requirements have
+   been addressed in the current version, and, where applicable, how
+   they are fulfilled by the proposed mechanism.
+
+   +============================+===========+==========================+
+   | Requirement                | Fulfilled | Requirement              |
+   |                            |           | Description              |
+   +============================+===========+==========================+
+   | R1: Allowed Multiple       | Y         | see Section 4.2          |
+   | templates to be applied at |           |                          |
+   | a single node              |           |                          |
+   +----------------------------+-----------+--------------------------+
+   | R2: Templates must work    | Y         | see Section 4.1          |
+   | with any YANG module       |           |                          |
+   +----------------------------+-----------+--------------------------+
+   | R3: Templates must be      | N         | Needs further            |
+   | validated when defined     |           | discussion, see          |
+   |                            |           | Editor's note from       |
+   |                            |           | Section 4.1              |
+   +----------------------------+-----------+--------------------------+
+   | R4: Local-config overrides | Y         | see Section 4.3          |
+   | template-config            |           |                          |
+   +----------------------------+-----------+--------------------------+
+   | R5: Living template:       | Y         | see Section 4.4          |
+   | modified template data     |           |                          |
+   | gets expanded for all      |           |                          |
+   | consumers                  |           |                          |
+   +----------------------------+-----------+--------------------------+
+   | R6: Support basic          | N         | Seems to add some        |
+   | programmatic elements in   |           | complexity               |
+   | templates                  |           |                          |
+   +----------------------------+-----------+--------------------------+
+   | R7: Allow a server to      | Y         | See Section 8            |
+   | constrain which nodes can  |           |                          |
+   | be templates consumer      |           |                          |
+   +----------------------------+-----------+--------------------------+
+   | R8: Configuration with     | Y         | see Section 5 and        |
+   | both expanded and          |           | Section 8                |
+   | unexpanded templates is    |           |                          |
+   | able to be returned        |           |                          |
+   +----------------------------+-----------+--------------------------+
+   | R9: <running> contains the | Y         | see Section 5, also      |
+   | unexpanded template        |           | stated explicitly        |
+   |                            |           | in Section 8             |
+   +----------------------------+-----------+--------------------------+
+   | R10: <intended> contains   | Y         | see Section 5, also      |
+   | the expanded template      |           | stated explicitly        |
+   |                            |           | in Section 8             |
+   +----------------------------+-----------+--------------------------+
+   | R11: Enables off-box       | Y         | see Section 4.4          |
+   | template expansion of      |           |                          |
+   | <running>                  |           |                          |
+   +----------------------------+-----------+--------------------------+
+   | R12: Support limited regex | Y         | see Section 4.1.1        |
+   | in templates               |           |                          |
+   +----------------------------+-----------+--------------------------+
+   | R13: Have a precedence     | Y         | See Section 4.4          |
+   | rule when multiple         |           |                          |
+   | templates are applied at a |           |                          |
+   | single node                |           |                          |
+   +----------------------------+-----------+--------------------------+
+   | R14: The innermost         | Y         | See Section 4.4          |
+   | template takes precedence  |           |                          |
+   | when templates are applied |           |                          |
+   | at multiple ancestor nodes |           |                          |
+   +----------------------------+-----------+--------------------------+
+   | R15: Enable non-NMDA       | N         | have a dedicated         |
+   | servers to return the      |           | section (Section 6)      |
+   | expanded data              |           | for this, but empty      |
+   |                            |           | now                      |
+   +----------------------------+-----------+--------------------------+
+   | Not discussed: R16:        | N         | Seems to add some        |
+   | exclude templates applied  |           | complexity, needs        |
+   | at ancestor nodes          |           | further discussion       |
+   +----------------------------+-----------+--------------------------+
+   | Not discussed: R17:        | N         | Needs further            |
+   | Annotations to determine   |           | discussion               |
+   | which template a node was  |           |                          |
+   | applied from               |           |                          |
+   +----------------------------+-----------+--------------------------+
+
+                                  Table 1
 
 Acknowledgments
 

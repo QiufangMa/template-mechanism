@@ -17,24 +17,24 @@
    identical configuration and ensures the consistency of it, thus
    allowing devices to be managed more conveniently and efficiently. 
     " name="description">
-<meta content="xml2rfc 3.31.0" name="generator">
+<meta content="xml2rfc 3.33.0" name="generator">
 <meta content="YANG" name="keyword">
 <meta content="template" name="keyword">
 <meta content="NMDA" name="keyword">
 <meta content="draft-tt-netmod-yang-config-templates-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.31.0
-    Python 3.12.12
+  xml2rfc 3.33.0
+    Python 3.12.13
     ConfigArgParse 1.7
     google-i18n-address 3.1.1
     intervaltree 3.2.1
     Jinja2 3.1.6
     lxml 6.0.2
-    platformdirs 4.5.1
+    platformdirs 4.9.6
     pycountry 24.6.1
     PyYAML 6.0.3
-    requests 2.32.5
-    wcwidth 0.3.0
+    requests 2.33.1
+    wcwidth 0.7.0
 -->
 <link href="draft-tt-netmod-yang-config-templates.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -301,16 +301,19 @@ h1, h2, h3, h4, h5, h6 {
   font-size-adjust: 0.5;
   color: var(--title-color);
 }
-h1#title {
-  font-size: 32px;
-  line-height: 40px;
-  clear: both;
-}
-h1#title, h1#rfcnum {
-  margin: 1.5em 0 0.2em;
-}
-h1#rfcnum + h1#title {
-  margin: 0.2em 0;
+h1 {
+  &#title {
+    font-size: 32px;
+    line-height: 40px;
+    clear: both;
+    margin: 1.5em 0 0.2em;
+  }
+  &#rfcnum {
+    margin: 1.5em 0 0.2em;
+    & + h1#title {
+      margin: 0.2em 0;
+    }
+  }
 }
 
 h1, h2, h3 {
@@ -330,10 +333,10 @@ h4, h5, h6 {
 #abstract+p {
   font-size: 18px;
   line-height: 24px;
-}
-#abstract+p code, #abstract+p samp, #abstract+p tt {
-  font-size: 16px;
-  line-height: 0;
+  & code, & samp, & tt {
+    font-size: 16px;
+    line-height: 0;
+  }
 }
 
 p {
@@ -344,59 +347,59 @@ p {
 div {
   margin: 0;
 }
-.alignRight.art-text {
-  background-color: var(--highlight-color);
-  border: 1px solid var(--line-color);
-  border-radius: 3px;
-  padding: 0.5em 1em 0;
-  margin-bottom: 0.5em;
-}
-.alignRight.art-text pre {
-  padding: 0;
-  width: auto;
-}
 .alignRight {
   margin: 1em 0;
-}
-.alignRight > *:first-child {
-  border: none;
-  margin: 0;
-  float: right;
-  clear: both;
-}
-.alignRight > *:nth-child(2) {
-  clear: both;
-  display: block;
-  border: none;
+  &.art-text {
+    background-color: var(--highlight-color);
+    border: 1px solid var(--line-color);
+    border-radius: 3px;
+    padding: 0.5em 1em 0;
+    margin-bottom: 0.5em;
+    & pre {
+      padding: 0;
+      width: auto;
+    }
+  }
+  & > *:first-child {
+    border: none;
+    margin: 0;
+    float: right;
+    clear: both;
+  }
+  & > *:nth-child(2) {
+    clear: both;
+    display: block;
+    border: none;
+  }
 }
 svg {
   display: block;
-}
-/* font-family isn't space-separated, but =~ will have to do */
-svg[font-family~="monospace" i], svg [font-family~="monospace" i] {
-  font-family: var(--font-mono);
-}
-.alignCenter.art-text {
-  background-color: var(--highlight-color);
-  border: 1px solid var(--line-color);
-  border-radius: 3px;
-  padding: 0.5em 1em 0;
-  margin-bottom: 0.5em;
-}
-.alignCenter.art-text pre {
-  padding: 0;
-  width: auto;
+  /* font-family isn't space-separated, but =~ will have to do */
+  &[font-family~="monospace" i], & [font-family~="monospace" i] {
+    font-family: var(--font-mono);
+  }
 }
 .alignCenter {
   margin: 1em 0;
-}
-.alignCenter > *:first-child {
-  border: none;
-  /* this isn't optimal, but it's an existence proof.  PrinceXML doesn't
-     support flexbox yet.
-  */
-  display: table;
-  margin: 0 auto;
+  &.art-text {
+    background-color: var(--highlight-color);
+    border: 1px solid var(--line-color);
+    border-radius: 3px;
+    padding: 0.5em 1em 0;
+    margin-bottom: 0.5em;
+    & pre {
+      padding: 0;
+      width: auto;
+    }
+  }
+  & > *:first-child {
+    border: none;
+    /* this isn't optimal, but it's an existence proof.  PrinceXML doesn't
+       support flexbox yet.
+    */
+    display: table;
+    margin: 0 auto;
+  }
 }
 
 /* lists */
@@ -434,26 +437,25 @@ dl {
     --indent: 5ch;
     & > dt {
       min-width: calc(var(--indent) - 2ch);
+      float: none;
     }
-  }
-  &.olPercent > dt {
-    float: none;
   }
 
   dl > dd > & {
     margin-top: 0.5em;
     margin-bottom: 0;
   }
-}
-dl:not(.dlNewline) > dt {
-  float: left;
-  margin-right: 2ch;
-  min-width: 8ch;
-}
-dl > dd {
-  margin-bottom: .8em;
-  margin-left: var(--indent) !important; /* stupid element overrides */
-  min-height: 2ex;
+
+  &:not(.dlNewline) > dt {
+    float: left;
+    margin-right: 2ch;
+    min-width: 8ch;
+  }
+  & > dd {
+    margin-bottom: .8em;
+    margin-left: var(--indent) !important; /* stupid element overrides */
+    min-height: 2ex;
+  }
 }
 :is(dl.compact, .dlCompact) > dd {
   margin-bottom: 0;
@@ -469,20 +471,22 @@ dl > dd {
 }
 
 /* links */
-a, a[href].selfRef:hover {
+a {
   text-decoration: none;
+  &[href] {
+    color: var(--link-color);
+    &:hover { text-decoration: underline; }
+    &.selfRef {
+      color: var(--text-color);
+      &:hover {
+        text-decoration: none;
+        background-color: var(--highlight-color);
+      }
+    }
+  }
 }
-a[href] {
-  color: var(--link-color);
-}
-a[href].selfRef, .iref + a[href].internal {
+.iref + a[href].internal {
   color: var(--text-color);
-}
-a[href]:hover {
-  text-decoration: underline;
-}
-a[href].selfRef:hover {
-  background-color: var(--highlight-color);
 }
 a.xref:is(.cite, .auto), :is(#status-of-memo, #copyright) a {
   white-space: nowrap;
@@ -518,9 +522,9 @@ img {
 figure {
   margin: 0.5em 0;
   padding: 0;
-}
-figure blockquote {
-  margin: 0.8em 0.4em 0.4em;
+  & blockquote {
+    margin: 0.8em 0.4em 0.4em;
+  }
 }
 figcaption, caption {
   font-style: italic;
@@ -530,17 +534,19 @@ figcaption, caption {
 }
 @media screen {
   /* Auto-collapse boilerplate. */
-  :is(#status-of-memo, #copyright) p {
-    margin: -2px 0;
-    max-height: 0;
-    transition: max-height 2s ease, margin 0.5s ease 0.5s;
-    overflow: hidden;
-  }
-  :is(#status-of-memo, #copyright):hover p,
-  :is(#status-of-memo, #copyright) h2:target ~ p {
-    margin: 0.5em 0;
-    max-height: 500px;
-    overflow: auto;
+  :is(#status-of-memo, #copyright) {
+    & p {
+      margin: -2px 0;
+      max-height: 0;
+      transition: max-height 2s ease, margin 0.5s ease 0.5s;
+      overflow: hidden;
+    }
+    &:hover p,
+    & h2:target ~ p {
+      margin: 0.5em 0;
+      max-height: 500px;
+      overflow: auto;
+    }
   }
   pre, svg {
     display: inline-block;
@@ -590,25 +596,17 @@ table {
   max-width: 100%;
   margin: 0 0 1em;
   border-collapse: collapse;
-}
-table.right {
-  margin-left: auto;
-}
-table.center {
-  margin-left: auto;
-  margin-right: auto;
-}
-table.left {
-  margin-right: auto;
-}
-table .text-left {
-  text-align: left;
-}
-table .text-center {
-  text-align: center;
-}
-table .text-right {
-  text-align: right;
+  &.right { margin-left: auto; }
+  &.center { margin-left: auto; margin-right: auto; }
+  &.left { margin-right: auto; }
+  & .text-left { text-align: left; }
+  & .text-center { text-align: center; }
+  & .text-right { text-align: right; }
+  & caption {
+    margin: 0;
+    padding: 3px 0 3px 1em;
+  }
+  & p { margin: 0; }
 }
 
 thead, tbody {
@@ -628,13 +626,6 @@ th {
 :is(tr:nth-child(2n+1), thead+tbody > tr:nth-child(2n)) > td {
   background-color: var(--highlight-color);
 }
-table caption {
-  margin: 0;
-  padding: 3px 0 3px 1em;
-}
-table p {
-  margin: 0;
-}
 
 /* pilcrow */
 a.pilcrow {
@@ -645,18 +636,16 @@ a.pilcrow {
     color: var(--pilcrow-weak);
     &:hover { text-decoration: none; }
   }
-}
-@media not print {
-  :hover > a.pilcrow, a.pilcrow:focus {
-    opacity: 1;
+  @media not print {
+    :hover > &, &:focus {
+      opacity: 1;
+    }
+    &[href]:hover {
+      color: var(--pilcrow-strong);
+      background-color: transparent;
+    }
   }
-  a.pilcrow[href]:hover {
-    color: var(--pilcrow-strong);
-    background-color: transparent;
-  }
-}
-@media print {
-  a.pilcrow {
+  @media print {
     display: none;
   }
 }
@@ -715,9 +704,9 @@ sub, sup {
   font-size: 0.9em;
   font-style: italic;
   margin-top: 2em;
-}
-.docInfo .prepared {
-  float: right;
+  & .prepared {
+    float: right;
+  }
 }
 
 /* table of contents */
@@ -807,23 +796,27 @@ hr.addr {
   max-width: calc(100% - 16px);
 }
 @media (min-width: 500px) {
-  #authors-addresses > section {
-    column-count: 2;
-    column-gap: 20px;
-  }
-  #authors-addresses > section > h2 {
-    column-span: all;
-  }
-  /* hack for break-inside: avoid-column */
-  #authors-addresses address {
-    display: inline-block;
-    break-inside: avoid-column;
+  #authors-addresses {
+    & > section {
+      column-count: 2;
+      column-gap: 20px;
+    }
+    & > section > h2 {
+      column-span: all;
+    }
+    /* hack for break-inside: avoid-column */
+    & address {
+      display: inline-block;
+      break-inside: avoid-column;
+    }
   }
 }
 
 /* Comments */
-.rfcEditorRemove p:first-of-type {
-  font-style: italic;
+.rfcEditorRemove {
+  & p:first-of-type {
+    font-style: italic;
+  }
 }
 .cref {
   background-color: rgba(249, 232, 105, 0.3);
@@ -834,19 +827,21 @@ hr.addr {
 }
 
 @media screen {
-  #toc nav {
-    font-family: var(--font-title);
-    font-weight: 360;
-    & > ul { margin-bottom: 2em; }
-    & ul {
-      margin: 0 0 0 4px;
-      & :is(p, li) {
-        margin: 2px 0;
+  #toc {
+    & nav {
+      font-family: var(--font-title);
+      font-weight: 360;
+      & > ul { margin-bottom: 2em; }
+      & ul {
+        margin: 0 0 0 4px;
+        & :is(p, li) {
+          margin: 2px 0;
+        }
       }
     }
-  }
-  #toc a.toplink {
-    float: right;
+    & a.toplink {
+      float: right;
+    }
   }
 }
 @media not screen {
@@ -867,54 +862,54 @@ hr.addr {
     margin: 0;
     border-bottom: 1px solid #ccc;
     opacity: 0.6;
-  }
-  #toc h2 {
-    margin: 0;
-    padding: 2px 0 2px 6px;
-    padding-right: 1em;
-    font-size: 18px;
-    line-height: 24px;
-    min-width: 190px;
-    text-align: right;
-    background-color: #444;
-    color: white;
-    cursor: pointer;
-    &::before { /* css hamburger */
-      float: right;
-      position: relative;
-      width: 1em;
-      height: 1px;
-      left: -164px;
-      margin: 8px 0 0 0;
-      background: white none repeat scroll 0 0;
-      box-shadow: 0 4px 0 0 white, 0 8px 0 0 white;
-      content: "";
+    & h2 {
+      margin: 0;
+      padding: 2px 0 2px 6px;
+      padding-right: 1em;
+      font-size: 18px;
+      line-height: 24px;
+      min-width: 190px;
+      text-align: right;
+      background-color: #444;
+      color: white;
+      cursor: pointer;
+      &::before { /* css hamburger */
+        float: right;
+        position: relative;
+        width: 1em;
+        height: 1px;
+        left: -164px;
+        margin: 8px 0 0 0;
+        background: white none repeat scroll 0 0;
+        box-shadow: 0 4px 0 0 white, 0 8px 0 0 white;
+        content: "";
+      }
     }
-  }
-  #toc nav {
-    display: none;
-    background-color: var(--background-color);
-    padding: 0.5em 1em 1em;
-    overflow: auto;
-    overscroll-behavior: contain;
-    height: calc(100vh - 48px);
-    border-left: 1px solid #ddd;
-  }
-  #toc.active {
-    opacity: 1;
-    & nav { display: block; }
-  }
-  /* Make the collapsed ToC header render white on gray also when it's a link */
-  #toc h2 a,
-  #toc h2 a:is(:link, :focus, :hover),
-  #toc a.toplink,
-  #toc a.toplink:hover {
-    color: white;
-    background-color: #444;
-    text-decoration: none;
-  }
-  #toc a.toplink {
-    margin: 2px 0.5em 0;
+    & nav {
+      display: none;
+      background-color: var(--background-color);
+      padding: 0.5em 1em 1em;
+      overflow: auto;
+      overscroll-behavior: contain;
+      height: calc(100vh - 48px);
+      border-left: 1px solid #ddd;
+    }
+    &.active {
+      opacity: 1;
+      & nav { display: block; }
+    }
+    /* Make the collapsed ToC header render white on gray also when it's a link */
+    & h2 a,
+    & h2 a:is(:link, :focus, :hover),
+    & a.toplink,
+    & a.toplink:hover {
+      color: white;
+      background-color: #444;
+      text-decoration: none;
+    }
+    & a.toplink {
+      margin: 2px 0.5em 0;
+    }
   }
 }
 
@@ -933,26 +928,26 @@ hr.addr {
     margin: 0;
     padding: 0;
     z-index: 1;
-  }
-  #toc h2 {
-    margin: 0;
-    padding: 0.25em 1em 1em 0;
-  }
-  #toc nav {
-    display: block;
-    height: calc(90vh - 84px);
-    bottom: 0;
-    padding: 0.5em 0 2em;
-    overflow: auto;
-    overscroll-behavior: contain;
-    scrollbar-width: thin;
+    & h2 {
+      margin: 0;
+      padding: 0.25em 1em 1em 0;
+    }
+    & nav {
+      display: block;
+      height: calc(90vh - 84px);
+      bottom: 0;
+      padding: 0.5em 0 2em;
+      overflow: auto;
+      overscroll-behavior: contain;
+      scrollbar-width: thin;
+    }
+    & a.toplink {
+      margin: 8px 0.5em 0;
+    }
   }
   img { /* future proofing */
     max-width: 100%;
     height: auto;
-  }
-  #toc a.toplink {
-    margin: 8px 0.5em 0;
   }
 }
 
@@ -968,12 +963,13 @@ hr.addr {
   #n-copyright-notice {
     border-bottom: none;
   }
-  #toc, #n-introduction {
-    page-break-before: always;
-  }
   #toc {
+    page-break-before: always;
     border-top: none;
     padding-top: 0;
+  }
+  #n-introduction {
+    page-break-before: always;
   }
   figure, pre, .vcard {
     page-break-inside: avoid;
@@ -1035,17 +1031,19 @@ hr.addr {
 }
 
 /* SVG Trick: a prefix match works because only black and white are allowed */
-svg :is([stroke="black"], [stroke^="#000"]) {
-  stroke: var(--text-color);
-}
-svg :is([stroke="white"], [stroke^="#fff"]) {
-  stroke: var(--background-color);
-}
-svg :is([fill="black"], [fill^="#000"], :not([fill])) {
-  fill: var(--text-color);
-}
-svg :is([fill="white"], [fill^="#fff"]) {
-  fill: var(--background-color);
+svg {
+  & :is([stroke="black"], [stroke^="#000"]) {
+    stroke: var(--text-color);
+  }
+  & :is([stroke="white"], [stroke^="#fff"]) {
+    stroke: var(--background-color);
+  }
+  & :is([fill="black"], [fill^="#000"], :not([fill])) {
+    fill: var(--text-color);
+  }
+  & :is([fill="white"], [fill^="#fff"]) {
+    fill: var(--background-color);
+  }
 }
 </style>
 
@@ -1055,11 +1053,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">template</td>
-<td class="right">February 2026</td>
+<td class="right">June 2026</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Wills, et al.</td>
-<td class="center">Expires 29 August 2026</td>
+<td class="center">Expires 19 December 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1072,12 +1070,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-tt-netmod-yang-config-templates-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-02-25" class="published">25 February 2026</time>
+<time datetime="2026-06-17" class="published">17 June 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-08-29">29 August 2026</time></dd>
+<dd class="expires"><time datetime="2026-12-19">19 December 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1139,7 +1137,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 29 August 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 19 December 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1206,7 +1204,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
                 <p id="section-toc.1-1.4.2.1.1"><a href="#section-4.1" class="auto internal xref">4.1</a>.  <a href="#name-defining-templates" class="internal xref">Defining Templates</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.1.2.1">
-                    <p id="section-toc.1-1.4.2.1.2.1.1"><a href="#section-4.1.1" class="auto internal xref">4.1.1</a>.  <a href="#name-templates-with-regular-expr" class="internal xref">Templates with Regular Expressions</a></p>
+                    <p id="section-toc.1-1.4.2.1.2.1.1"><a href="#section-4.1.1" class="auto internal xref">4.1.1</a>.  <a href="#name-template-definition-with-pa" class="internal xref">Template Definition with Pattern Matching</a></p>
 </li>
                 </ul>
 </li>
@@ -1228,7 +1226,10 @@ svg :is([fill="white"], [fill^="#fff"]) {
                 <p id="section-toc.1-1.4.2.4.1"><a href="#section-4.4" class="auto internal xref">4.4</a>.  <a href="#name-expanding-templates" class="internal xref">Expanding Templates</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.5">
-                <p id="section-toc.1-1.4.2.5.1"><a href="#section-4.5" class="auto internal xref">4.5</a>.  <a href="#name-validity-of-templates" class="internal xref">Validity of Templates</a></p>
+                <p id="section-toc.1-1.4.2.5.1"><a href="#section-4.5" class="auto internal xref">4.5</a>.  <a href="#name-deletion-of-templates" class="internal xref">Deletion of Templates</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.6">
+                <p id="section-toc.1-1.4.2.6.1"><a href="#section-4.6" class="auto internal xref">4.6</a>.  <a href="#name-validity-of-templates" class="internal xref">Validity of Templates</a></p>
 </li>
             </ul>
 </li>
@@ -1250,38 +1251,44 @@ svg :is([fill="white"], [fill^="#fff"]) {
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8">
-            <p id="section-toc.1-1.8.1"><a href="#section-8" class="auto internal xref">8</a>.  <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
+            <p id="section-toc.1-1.8.1"><a href="#section-8" class="auto internal xref">8</a>.  <a href="#name-operational-considerations" class="internal xref">Operational Considerations</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9">
-            <p id="section-toc.1-1.9.1"><a href="#section-9" class="auto internal xref">9</a>.  <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
-<ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.1">
-                <p id="section-toc.1-1.9.2.1.1"><a href="#section-9.1" class="auto internal xref">9.1</a>.  <a href="#name-the-ietf-xml-registry" class="internal xref">The "IETF XML" Registry</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.2">
-                <p id="section-toc.1-1.9.2.2.1"><a href="#section-9.2" class="auto internal xref">9.2</a>.  <a href="#name-the-yang-module-names-regis" class="internal xref">The "YANG Module Names" Registry</a></p>
-</li>
-            </ul>
+            <p id="section-toc.1-1.9.1"><a href="#section-9" class="auto internal xref">9</a>.  <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10">
-            <p id="section-toc.1-1.10.1"><a href="#section-10" class="auto internal xref">10</a>. <a href="#name-references" class="internal xref">References</a></p>
+            <p id="section-toc.1-1.10.1"><a href="#section-10" class="auto internal xref">10</a>. <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.1">
-                <p id="section-toc.1-1.10.2.1.1"><a href="#section-10.1" class="auto internal xref">10.1</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
+                <p id="section-toc.1-1.10.2.1.1"><a href="#section-10.1" class="auto internal xref">10.1</a>.  <a href="#name-the-ietf-xml-registry" class="internal xref">The "IETF XML" Registry</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.2">
-                <p id="section-toc.1-1.10.2.2.1"><a href="#section-10.2" class="auto internal xref">10.2</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
+                <p id="section-toc.1-1.10.2.2.1"><a href="#section-10.2" class="auto internal xref">10.2</a>.  <a href="#name-the-yang-module-names-regis" class="internal xref">The "YANG Module Names" Registry</a></p>
 </li>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11">
-            <p id="section-toc.1-1.11.1"><a href="#appendix-A" class="auto internal xref"></a><a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
+            <p id="section-toc.1-1.11.1"><a href="#section-11" class="auto internal xref">11</a>. <a href="#name-references" class="internal xref">References</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.1">
+                <p id="section-toc.1-1.11.2.1.1"><a href="#section-11.1" class="auto internal xref">11.1</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.2">
+                <p id="section-toc.1-1.11.2.2.1"><a href="#section-11.2" class="auto internal xref">11.2</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
+</li>
+            </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12">
-            <p id="section-toc.1-1.12.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-contributors" class="internal xref">Contributors</a></p>
+            <p id="section-toc.1-1.12.1"><a href="#appendix-A" class="auto internal xref">Appendix A</a>.  <a href="#name-requirement-implementation-" class="internal xref">Requirement Implementation Status</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13">
-            <p id="section-toc.1-1.13.1"><a href="#appendix-C" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
+            <p id="section-toc.1-1.13.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14">
+            <p id="section-toc.1-1.14.1"><a href="#appendix-C" class="auto internal xref"></a><a href="#name-contributors" class="internal xref">Contributors</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15">
+            <p id="section-toc.1-1.15.1"><a href="#appendix-D" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
 </li>
         </ul>
 </nav>
@@ -1391,7 +1398,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
   any other subtree of configuration.<a href="#section-3.1-2" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="applying-templates">
+<div id="template-inherits">
 <section id="section-3.2">
         <h3 id="name-applying-templates">
 <a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-applying-templates" class="section-name selfRef">Applying Templates</a>
@@ -1482,7 +1489,7 @@ the &lt;running&gt; datastore and not the state of the device.<a href="#section-
       <h2 id="name-configuration-template-solu">
 <a href="#section-4" class="section-number selfRef">4. </a><a href="#name-configuration-template-solu" class="section-name selfRef">Configuration Template Solution</a>
       </h2>
-<div id="defining-templates">
+<div id="define-templates">
 <section id="section-4.1">
         <h3 id="name-defining-templates">
 <a href="#section-4.1" class="section-number selfRef">4.1. </a><a href="#name-defining-templates" class="section-name selfRef">Defining Templates</a>
@@ -1490,27 +1497,24 @@ the &lt;running&gt; datastore and not the state of the device.<a href="#section-
 <p id="section-4.1-1">A configuration template must first be defined before it can be applied (see <a href="#inheriting-temp" class="auto internal xref">Section 4.2</a>). The creation,
 modification, and deletion of configuration templates is achieved by network
 management operations via NETCONF or RESTCONF protocols. The contents of the configuration
-template must be an instantiated chunk of data starting from any level node in the module hierarchies.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
+template must be an instantiated chunk of data starting from any level node in the hierarchies of any YANG data model.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
 <p id="section-4.1-2">(Editor's note: more work may be needed here to ensure the template
 is a valid subtree of config from a schema perspective.  This may
 mean we need a way of saying where the root of the template is in the
 schema, for example with a set of "outer" nodes with
 operation="none").<a href="#section-4.1-2" class="pilcrow">¶</a></p>
 <p id="section-4.1-3">The YANG data model of configuration templates is defined in <a href="#template-yang" class="auto internal xref">Section 7</a>.<a href="#section-4.1-3" class="pilcrow">¶</a></p>
-<div id="templates-with-regular-expressions">
+<div id="regex">
 <section id="section-4.1.1">
-          <h4 id="name-templates-with-regular-expr">
-<a href="#section-4.1.1" class="section-number selfRef">4.1.1. </a><a href="#name-templates-with-regular-expr" class="section-name selfRef">Templates with Regular Expressions</a>
+          <h4 id="name-template-definition-with-pa">
+<a href="#section-4.1.1" class="section-number selfRef">4.1.1. </a><a href="#name-template-definition-with-pa" class="section-name selfRef">Template Definition with Pattern Matching</a>
           </h4>
-<p id="section-4.1.1-1">Simple regular expressions can be used to restrict which list entries
-a template takes effect for.<a href="#section-4.1.1-1" class="pilcrow">¶</a></p>
-<p id="section-4.1.1-2">(Editor's note: more work is needed here to define the exact
- semantics of this.  Also, the regular expressions will be very simple
- (again, this needs to be defined), and therefore it may be better to
- call them 'globs' or 'patterns')<a href="#section-4.1.1-2" class="pilcrow">¶</a></p>
-<p id="section-4.1.1-3">For example, Figure 1 provides an interface configuration template
+<p id="section-4.1.1-1">To allow a single template to apply to multiple instances with similar naming conventions without explicit replication, pattern matching may be used within key leafs to restrict which list entries a template takes effect for. It is used to restrict the built-in type "string", or types derived from "string", to values that match the pattern.<a href="#section-4.1.1-1" class="pilcrow">¶</a></p>
+<p id="section-4.1.1-2">Any regular expression pattern <span class="bcp14">MUST</span> conform to <span>[<a href="#RFC9485" class="cite xref">RFC9485</a>]</span>, which defines
+a subset of XML Schema Definition (XSD) regular expressions <span>[<a href="#XSD-TYPES" class="cite xref">XSD-TYPES</a>]</span>.<a href="#section-4.1.1-2" class="pilcrow">¶</a></p>
+<p id="section-4.1.1-3">For example, <a href="#regex-example" class="auto internal xref">Figure 1</a> provides an interface configuration template
  that sets "type" as ethernetCsmacd and "mtu" as 1500 for interfaces
- named with the prefix "eth":<a href="#section-4.1.1-3" class="pilcrow">¶</a></p>
+ names match the pattern "eth.*", i.e., starting with the prefix "eth":<a href="#section-4.1.1-3" class="pilcrow">¶</a></p>
 <span id="name-example-of-an-interface-tem"></span><div id="regex-example">
 <figure id="figure-1">
             <div class="alignCenter art-text artwork" id="section-4.1.1-4.1">
@@ -1521,7 +1525,7 @@ a template takes effect for.<a href="#section-4.1.1-1" class="pilcrow">¶</a></p
     &lt;content&gt;
       &lt;interfaces xmlns="urn:example:interface"&gt;
         &lt;interface&gt;
-          &lt;name&gt;^eth.*&lt;/name&gt;
+          &lt;name&gt;eth.*&lt;/name&gt;
           &lt;type&gt;ethernetCsmacd&lt;/type&gt;
           &lt;mtu&gt;1500&lt;/mtu&gt;
         &lt;/interface&gt;
@@ -1616,19 +1620,26 @@ three cases:<a href="#section-4.2.2-1" class="pilcrow">¶</a></p>
 empty (i.e. a list of templates to apply to the node).  The apply-
 templates metadata is changed to match the value in the request.<a href="#section-4.2.2-2.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-4.2.2-2.2">
-              <p id="section-4.2.2-2.2.1">The apply-templates attribute is specified and the value is the
-empty string.  The apply-templates metadata is removed and thus no
-templates are applied to the node.<a href="#section-4.2.2-2.2.1" class="pilcrow">¶</a></p>
-</li>
-            <li class="normal" id="section-4.2.2-2.3">
-              <p id="section-4.2.2-2.3.1">The apply-templates attribute not specified.  The apply-templates
-metadata currently present on the node (if any) is unchanged.<a href="#section-4.2.2-2.3.1" class="pilcrow">¶</a></p>
+          </ul>
+<ul class="normal ulEmpty">
+<li class="normal ulEmpty" id="section-4.2.2-3.1">
+              <p id="section-4.2.2-3.1.1">Editor's Note: What if a specific node has some templates applied, and another &lt;edit-config&gt; provides another set of values of apply-template? It is a merge or full replace? Should this whole solution be combined with NETCONF "operation" attribute?<a href="#section-4.2.2-3.1.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
-<p id="section-4.2.2-3">For example, this request creates a single loopback0 interface and
-applies template t1 to the interfaces container:<a href="#section-4.2.2-3" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-4.2.2-4">
+<ul class="normal">
+<li class="normal" id="section-4.2.2-4.1">
+              <p id="section-4.2.2-4.1.1">The apply-templates attribute is specified and the value is the
+empty string.  The apply-templates metadata is removed and thus no
+templates are applied to the node.<a href="#section-4.2.2-4.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-4.2.2-4.2">
+              <p id="section-4.2.2-4.2.1">The apply-templates attribute not specified.  The apply-templates
+metadata currently present on the node (if any) is unchanged.<a href="#section-4.2.2-4.2.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+<p id="section-4.2.2-5">For example, this request creates a single loopback0 interface and
+applies template t1 to the interfaces container:<a href="#section-4.2.2-5" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-4.2.2-6">
 <pre>
     &lt;edit-config&gt;
       ...
@@ -1641,10 +1652,10 @@ applies template t1 to the interfaces container:<a href="#section-4.2.2-3" class
         &lt;/interfaces&gt;
       &lt;/config&gt;
     &lt;/edit-config&gt;
-</pre><a href="#section-4.2.2-4" class="pilcrow">¶</a>
+</pre><a href="#section-4.2.2-6" class="pilcrow">¶</a>
 </div>
-<p id="section-4.2.2-5">This request also applies template t2 to the interfaces container:<a href="#section-4.2.2-5" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-4.2.2-6">
+<p id="section-4.2.2-7">This request also applies template t2 to the interfaces container:<a href="#section-4.2.2-7" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-4.2.2-8">
 <pre>
     &lt;edit-config&gt;
       ...
@@ -1653,10 +1664,10 @@ applies template t1 to the interfaces container:<a href="#section-4.2.2-3" class
                     ct:apply-templates="t1 t2" /&gt;
       &lt;/config&gt;
     &lt;/edit-config&gt;
-</pre><a href="#section-4.2.2-6" class="pilcrow">¶</a>
+</pre><a href="#section-4.2.2-8" class="pilcrow">¶</a>
 </div>
-<p id="section-4.2.2-7">After this request, &lt;running&gt; is as follows:<a href="#section-4.2.2-7" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-4.2.2-8">
+<p id="section-4.2.2-9">After this request, &lt;running&gt; is as follows:<a href="#section-4.2.2-9" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-4.2.2-10">
 <pre>
     &lt;interfaces xmlns="urn:example:interface"
                 ct:apply-templates="t1 t1"&gt;
@@ -1664,11 +1675,11 @@ applies template t1 to the interfaces container:<a href="#section-4.2.2-3" class
         &lt;name&gt;loopback0&lt;/name&gt;
       &lt;/interface&gt;
     &lt;/interfaces&gt;
-</pre><a href="#section-4.2.2-8" class="pilcrow">¶</a>
+</pre><a href="#section-4.2.2-10" class="pilcrow">¶</a>
 </div>
-<p id="section-4.2.2-9">This request adds a new interface list entry, and leaves the applied
-templates unchanged:<a href="#section-4.2.2-9" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-4.2.2-10">
+<p id="section-4.2.2-11">This request adds a new interface list entry, and leaves the applied
+templates unchanged:<a href="#section-4.2.2-11" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-4.2.2-12">
 <pre>
     &lt;edit-config&gt;
       ...
@@ -1680,10 +1691,10 @@ templates unchanged:<a href="#section-4.2.2-9" class="pilcrow">¶</a></p>
         &lt;/interfaces&gt;
       &lt;/config&gt;
     &lt;/edit-config&gt;
-</pre><a href="#section-4.2.2-10" class="pilcrow">¶</a>
+</pre><a href="#section-4.2.2-12" class="pilcrow">¶</a>
 </div>
-<p id="section-4.2.2-11">After this request, &lt;running&gt; is as follows:<a href="#section-4.2.2-11" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-4.2.2-12">
+<p id="section-4.2.2-13">After this request, &lt;running&gt; is as follows:<a href="#section-4.2.2-13" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-4.2.2-14">
 <pre>
     &lt;interfaces xmlns="urn:example:interface"
                 ct:apply-templates="t1 t1"&gt;
@@ -1694,11 +1705,11 @@ templates unchanged:<a href="#section-4.2.2-9" class="pilcrow">¶</a></p>
         &lt;name&gt;eth0&lt;/name&gt;
       &lt;/interface&gt;
     &lt;/interfaces&gt;
-</pre><a href="#section-4.2.2-12" class="pilcrow">¶</a>
+</pre><a href="#section-4.2.2-14" class="pilcrow">¶</a>
 </div>
-<p id="section-4.2.2-13">Finally, this request deletes all the templates, and leaves the list
-entries unchanged:<a href="#section-4.2.2-13" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-4.2.2-14">
+<p id="section-4.2.2-15">Finally, this request deletes all the templates, and leaves the list
+entries unchanged:<a href="#section-4.2.2-15" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-4.2.2-16">
 <pre>
     &lt;edit-config&gt;
       ...
@@ -1708,10 +1719,10 @@ entries unchanged:<a href="#section-4.2.2-13" class="pilcrow">¶</a></p>
         &lt;/interfaces&gt;
       &lt;/config&gt;
     &lt;/edit-config&gt;
-</pre><a href="#section-4.2.2-14" class="pilcrow">¶</a>
+</pre><a href="#section-4.2.2-16" class="pilcrow">¶</a>
 </div>
-<p id="section-4.2.2-15">After this request, &lt;running&gt; is as follows:<a href="#section-4.2.2-15" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-4.2.2-16">
+<p id="section-4.2.2-17">After this request, &lt;running&gt; is as follows:<a href="#section-4.2.2-17" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-4.2.2-18">
 <pre>
     &lt;interfaces xmlns="urn:example:interface"&gt;
       &lt;interface&gt;
@@ -1721,7 +1732,7 @@ entries unchanged:<a href="#section-4.2.2-13" class="pilcrow">¶</a></p>
         &lt;name&gt;eth0&lt;/name&gt;
       &lt;/interface&gt;
     &lt;/interfaces&gt;
-</pre><a href="#section-4.2.2-16" class="pilcrow">¶</a>
+</pre><a href="#section-4.2.2-18" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
@@ -1785,7 +1796,7 @@ entries unchanged:<a href="#section-4.2.2-13" class="pilcrow">¶</a></p>
 </div>
 </section>
 </div>
-<div id="expanding-templates">
+<div id="expand-templates">
 <section id="section-4.4">
         <h3 id="name-expanding-templates">
 <a href="#section-4.4" class="section-number selfRef">4.4. </a><a href="#name-expanding-templates" class="section-name selfRef">Expanding Templates</a>
@@ -1795,7 +1806,8 @@ it acts as if the configuration defined in the template is merged
 with the configuration provided explicitly at the corresponding level
 in the data tree, with the explicitly provided configuration taking
 precedence.<a href="#section-4.4-1" class="pilcrow">¶</a></p>
-<p id="section-4.4-2">The rules for deriving the &lt;running&gt; configuration are as follows:<a href="#section-4.4-2" class="pilcrow">¶</a></p>
+<p id="section-4.4-2">the process of expanding templates to derive &lt;intended&gt; is deterministic and depends solely on the contents of &lt;running&gt;.
+The process rules are as follows:<a href="#section-4.4-2" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-4.4-3.1">
             <p id="section-4.4-3.1.1">The value of a node in the &lt;intended&gt; configuration is determined
@@ -1814,17 +1826,29 @@ order of application (as indicated by the client when applying the
 templates) determines the precedence within that node.<a href="#section-4.4-3.4.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-4.4-4">Whenever the contents of a template is updated in &lt;running&gt;, the
+<p id="section-4.4-4">If a client has knowledge of the complete contents of &lt;running&gt;,
+it can calculate the exact result of template expansion, independent of the server's operational state.<a href="#section-4.4-4" class="pilcrow">¶</a></p>
+<p id="section-4.4-5">Whenever the contents of a template is updated in &lt;running&gt;, the
 result of expanding out the template appears in &lt;intended&gt; and takes
-effect on the device.<a href="#section-4.4-4" class="pilcrow">¶</a></p>
+effect on the device.<a href="#section-4.4-5" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="deletion-of-templates">
+<section id="section-4.5">
+        <h3 id="name-deletion-of-templates">
+<a href="#section-4.5" class="section-number selfRef">4.5. </a><a href="#name-deletion-of-templates" class="section-name selfRef">Deletion of Templates</a>
+        </h3>
+<p id="section-4.5-1">After a template has been applied to a node in the data tree,
+the template configuration itself <span class="bcp14">MAY</span> be allowed to be deleted
+while the expanded configuration still remains in the intended datastore.<a href="#section-4.5-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="validity-of-templates">
-<section id="section-4.5">
+<section id="section-4.6">
         <h3 id="name-validity-of-templates">
-<a href="#section-4.5" class="section-number selfRef">4.5. </a><a href="#name-validity-of-templates" class="section-name selfRef">Validity of Templates</a>
+<a href="#section-4.6" class="section-number selfRef">4.6. </a><a href="#name-validity-of-templates" class="section-name selfRef">Validity of Templates</a>
         </h3>
-<p id="section-4.5-1">The contents of the template alone is not always sufficient to
+<p id="section-4.6-1">The contents of the template alone is not always sufficient to
 enforce the constraints of the data model.  Some constraints may
 depend on configuration outside of the templates to satisfy, e.g., a
 list may contain a mandatory leaf node which is not defined in the
@@ -1833,21 +1857,21 @@ template but explicitly provided by the client.  However, servers
 possible during the processing of template creation, e.g., servers
 may validate type constraints for the leaf, including those defined
 in the type's "range", "length", and "pattern" properties. Implementations
-may also consider using mechanism defined in <span>[<a href="#I-D.netmod-yang-anydata-validation" class="cite xref">I-D.netmod-yang-anydata-validation</a>]</span> to validate anydata.<a href="#section-4.5-1" class="pilcrow">¶</a></p>
+may also consider using mechanism defined in <span>[<a href="#I-D.ietf-netmod-yang-anydata-validation" class="cite xref">I-D.ietf-netmod-yang-anydata-validation</a>]</span> to validate anydata.<a href="#section-4.6-1" class="pilcrow">¶</a></p>
 <ul class="normal ulEmpty">
-<li class="normal ulEmpty" id="section-4.5-2.1">
-            <p id="section-4.5-2.1.1">Editor's Note: Should the validity of template configuration be mandatory or optional?<a href="#section-4.5-2.1.1" class="pilcrow">¶</a></p>
+<li class="normal ulEmpty" id="section-4.6-2.1">
+            <p id="section-4.6-2.1.1">Editor's Note: Should the validity of template configuration be mandatory or optional?<a href="#section-4.6-2.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-4.5-3">That said, if a template is applied in the configuration data tree,
+<p id="section-4.6-3">That said, if a template is applied in the configuration data tree,
 the results of the template configuration merging with configuration
 explicitly provided by the client <span class="bcp14">MUST</span> always be valid, as defined in
-<span><a href="https://rfc-editor.org/rfc/rfc7950#section-8.1" class="relref">Section 8.1</a> of [<a href="#RFC7950" class="cite xref">RFC7950</a>]</span>.<a href="#section-4.5-3" class="pilcrow">¶</a></p>
+<span><a href="https://rfc-editor.org/rfc/rfc7950#section-8.1" class="relref">Section 8.1</a> of [<a href="#RFC7950" class="cite xref">RFC7950</a>]</span>.<a href="#section-4.6-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
 </div>
-<div id="interaction-with-nmda-datastores">
+<div id="interact-NMDA">
 <section id="section-5">
       <h2 id="name-interaction-with-nmda-datas">
 <a href="#section-5" class="section-number selfRef">5. </a><a href="#name-interaction-with-nmda-datas" class="section-name selfRef">Interaction with NMDA datastores</a>
@@ -1863,7 +1887,7 @@ sent by the client with the "apply-templates" metadata attached to the specific 
 A configuration template which is inherited or overridden by the node instance <span class="bcp14">MUST</span> be expanded in &lt;intended&gt;.<a href="#section-5-2" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="interaction-with-non-nmda-datastores">
+<div id="interact-non-NMDA">
 <section id="section-6">
       <h2 id="name-interaction-with-non-nmda-d">
 <a href="#section-6" class="section-number selfRef">6. </a><a href="#name-interaction-with-non-nmda-d" class="section-name selfRef">Interaction with Non-NMDA datastores</a>
@@ -2005,63 +2029,73 @@ module ietf-config-template {
 </div>
 </section>
 </div>
-<div id="security-considerations">
+<div id="operational-consideration">
 <section id="section-8">
-      <h2 id="name-security-considerations">
-<a href="#section-8" class="section-number selfRef">8. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
+      <h2 id="name-operational-considerations">
+<a href="#section-8" class="section-number selfRef">8. </a><a href="#name-operational-considerations" class="section-name selfRef">Operational Considerations</a>
       </h2>
-<p id="section-8-1">TODO Security<a href="#section-8-1" class="pilcrow">¶</a></p>
+<p id="section-8-1">Implementations <span class="bcp14">MAY</span> restrict the applications of configuration templates to some specific nodes in the YANG data tree. Restrictions should be applied consistently across all client operations. Any attempts to apply a template to a restricted node will be rejected. Implementations are recommended to expose the list of configuration nodes that do not support template application, any mechanisms to achieve this are outside the scope of this document.<a href="#section-8-1" class="pilcrow">¶</a></p>
+<p id="section-8-2">Configuration templates are designed to remain unexpanded in &lt;running&gt;. This ensures storage efficiency and preserves the client's control over &lt;running&gt;, i.e., reads of &lt;running&gt; returns the client-submitted configuration with the "apply-templates" metadata attached to target nodes. Any configuration template that is applied in the data tree <span class="bcp14">MUST</span> be expanded in &lt;intended&gt;, which holds a merged result of template expansion and configuration explicitly provided by clients.<a href="#section-8-2" class="pilcrow">¶</a></p>
+<p id="section-8-3">Implementations <span class="bcp14">MAY</span> differ in whether the configuration templates themselves appear in &lt;intended&gt;, independent of whether the templates are applied. Implementations <span class="bcp14">MAY</span> also support conditional visibility, where templates appear in &lt;intended&gt; only when they are applied by at least one node via the "apply-templates" annotation. Regardless of the approach chosen, implementations <span class="bcp14">MUST</span> ensure the behavior is consistent and deterministic, and <span class="bcp14">SHOULD</span> be documented to allow clients to rely on predictable operational behaviors.<a href="#section-8-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="security-considerations">
+<section id="section-9">
+      <h2 id="name-security-considerations">
+<a href="#section-9" class="section-number selfRef">9. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
+      </h2>
+<p id="section-9-1">TODO Security<a href="#section-9-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="iana-considerations">
-<section id="section-9">
+<section id="section-10">
       <h2 id="name-iana-considerations">
-<a href="#section-9" class="section-number selfRef">9. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
+<a href="#section-10" class="section-number selfRef">10. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
       </h2>
 <div id="the-ietf-xml-registry">
-<section id="section-9.1">
+<section id="section-10.1">
         <h3 id="name-the-ietf-xml-registry">
-<a href="#section-9.1" class="section-number selfRef">9.1. </a><a href="#name-the-ietf-xml-registry" class="section-name selfRef">The "IETF XML" Registry</a>
+<a href="#section-10.1" class="section-number selfRef">10.1. </a><a href="#name-the-ietf-xml-registry" class="section-name selfRef">The "IETF XML" Registry</a>
         </h3>
-<p id="section-9.1-1">This document registers the following URI in the "IETF XML Registry" <span>[<a href="#RFC3688" class="cite xref">RFC3688</a>]</span>.<a href="#section-9.1-1" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-9.1-2">
+<p id="section-10.1-1">This document registers the following URI in the "IETF XML Registry" <span>[<a href="#RFC3688" class="cite xref">RFC3688</a>]</span>.<a href="#section-10.1-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-10.1-2">
 <pre>
         URI: urn:ietf:params:xml:ns:yang:ietf-config-template
         Registrant Contact: The IESG.
         XML: N/A, the requested URI is an XML namespace.
-</pre><a href="#section-9.1-2" class="pilcrow">¶</a>
+</pre><a href="#section-10.1-2" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
 <div id="the-yang-module-names-registry">
-<section id="section-9.2">
+<section id="section-10.2">
         <h3 id="name-the-yang-module-names-regis">
-<a href="#section-9.2" class="section-number selfRef">9.2. </a><a href="#name-the-yang-module-names-regis" class="section-name selfRef">The "YANG Module Names" Registry</a>
+<a href="#section-10.2" class="section-number selfRef">10.2. </a><a href="#name-the-yang-module-names-regis" class="section-name selfRef">The "YANG Module Names" Registry</a>
         </h3>
-<p id="section-9.2-1">This document registers the following YANG module in the "YANG Module Names"
-   registry <span>[<a href="#RFC6020" class="cite xref">RFC6020</a>]</span>.<a href="#section-9.2-1" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-9.2-2">
+<p id="section-10.2-1">This document registers the following YANG module in the "YANG Module Names"
+   registry <span>[<a href="#RFC6020" class="cite xref">RFC6020</a>]</span>.<a href="#section-10.2-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-10.2-2">
 <pre>
         name:               ietf-config-template
         namespace:          urn:ietf:params:xml:ns:yang:ietf-config-template
         prefix:             ct
         maintained by IANA? N
         reference:          RFC XXXX
-</pre><a href="#section-9.2-2" class="pilcrow">¶</a>
+</pre><a href="#section-10.2-2" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
 </section>
 </div>
 <div id="sec-combined-references">
-<section id="section-10">
+<section id="section-11">
       <h2 id="name-references">
-<a href="#section-10" class="section-number selfRef">10. </a><a href="#name-references" class="section-name selfRef">References</a>
+<a href="#section-11" class="section-number selfRef">11. </a><a href="#name-references" class="section-name selfRef">References</a>
       </h2>
 <div id="sec-normative-references">
-<section id="section-10.1">
+<section id="section-11.1">
         <h3 id="name-normative-references">
-<a href="#section-10.1" class="section-number selfRef">10.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
+<a href="#section-11.1" class="section-number selfRef">11.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
         </h3>
 <dl class="references">
 <dt id="RFC2119">[RFC2119]</dt>
@@ -2089,25 +2123,29 @@ module ietf-config-template {
 <span class="refAuthor">Bierman, A.</span>, <span class="refAuthor">Bjorklund, M.</span>, and <span class="refAuthor">K. Watsen</span>, <span class="refTitle">"RESTCONF Protocol"</span>, <span class="seriesInfo">RFC 8040</span>, <span class="seriesInfo">DOI 10.17487/RFC8040</span>, <time datetime="2017-01" class="refDate">January 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8040">https://www.rfc-editor.org/rfc/rfc8040</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC8174">[RFC8174]</dt>
-      <dd>
+        <dd>
 <span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05" class="refDate">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8174">https://www.rfc-editor.org/rfc/rfc8174</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC9485">[RFC9485]</dt>
+      <dd>
+<span class="refAuthor">Bormann, C.</span> and <span class="refAuthor">T. Bray</span>, <span class="refTitle">"I-Regexp: An Interoperable Regular Expression Format"</span>, <span class="seriesInfo">RFC 9485</span>, <span class="seriesInfo">DOI 10.17487/RFC9485</span>, <time datetime="2023-10" class="refDate">October 2023</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9485">https://www.rfc-editor.org/rfc/rfc9485</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 </dl>
 </section>
 </div>
 <div id="sec-informative-references">
-<section id="section-10.2">
+<section id="section-11.2">
         <h3 id="name-informative-references">
-<a href="#section-10.2" class="section-number selfRef">10.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
+<a href="#section-11.2" class="section-number selfRef">11.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
         </h3>
 <dl class="references">
 <dt id="I-D.ietf-netmod-system-config">[I-D.ietf-netmod-system-config]</dt>
         <dd>
 <span class="refAuthor">Ma, Q.</span>, <span class="refAuthor">Wu, Q.</span>, and <span class="refAuthor">C. Feng</span>, <span class="refTitle">"System-defined Configuration"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-netmod-system-config-20</span>, <time datetime="2026-01-28" class="refDate">28 January 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-netmod-system-config-20">https://datatracker.ietf.org/doc/html/draft-ietf-netmod-system-config-20</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="I-D.netmod-yang-anydata-validation">[I-D.netmod-yang-anydata-validation]</dt>
+<dt id="I-D.ietf-netmod-yang-anydata-validation">[I-D.ietf-netmod-yang-anydata-validation]</dt>
         <dd>
-<span class="refTitle">"*** BROKEN REFERENCE ***"</span>. </dd>
+<span class="refAuthor">Elhassany, A.</span> and <span class="refAuthor">T. Graf</span>, <span class="refTitle">"Validating anydata in YANG Library context"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-netmod-yang-anydata-validation-00</span>, <time datetime="2025-12-02" class="refDate">2 December 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-netmod-yang-anydata-validation-00">https://datatracker.ietf.org/doc/html/draft-ietf-netmod-yang-anydata-validation-00</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC7952">[RFC7952]</dt>
         <dd>
@@ -2118,41 +2156,164 @@ module ietf-config-template {
 <span class="refAuthor">Bjorklund, M.</span> and <span class="refAuthor">L. Berger, Ed.</span>, <span class="refTitle">"YANG Tree Diagrams"</span>, <span class="seriesInfo">BCP 215</span>, <span class="seriesInfo">RFC 8340</span>, <span class="seriesInfo">DOI 10.17487/RFC8340</span>, <time datetime="2018-03" class="refDate">March 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8340">https://www.rfc-editor.org/rfc/rfc8340</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC8342">[RFC8342]</dt>
-      <dd>
+        <dd>
 <span class="refAuthor">Bjorklund, M.</span>, <span class="refAuthor">Schoenwaelder, J.</span>, <span class="refAuthor">Shafer, P.</span>, <span class="refAuthor">Watsen, K.</span>, and <span class="refAuthor">R. Wilton</span>, <span class="refTitle">"Network Management Datastore Architecture (NMDA)"</span>, <span class="seriesInfo">RFC 8342</span>, <span class="seriesInfo">DOI 10.17487/RFC8342</span>, <time datetime="2018-03" class="refDate">March 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8342">https://www.rfc-editor.org/rfc/rfc8342</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="XSD-TYPES">[XSD-TYPES]</dt>
+      <dd>
+<span class="refAuthor">Biron, P. V.</span>, <span class="refAuthor">Permanente, K.</span>, and <span class="refAuthor">A. Malhotra</span>, <span class="refTitle">"XML Schema Part 2: Datatypes Second Edition"</span>, <span>&lt;<a href="http://www.w3.org/TR/2004/REC-xmlschema-2-20041028">http://www.w3.org/TR/2004/REC-xmlschema-2-20041028</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 </dl>
 </section>
 </div>
 </section>
 </div>
-<div id="acknowledgments">
+<div id="requirement-implementation-status">
 <section id="appendix-A">
+      <h2 id="name-requirement-implementation-">
+<a href="#appendix-A" class="section-number selfRef">Appendix A. </a><a href="#name-requirement-implementation-" class="section-name selfRef">Requirement Implementation Status</a>
+      </h2>
+<p id="appendix-A-1">Note to the RFC Editor: Please remove this section before publication.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
+<p id="appendix-A-2">This appendix aims to track which of identified requirements have been addressed in the current version, and, where applicable, how they are fulfilled by the proposed mechanism.<a href="#appendix-A-2" class="pilcrow">¶</a></p>
+<table class="center" id="table-1">
+        <caption><a href="#table-1" class="selfRef">Table 1</a></caption>
+<thead>
+          <tr>
+            <th class="text-left" rowspan="1" colspan="1">Requirement</th>
+            <th class="text-left" rowspan="1" colspan="1">Fulfilled</th>
+            <th class="text-left" rowspan="1" colspan="1">Requirement Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">R1: Allowed Multiple templates to be applied at a single node</td>
+            <td class="text-left" rowspan="1" colspan="1">Y</td>
+            <td class="text-left" rowspan="1" colspan="1">see <a href="#inheriting-temp" class="auto internal xref">Section 4.2</a>
+</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">R2: Templates must work with any YANG module</td>
+            <td class="text-left" rowspan="1" colspan="1">Y</td>
+            <td class="text-left" rowspan="1" colspan="1">see <a href="#define-templates" class="auto internal xref">Section 4.1</a>
+</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">R3: Templates must be validated when defined</td>
+            <td class="text-left" rowspan="1" colspan="1">N</td>
+            <td class="text-left" rowspan="1" colspan="1">Needs further discussion, see Editor's note from <a href="#define-templates" class="auto internal xref">Section 4.1</a>
+</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">R4: Local-config overrides template-config</td>
+            <td class="text-left" rowspan="1" colspan="1">Y</td>
+            <td class="text-left" rowspan="1" colspan="1">see <a href="#overriding-temp" class="auto internal xref">Section 4.3</a>
+</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">R5: Living template: modified template data gets expanded for all consumers</td>
+            <td class="text-left" rowspan="1" colspan="1">Y</td>
+            <td class="text-left" rowspan="1" colspan="1">see <a href="#expand-templates" class="auto internal xref">Section 4.4</a>
+</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">R6: Support basic programmatic elements in templates</td>
+            <td class="text-left" rowspan="1" colspan="1">N</td>
+            <td class="text-left" rowspan="1" colspan="1">Seems to add some complexity</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">R7: Allow a server to constrain which nodes can be templates consumer</td>
+            <td class="text-left" rowspan="1" colspan="1">Y</td>
+            <td class="text-left" rowspan="1" colspan="1">See <a href="#operational-consideration" class="auto internal xref">Section 8</a>
+</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">R8: Configuration with both expanded and unexpanded templates is able to be returned</td>
+            <td class="text-left" rowspan="1" colspan="1">Y</td>
+            <td class="text-left" rowspan="1" colspan="1">see <a href="#interact-NMDA" class="auto internal xref">Section 5</a> and <a href="#operational-consideration" class="auto internal xref">Section 8</a>
+</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">R9: &lt;running&gt; contains the unexpanded template</td>
+            <td class="text-left" rowspan="1" colspan="1">Y</td>
+            <td class="text-left" rowspan="1" colspan="1">see <a href="#interact-NMDA" class="auto internal xref">Section 5</a>, also stated explicitly in <a href="#operational-consideration" class="auto internal xref">Section 8</a>
+</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">R10: &lt;intended&gt; contains the expanded template</td>
+            <td class="text-left" rowspan="1" colspan="1">Y</td>
+            <td class="text-left" rowspan="1" colspan="1">see <a href="#interact-NMDA" class="auto internal xref">Section 5</a>, also stated explicitly in <a href="#operational-consideration" class="auto internal xref">Section 8</a>
+</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">R11: Enables off-box template expansion of &lt;running&gt;</td>
+            <td class="text-left" rowspan="1" colspan="1">Y</td>
+            <td class="text-left" rowspan="1" colspan="1">see <a href="#expand-templates" class="auto internal xref">Section 4.4</a>
+</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">R12: Support limited regex in templates</td>
+            <td class="text-left" rowspan="1" colspan="1">Y</td>
+            <td class="text-left" rowspan="1" colspan="1">see <a href="#regex" class="auto internal xref">Section 4.1.1</a>
+</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">R13: Have a precedence rule when multiple templates are applied at a single node</td>
+            <td class="text-left" rowspan="1" colspan="1">Y</td>
+            <td class="text-left" rowspan="1" colspan="1">See <a href="#expand-templates" class="auto internal xref">Section 4.4</a>
+</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">R14: The innermost template takes precedence when templates are applied at multiple ancestor nodes</td>
+            <td class="text-left" rowspan="1" colspan="1">Y</td>
+            <td class="text-left" rowspan="1" colspan="1">See <a href="#expand-templates" class="auto internal xref">Section 4.4</a>
+</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">R15: Enable non-NMDA servers to return the expanded data</td>
+            <td class="text-left" rowspan="1" colspan="1">N</td>
+            <td class="text-left" rowspan="1" colspan="1">have a dedicated section (<a href="#interact-non-NMDA" class="auto internal xref">Section 6</a>) for this, but empty now</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">Not discussed: R16: exclude templates applied at ancestor nodes</td>
+            <td class="text-left" rowspan="1" colspan="1">N</td>
+            <td class="text-left" rowspan="1" colspan="1">Seems to add some complexity, needs further discussion</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">Not discussed: R17: Annotations to determine which template a node was applied from</td>
+            <td class="text-left" rowspan="1" colspan="1">N</td>
+            <td class="text-left" rowspan="1" colspan="1">Needs further discussion</td>
+          </tr>
+        </tbody>
+      </table>
+</section>
+</div>
+<div id="acknowledgments">
+<section id="appendix-B">
       <h2 id="name-acknowledgments">
 <a href="#name-acknowledgments" class="section-name selfRef">Acknowledgments</a>
       </h2>
-<p id="appendix-A-1">The author would like to thank Lou Berger, Jason Sterne, Kent Watsen, and Robert
-Wilton for comments and contributions made during interim meetings.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
-<p id="appendix-A-2">The author would like to acknowledge the following drafts and
-presenters for kick-starting discussions on Yang Templates:<a href="#appendix-A-2" class="pilcrow">¶</a></p>
+<p id="appendix-B-1">The author would like to thank Lou Berger, Jason Sterne, Kent Watsen, and Robert
+Wilton for comments and contributions made during interim meetings.<a href="#appendix-B-1" class="pilcrow">¶</a></p>
+<p id="appendix-B-2">The author would like to acknowledge the following drafts and
+presenters for kick-starting discussions on Yang Templates:<a href="#appendix-B-2" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="appendix-A-3.1">
-          <p id="appendix-A-3.1.1">draft-ma-netmod-yang-config-template-00<a href="#appendix-A-3.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="appendix-B-3.1">
+          <p id="appendix-B-3.1.1">draft-ma-netmod-yang-config-template-00<a href="#appendix-B-3.1.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="appendix-A-3.2">
-          <p id="appendix-A-3.2.1">draft-rajaram-netmod-yang-cfg-template-framework-00<a href="#appendix-A-3.2.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="appendix-B-3.2">
+          <p id="appendix-B-3.2.1">draft-rajaram-netmod-yang-cfg-template-framework-00<a href="#appendix-B-3.2.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="appendix-A-3.3">
-          <p id="appendix-A-3.3.1">draft-wills-netmod-yang-templates-00<a href="#appendix-A-3.3.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="appendix-B-3.3">
+          <p id="appendix-B-3.3.1">draft-wills-netmod-yang-templates-00<a href="#appendix-B-3.3.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="appendix-A-3.4">
-          <p id="appendix-A-3.4.1">Jan Lindblad<a href="#appendix-A-3.4.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="appendix-B-3.4">
+          <p id="appendix-B-3.4.1">Jan Lindblad<a href="#appendix-B-3.4.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 </section>
 </div>
 <div id="contributors">
-<section id="appendix-B">
+<section id="appendix-C">
       <h2 id="name-contributors">
 <a href="#name-contributors" class="section-name selfRef">Contributors</a>
       </h2>
@@ -2171,7 +2332,7 @@ presenters for kick-starting discussions on Yang Templates:<a href="#appendix-A-
 </section>
 </div>
 <div id="authors-addresses">
-<section id="appendix-C">
+<section id="appendix-D">
       <h2 id="name-authors-addresses">
 <a href="#name-authors-addresses" class="section-name selfRef">Authors' Addresses</a>
       </h2>
