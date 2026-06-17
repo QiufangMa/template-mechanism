@@ -360,7 +360,7 @@ After this request, \<running\> is as follows:
 
 ~~~~
     <interfaces xmlns="urn:example:interface"
-                ct:apply-templates="t1 t1">
+                ct:apply-templates="t1 t2">
       <interface>
         <name>loopback0</name>
       </interface>
@@ -570,7 +570,7 @@ The following tree diagram {{?RFC8340}} illustrates the "ietf-config-template" m
 ## YANG Module
 
 ~~~~
-<CODE BEGINS> file "ietf-template@2026-06-15.yang"
+<CODE BEGINS> file "ietf-config-template@2026-06-15.yang"
 {::include-fold ./yang/ietf-config-template.yang}
 <CODE ENDS>
 ~~~~
