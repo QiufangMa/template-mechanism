@@ -252,7 +252,7 @@ a template takes effect for.
 
 ## Applying Templates {#inheriting-temp}
 
-For each configuration node, one or more
+For each configuration node, including container, list, anydata, anyxml, leaf-list, and leaf, one or more
 templates can be applied. This causes configuration from one or more
 templates to be combined with explicitly provided configuration data
 to produce a final set of \<intended\> that is intended to be applied by the server.
