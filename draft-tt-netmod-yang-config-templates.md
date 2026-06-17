@@ -251,7 +251,7 @@ The YANG data model of configuration templates is defined in {{template-yang}}.
 
 ### Template Definition with Pattern Matching {#regex}
 
-To allow a single template to apply to multiple instances with similar naming conventions without explicit replication, pattern matching may be used within key leafs to restrict which list entries a template takes effect for. It is used to restrict the built-in type "string", or types derived from "string", to values that match the pattern.
+To allow a single template to apply to multiple instances with similar naming conventions without explicit replication, a regular expression string may be used within key leafs to restrict which list entries a template takes effect for. It MUST NOT be used on any nodes other than a list key with built-in type "string", or types derived from "string".
 
 Any regular expression pattern MUST conform to {{!RFC9485}}, which defines
 a subset of XML Schema Definition (XSD) regular expressions {{XSD-TYPES}}.
