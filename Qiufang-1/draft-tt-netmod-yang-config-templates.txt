@@ -5,10 +5,10 @@
 Network Modeling                                           R. Wills, Ed.
 Internet-Draft                                                     Cisco
 Intended status: Standards Track                              Q. Ma, Ed.
-Expires: 17 December 2026                                         Huawei
+Expires: 19 December 2026                                         Huawei
                                                          D. Rajaram, Ed.
                                                                    Nokia
-                                                            15 June 2026
+                                                            17 June 2026
 
 
                       YANG Configuration Templates
@@ -51,7 +51,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 17 December 2026.
+   This Internet-Draft will expire on 19 December 2026.
 
 Copyright Notice
 
@@ -412,7 +412,7 @@ Table of Contents
    After this request, <running> is as follows:
 
        <interfaces xmlns="urn:example:interface"
-                   ct:apply-templates="t1 t1">
+                   ct:apply-templates="t1 t2">
          <interface>
            <name>loopback0</name>
          </interface>
@@ -622,7 +622,7 @@ Table of Contents
 
 7.2.  YANG Module
 
-   <CODE BEGINS> file "ietf-template@2026-06-15.yang"
+   <CODE BEGINS> file "ietf-config-template@2026-06-15.yang"
    module ietf-config-template {
      yang-version 1.1;
      namespace "urn:ietf:params:xml:ns:yang:ietf-config-template";
@@ -667,7 +667,7 @@ Table of Contents
         (RFC 8174) when, and only when, they appear in all
         capitals, as shown here.";
 
-      revision 2025-05-28 {
+      revision 2026-06-15 {
         description
           "Initial revision.";
         reference
