@@ -310,7 +310,8 @@ Table of Contents
 
 4.2.  Applying Templates
 
-   For each configuration node, one or more templates can be applied.
+   For each configuration node, including container, list, anydata,
+   anyxml, leaf-list, and leaf, one or more templates can be applied.
    This causes configuration from one or more templates to be combined
    with explicitly provided configuration data to produce a final set of
    <intended> that is intended to be applied by the server.
