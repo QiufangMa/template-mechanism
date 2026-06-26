@@ -80,7 +80,7 @@ Table of Contents
      3.5.  Off-box Template Expansion
    4.  Configuration Template Solution
      4.1.  Defining Templates
-       4.1.1.  Templates with Regular Expressions
+       4.1.1.  Template Definition with Pattern Matching
      4.2.  Applying Templates
        4.2.1.  The "apply-templates" Metadata
        4.2.2.  Creating, editing and deleting the "apply-templates"
@@ -277,19 +277,23 @@ Table of Contents
    The YANG data model of configuration templates is defined in
    Section 7.
 
-4.1.1.  Templates with Regular Expressions
+4.1.1.  Template Definition with Pattern Matching
 
-   Simple regular expressions can be used to restrict which list entries
-   a template takes effect for.
+   To allow a single template to apply to multiple instances with
+   similar naming conventions without explicit replication, a regular
+   expression string may be used within key leafs to restrict which list
+   entries a template takes effect for.  It MUST NOT be used on any
+   nodes other than a list key with built-in type "string", or types
+   derived from "string".
 
-   (Editor's note: more work is needed here to define the exact
-   semantics of this.  Also, the regular expressions will be very simple
-   (again, this needs to be defined), and therefore it may be better to
-   call them 'globs' or 'patterns')
+   Any regular expression pattern MUST conform to [RFC9485], which
+   defines a subset of XML Schema Definition (XSD) regular expressions
+   [XSD-TYPES].
 
    For example, Figure 1 provides an interface configuration template
    that sets "type" as ethernetCsmacd and "mtu" as 1500 for interfaces
-   named with the prefix "eth":
+   names match the pattern "eth.*", i.e., starting with the prefix
+   "eth":
 
    <templates xmlns="urn:ietf:params:xml:ns:yang:ietf-config-template">
      <template>
@@ -297,7 +301,7 @@ Table of Contents
        <content>
          <interfaces xmlns="urn:example:interface">
            <interface>
-             <name>^eth.*</name>
+             <name>eth.*</name>
              <type>ethernetCsmacd</type>
              <mtu>1500</mtu>
            </interface>
@@ -802,6 +806,11 @@ Table of Contents
               (NMDA)", RFC 8342, DOI 10.17487/RFC8342, March 2018,
               <https://www.rfc-editor.org/rfc/rfc8342>.
 
+   [RFC9485]  Bormann, C. and T. Bray, "I-Regexp: An Interoperable
+              Regular Expression Format", RFC 9485,
+              DOI 10.17487/RFC9485, October 2023,
+              <https://www.rfc-editor.org/rfc/rfc9485>.
+
 11.2.  Informative References
 
    [I-D.ietf-netmod-system-config]
@@ -825,6 +834,11 @@ Table of Contents
    [RFC8340]  Bjorklund, M. and L. Berger, Ed., "YANG Tree Diagrams",
               BCP 215, RFC 8340, DOI 10.17487/RFC8340, March 2018,
               <https://www.rfc-editor.org/rfc/rfc8340>.
+
+   [XSD-TYPES]
+              Biron, P. V., Permanente, K., and A. Malhotra, "XML Schema
+              Part 2: Datatypes Second Edition",
+              <http://www.w3.org/TR/2004/REC-xmlschema-2-20041028>.
 
 Appendix A.  Requirement Implementation Status
 
@@ -884,9 +898,8 @@ Appendix A.  Requirement Implementation Status
    | template expansion of      |           |                          |
    | <running>                  |           |                          |
    +----------------------------+-----------+--------------------------+
-   | R12: Support limited regex | Y         | But needs more           |
-   | in templates               |           | work, see                |
-   |                            |           | Section 4.1.1            |
+   | R12: Support limited regex | Y         | see Section 4.1.1        |
+   | in templates               |           |                          |
    +----------------------------+-----------+--------------------------+
    | R13: Have a precedence     | Y         | See Section 4.4          |
    | rule when multiple         |           |                          |
