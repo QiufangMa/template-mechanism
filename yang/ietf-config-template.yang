@@ -42,7 +42,7 @@ module ietf-config-template {
      (RFC 8174) when, and only when, they appear in all
      capitals, as shown here.";
 
-   revision 2025-05-28 {
+   revision 2026-06-15 {
      description
        "Initial revision.";
      reference
