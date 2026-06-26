@@ -5,10 +5,10 @@
 Network Modeling                                           R. Wills, Ed.
 Internet-Draft                                                     Cisco
 Intended status: Standards Track                              Q. Ma, Ed.
-Expires: 13 September 2026                                        Huawei
+Expires: 28 December 2026                                         Huawei
                                                          D. Rajaram, Ed.
                                                                    Nokia
-                                                           12 March 2026
+                                                            26 June 2026
 
 
                       YANG Configuration Templates
@@ -22,7 +22,8 @@ Abstract
    configuration data can be defined in one or more templates and
    applied repeatedly.  This avoids the redundant definition of
    identical configuration and ensures the consistency of it, thus
-   allowing devices to be managed more conveniently and efficiently.
+   allowing configuration data to be managed more conveniently and
+   efficiently.
 
 Discussion Venues
 
@@ -50,7 +51,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 13 September 2026.
+   This Internet-Draft will expire on 28 December 2026.
 
 Copyright Notice
 
@@ -112,19 +113,15 @@ Table of Contents
    multiple subtrees with similar or identical nodes within them, such
    that the datastore contains repetitive data with limited variation.
    If a client has to repeatedly configure the same nodes for each
-   subtree, this can become complex, error-prone, and masks the intent
-   of the client.
+   subtree, this can become complex and error-prone.
 
    This document proposes a solution to improve this, called
-   "Configuration Templates", that results in a smaller running
-   datastore even when the configuration in <running> is large.
-
-   A Configuration Template is a fragment of configuration that the
-   device is instructed to replicate multiple times to generate copies
-   of the configuration.  This allows repetitive subtrees of
-   configuration to be written only once, in the template.  When needed,
-   individual instantiations of a template can override the values of
-   nodes, or add new instance-specific nodes.
+   "Configuration Templates".  A configuration template is a fragment of
+   configuration that the server is instructed to replicate multiple
+   times to generate copies of the configuration.  This allows
+   repetitive subtrees of configuration to be written only once, in the
+   template.  When needed, individual instantiations of a template can
+   override the values of nodes, or add new instance-specific nodes.
 
    NMDA [RFC8342] allows the configuration templates to be defined in
    <running> and expanded in <intended>, but it does not specify details
@@ -134,7 +131,7 @@ Table of Contents
    context of YANG-driven network management protocols such as NETCONF
    [RFC6241] and RESTCONF [RFC8040].  Configuration templates can be
    used with any YANG data model, this document doesn't make any
-   assumption on the YANG data model design, i.e. it does not rely on a
+   assumption on the YANG data model design, i.e., it does not rely on a
    shared profile/group being defined in the YANG data model.
 
 1.1.  Editorial Note (To be removed by RFC Editor)
@@ -151,7 +148,7 @@ Table of Contents
 
    *  XXXX --> the assigned RFC number for this draft
 
-   *  2025-05-28 --> the actual date of the publication of this document
+   *  2026-06-15 --> the actual date of the publication of this document
 
 2.  Conventions and Definitions
 
@@ -164,58 +161,60 @@ Table of Contents
    The meanings of the symbols in tree diagrams are defined in
    [RFC8340].
 
-   This document uses the YANG terminology defined in Section 3 of
-   [RFC7950].
+   This document uses the terminology defined in Section 3 of [RFC7950]
+   and Section 3 of [RFC8342].
+
+   This document uses the following terminology in [RFC6241]:
+
+   *  configuration data
 
    Besides, this document defines the following terminology:
 
-   Configuration Template:  A chunk of reusable configuration data that
+   configuration template:  A chunk of reusable configuration data that
       could be applied to the configuration repeatedly, in order to
       simplify the delivery of network configuration and ensure the
-      consistency of it.  A configuration template may also be called
-      "template" or "YANG template" throughout this document.
+      consistency of it.  A configuration template is referred to
+      interchangeably as "template" or "YANG template" throughout this
+      document.
 
 3.  Requirements
 
-   This section describes the requirements that the Configuration
-   Templates solution must satisfy.  These requirements were all
-   discussed in the Interim Meetings, and a rough consensus was reached
-   on each of them by the participants in the meetings.  A general theme
-   of the Configuration Templates work is to come up with a "Minimal
-   Viable Product" that is useful but not over-complicated.  More
-   advanced features could be considered as extensions in later drafts.
+   This section describes requirements that the configuration templates
+   solution must satisfy.  A general theme of the configuration template
+   work is to come up with a "Minimal Viable Product (MVP)" that
+   delivers a baseline solution with essential functionality but avoids
+   excessive complexity.  More advanced features could be considered as
+   extensions in future work.
 
 3.1.  Defining and Managing Templates
 
-   Templates can be used with any YANG module.  They contain nodes of
-   configuration data, and are stored persistently in the running
-   datastore of the device.
+   Templates can be defined with any YANG module.  They contain nodes of
+   configuration data, and are stored in the running datastore of the
+   server after creation.
 
-   A client can view and manipulate a template, including the
-   configuration inside it, by manipulating it in the <running>
-   datastore.  In this sense, a template and its contents behaves like
-   any other subtree of configuration.
+   A client can view and manipulate a template in <running>.  System may
+   generate a template in <system> ([I-D.ietf-netmod-system-config]).
+   In this sense, a template and its contents behave like any other
+   configuration data.
 
 3.2.  Applying Templates
 
-   A template can be applied to zero or more nodes in the <running>
+   A template can be applied to zero or more nodes in the running
    datastore.  Each node can have zero or more templates applied to it,
-   and the order they are applied is specified by the client.  The order
-   is important when determining the final intended configuration -- see
-   the next section.
+   and the order specified by the client determines the precedence with
+   which templates are applied within that node.
 
-   Templates can be applied at multiple points in the hierachy.  The
-   next section states the requirements when a node applies a template
-   and it has an ancestor that also applies a template.
-
-   When viewing the <running> datastore, there is a mechanism to see
-   which templates have been applied to each node, and in which order.
+   Templates can be applied at multiple nodes in the hierachy.  When
+   viewing the contents of <running>, there is a mechanism to see which
+   templates have been applied to each node, and in which order.
 
 3.3.  Producing the Intended Datastore
 
-   The device's <intended> datastore is the result of combining all the
-   applications of templates together with non-template config.  This is
-   called "expanding out" the templates.
+   The server's intended datastore is the result of combining all the
+   applications of templates together with non-template configuration
+   (i.e., configuration explicitly created by clients rather than
+   derived from applied templates) in <running> and <system> (see
+   [I-D.ietf-netmod-system-config]).  This is called template expansion.
 
    The intended configuration inside a subtree is the result of taking
    the relevant contents of every template applied to the subtree's root
@@ -223,14 +222,14 @@ Table of Contents
    nodes inside the subtree.
 
    A node inside a subtree may be present in multiple templates that
-   have been applied, and/or it may be present as non-template config
-   inside the subtree.  The requirements for combining the templates and
-   the non-template config together are as follows:
+   have been applied, and/or it may be present as non-template
+   configuration inside the subtree.  The requirements for template
+   expansion are as follows:
 
-   *  The value of a node in the <intended> configuration is determined
-      by using precedence to decide where to take the value from.
+   *  The value of a node in <intended> is determined by using
+      precedence rule to decide where to take the value from.
 
-   *  Non-template config always has the highest precedence.
+   *  Non-template configuration always has the highest precedence.
 
    *  When templates are applied to multiple ancestors, the innermost
       ancestor takes precedence.
@@ -239,9 +238,8 @@ Table of Contents
       order of application (as indicated by the client when applying the
       templates) determines the precedence within that node.
 
-   Whenever the contents of a template is updated in <running>, the
-   result of expanding out the template appears in <intended> and takes
-   effect on the device.
+   Whenever the contents of a template is updated in <running> or
+   <system>, the result of template expansion appears in <intended>.
 
 3.4.  Pattern Matching in Templates
 
@@ -257,13 +255,13 @@ Table of Contents
 
 3.5.  Off-box Template Expansion
 
-   If the client knows the contents of the <running> datastore (non-
-   template config, template definitions and template applications), it
-   must be possible for the client to calculate the result of template
-   expansion.
+   If the client knows the complete contents of <running> and <system>,
+   which include non- template configuration, template definitions and
+   template applications, the client must be able to calculate the
+   result of template expansion, i.e., the contents of <intended>.
 
    In other words, the outcome of template expansion depends solely on
-   the <running> datastore and not the state of the device.
+   the contents of running and system datastores.
 
 4.  Configuration Template Solution
 
@@ -271,16 +269,10 @@ Table of Contents
 
    A configuration template must first be defined before it can be
    applied (see Section 4.2).  The creation, modification, and deletion
-   of configuration templates is achieved by network management
+   of configuration templates are achieved by network management
    operations via NETCONF or RESTCONF protocols.  The contents of the
    configuration template must be an instantiated chunk of data starting
    from any level node in the hierarchies of any YANG data model.
-
-   (Editor's note: more work may be needed here to ensure the template
-   is a valid subtree of config from a schema perspective.  This may
-   mean we need a way of saying where the root of the template is in the
-   schema, for example with a set of "outer" nodes with
-   operation="none").
 
    The YANG data model of configuration templates is defined in
    Section 7.
@@ -318,11 +310,11 @@ Table of Contents
 
 4.2.  Applying Templates
 
-   For each configuration node in the <running> datastore, one or more
-   templates can be applied.  This causes configuration from the
-   templates to be combined with child configuration in the <running>
-   datastore to produce a final set of <intended> configuration that
-   will be used by the device.
+   For each configuration node, including container, list, anydata,
+   anyxml, leaf-list, and leaf, one or more templates can be applied.
+   This causes configuration from one or more templates to be combined
+   with explicitly provided configuration data to produce a final set of
+   <intended> that is intended to be applied by the server.
 
 4.2.1.  The "apply-templates" Metadata
 
@@ -421,7 +413,7 @@ Table of Contents
    After this request, <running> is as follows:
 
        <interfaces xmlns="urn:example:interface"
-                   ct:apply-templates="t1 t1">
+                   ct:apply-templates="t1 t2">
          <interface>
            <name>loopback0</name>
          </interface>
@@ -542,7 +534,7 @@ Table of Contents
    *  The value of a node in the <intended> configuration is determined
       by using precedence to decide where to take the value from.
 
-   *  Non-template config always has the highest precedence.
+   *  Non-template configuration always has the highest precedence.
 
    *  When templates are applied to multiple ancestors, the innermost
       ancestor takes precedence.
@@ -551,18 +543,17 @@ Table of Contents
       order of application (as indicated by the client when applying the
       templates) determines the precedence within that node.
 
-   If a client has knowledge of the complete contents of <running>, it
-   can calculate the exact result of template expansion, independent of
-   the server's operational state.
+   If a client has knowledge of the complete contents of <running> and
+   <system>, it can calculate the exact result of template expansion,
+   independent of the server's operational state.
 
-   Whenever the contents of a template is updated in <running>, the
-   result of expanding out the template appears in <intended> and takes
-   effect on the device.
+   Whenever the contents of an applied template is updated in <running>
+   or <system>, the result of template expansion appears in <intended>.
 
 4.5.  Deletion of Templates
 
    After a template has been applied to a node in the data tree, the
-   template configuration itself MAY be allowed to be deleted while the
+   configuration template itself MAY be allowed to be deleted while the
    expanded configuration still remains in the intended datastore.
 
 4.6.  Validity of Templates
@@ -632,7 +623,7 @@ Table of Contents
 
 7.2.  YANG Module
 
-   <CODE BEGINS> file "ietf-template@2025-05-28.yang"
+   <CODE BEGINS> file "ietf-config-template@2026-06-15.yang"
    module ietf-config-template {
      yang-version 1.1;
      namespace "urn:ietf:params:xml:ns:yang:ietf-config-template";
@@ -677,7 +668,7 @@ Table of Contents
         (RFC 8174) when, and only when, they appear in all
         capitals, as shown here.";
 
-      revision 2025-05-28 {
+      revision 2026-06-15 {
         description
           "Initial revision.";
         reference
@@ -806,6 +797,11 @@ Table of Contents
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
 
+   [RFC8342]  Bjorklund, M., Schoenwaelder, J., Shafer, P., Watsen, K.,
+              and R. Wilton, "Network Management Datastore Architecture
+              (NMDA)", RFC 8342, DOI 10.17487/RFC8342, March 2018,
+              <https://www.rfc-editor.org/rfc/rfc8342>.
+
 11.2.  Informative References
 
    [I-D.ietf-netmod-system-config]
@@ -829,11 +825,6 @@ Table of Contents
    [RFC8340]  Bjorklund, M. and L. Berger, Ed., "YANG Tree Diagrams",
               BCP 215, RFC 8340, DOI 10.17487/RFC8340, March 2018,
               <https://www.rfc-editor.org/rfc/rfc8340>.
-
-   [RFC8342]  Bjorklund, M., Schoenwaelder, J., Shafer, P., Watsen, K.,
-              and R. Wilton, "Network Management Datastore Architecture
-              (NMDA)", RFC 8342, DOI 10.17487/RFC8342, March 2018,
-              <https://www.rfc-editor.org/rfc/rfc8342>.
 
 Appendix A.  Requirement Implementation Status
 

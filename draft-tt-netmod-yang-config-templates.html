@@ -15,26 +15,27 @@
    configuration data can be defined in one or more templates and
    applied repeatedly.  This avoids the redundant definition of
    identical configuration and ensures the consistency of it, thus
-   allowing devices to be managed more conveniently and efficiently. 
+   allowing configuration data to be managed more conveniently and efficiently. 
     " name="description">
-<meta content="xml2rfc 3.31.0" name="generator">
+<meta content="xml2rfc 3.34.0" name="generator">
 <meta content="YANG" name="keyword">
 <meta content="template" name="keyword">
 <meta content="NMDA" name="keyword">
 <meta content="draft-tt-netmod-yang-config-templates-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.31.0
-    Python 3.12.12
-    ConfigArgParse 1.7
+  xml2rfc 3.34.0
+    Python 3.14.5
+    ConfigArgParse 1.7.5
     google-i18n-address 3.1.1
     intervaltree 3.2.1
     Jinja2 3.1.6
-    lxml 6.0.2
-    platformdirs 4.5.1
+    lxml 6.1.1
+    natsort 8.4.0
+    platformdirs 4.10.0
     pycountry 24.6.1
     PyYAML 6.0.3
-    requests 2.32.5
-    wcwidth 0.3.0
+    requests 2.33.1
+    wcwidth 0.8.1
 -->
 <link href="draft-tt-netmod-yang-config-templates.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -301,16 +302,19 @@ h1, h2, h3, h4, h5, h6 {
   font-size-adjust: 0.5;
   color: var(--title-color);
 }
-h1#title {
-  font-size: 32px;
-  line-height: 40px;
-  clear: both;
-}
-h1#title, h1#rfcnum {
-  margin: 1.5em 0 0.2em;
-}
-h1#rfcnum + h1#title {
-  margin: 0.2em 0;
+h1 {
+  &#title {
+    font-size: 32px;
+    line-height: 40px;
+    clear: both;
+    margin: 1.5em 0 0.2em;
+  }
+  &#rfcnum {
+    margin: 1.5em 0 0.2em;
+    & + h1#title {
+      margin: 0.2em 0;
+    }
+  }
 }
 
 h1, h2, h3 {
@@ -330,10 +334,10 @@ h4, h5, h6 {
 #abstract+p {
   font-size: 18px;
   line-height: 24px;
-}
-#abstract+p code, #abstract+p samp, #abstract+p tt {
-  font-size: 16px;
-  line-height: 0;
+  & code, & samp, & tt {
+    font-size: 16px;
+    line-height: 0;
+  }
 }
 
 p {
@@ -344,59 +348,59 @@ p {
 div {
   margin: 0;
 }
-.alignRight.art-text {
-  background-color: var(--highlight-color);
-  border: 1px solid var(--line-color);
-  border-radius: 3px;
-  padding: 0.5em 1em 0;
-  margin-bottom: 0.5em;
-}
-.alignRight.art-text pre {
-  padding: 0;
-  width: auto;
-}
 .alignRight {
   margin: 1em 0;
-}
-.alignRight > *:first-child {
-  border: none;
-  margin: 0;
-  float: right;
-  clear: both;
-}
-.alignRight > *:nth-child(2) {
-  clear: both;
-  display: block;
-  border: none;
+  &.art-text {
+    background-color: var(--highlight-color);
+    border: 1px solid var(--line-color);
+    border-radius: 3px;
+    padding: 0.5em 1em 0;
+    margin-bottom: 0.5em;
+    & pre {
+      padding: 0;
+      width: auto;
+    }
+  }
+  & > *:first-child {
+    border: none;
+    margin: 0;
+    float: right;
+    clear: both;
+  }
+  & > *:nth-child(2) {
+    clear: both;
+    display: block;
+    border: none;
+  }
 }
 svg {
   display: block;
-}
-/* font-family isn't space-separated, but =~ will have to do */
-svg[font-family~="monospace" i], svg [font-family~="monospace" i] {
-  font-family: var(--font-mono);
-}
-.alignCenter.art-text {
-  background-color: var(--highlight-color);
-  border: 1px solid var(--line-color);
-  border-radius: 3px;
-  padding: 0.5em 1em 0;
-  margin-bottom: 0.5em;
-}
-.alignCenter.art-text pre {
-  padding: 0;
-  width: auto;
+  /* font-family isn't space-separated, but =~ will have to do */
+  &[font-family~="monospace" i], & [font-family~="monospace" i] {
+    font-family: var(--font-mono);
+  }
 }
 .alignCenter {
   margin: 1em 0;
-}
-.alignCenter > *:first-child {
-  border: none;
-  /* this isn't optimal, but it's an existence proof.  PrinceXML doesn't
-     support flexbox yet.
-  */
-  display: table;
-  margin: 0 auto;
+  &.art-text {
+    background-color: var(--highlight-color);
+    border: 1px solid var(--line-color);
+    border-radius: 3px;
+    padding: 0.5em 1em 0;
+    margin-bottom: 0.5em;
+    & pre {
+      padding: 0;
+      width: auto;
+    }
+  }
+  & > *:first-child {
+    border: none;
+    /* this isn't optimal, but it's an existence proof.  PrinceXML doesn't
+       support flexbox yet.
+    */
+    display: table;
+    margin: 0 auto;
+  }
 }
 
 /* lists */
@@ -434,26 +438,25 @@ dl {
     --indent: 5ch;
     & > dt {
       min-width: calc(var(--indent) - 2ch);
+      float: none;
     }
-  }
-  &.olPercent > dt {
-    float: none;
   }
 
   dl > dd > & {
     margin-top: 0.5em;
     margin-bottom: 0;
   }
-}
-dl:not(.dlNewline) > dt {
-  float: left;
-  margin-right: 2ch;
-  min-width: 8ch;
-}
-dl > dd {
-  margin-bottom: .8em;
-  margin-left: var(--indent) !important; /* stupid element overrides */
-  min-height: 2ex;
+
+  &:not(.dlNewline) > dt {
+    float: left;
+    margin-right: 2ch;
+    min-width: 8ch;
+  }
+  & > dd {
+    margin-bottom: .8em;
+    margin-left: var(--indent) !important; /* stupid element overrides */
+    min-height: 2ex;
+  }
 }
 :is(dl.compact, .dlCompact) > dd {
   margin-bottom: 0;
@@ -469,20 +472,22 @@ dl > dd {
 }
 
 /* links */
-a, a[href].selfRef:hover {
+a {
   text-decoration: none;
+  &[href] {
+    color: var(--link-color);
+    &:hover { text-decoration: underline; }
+    &.selfRef {
+      color: var(--text-color);
+      &:hover {
+        text-decoration: none;
+        background-color: var(--highlight-color);
+      }
+    }
+  }
 }
-a[href] {
-  color: var(--link-color);
-}
-a[href].selfRef, .iref + a[href].internal {
+.iref + a[href].internal {
   color: var(--text-color);
-}
-a[href]:hover {
-  text-decoration: underline;
-}
-a[href].selfRef:hover {
-  background-color: var(--highlight-color);
 }
 a.xref:is(.cite, .auto), :is(#status-of-memo, #copyright) a {
   white-space: nowrap;
@@ -518,9 +523,9 @@ img {
 figure {
   margin: 0.5em 0;
   padding: 0;
-}
-figure blockquote {
-  margin: 0.8em 0.4em 0.4em;
+  & blockquote {
+    margin: 0.8em 0.4em 0.4em;
+  }
 }
 figcaption, caption {
   font-style: italic;
@@ -530,17 +535,19 @@ figcaption, caption {
 }
 @media screen {
   /* Auto-collapse boilerplate. */
-  :is(#status-of-memo, #copyright) p {
-    margin: -2px 0;
-    max-height: 0;
-    transition: max-height 2s ease, margin 0.5s ease 0.5s;
-    overflow: hidden;
-  }
-  :is(#status-of-memo, #copyright):hover p,
-  :is(#status-of-memo, #copyright) h2:target ~ p {
-    margin: 0.5em 0;
-    max-height: 500px;
-    overflow: auto;
+  :is(#status-of-memo, #copyright) {
+    & p {
+      margin: -2px 0;
+      max-height: 0;
+      transition: max-height 2s ease, margin 0.5s ease 0.5s;
+      overflow: hidden;
+    }
+    &:hover p,
+    & h2:target ~ p {
+      margin: 0.5em 0;
+      max-height: 500px;
+      overflow: auto;
+    }
   }
   pre, svg {
     display: inline-block;
@@ -590,25 +597,17 @@ table {
   max-width: 100%;
   margin: 0 0 1em;
   border-collapse: collapse;
-}
-table.right {
-  margin-left: auto;
-}
-table.center {
-  margin-left: auto;
-  margin-right: auto;
-}
-table.left {
-  margin-right: auto;
-}
-table .text-left {
-  text-align: left;
-}
-table .text-center {
-  text-align: center;
-}
-table .text-right {
-  text-align: right;
+  &.right { margin-left: auto; }
+  &.center { margin-left: auto; margin-right: auto; }
+  &.left { margin-right: auto; }
+  & .text-left { text-align: left; }
+  & .text-center { text-align: center; }
+  & .text-right { text-align: right; }
+  & caption {
+    margin: 0;
+    padding: 3px 0 3px 1em;
+  }
+  & p { margin: 0; }
 }
 
 thead, tbody {
@@ -628,13 +627,6 @@ th {
 :is(tr:nth-child(2n+1), thead+tbody > tr:nth-child(2n)) > td {
   background-color: var(--highlight-color);
 }
-table caption {
-  margin: 0;
-  padding: 3px 0 3px 1em;
-}
-table p {
-  margin: 0;
-}
 
 /* pilcrow */
 a.pilcrow {
@@ -645,18 +637,16 @@ a.pilcrow {
     color: var(--pilcrow-weak);
     &:hover { text-decoration: none; }
   }
-}
-@media not print {
-  :hover > a.pilcrow, a.pilcrow:focus {
-    opacity: 1;
+  @media not print {
+    :hover > &, &:focus {
+      opacity: 1;
+    }
+    &[href]:hover {
+      color: var(--pilcrow-strong);
+      background-color: transparent;
+    }
   }
-  a.pilcrow[href]:hover {
-    color: var(--pilcrow-strong);
-    background-color: transparent;
-  }
-}
-@media print {
-  a.pilcrow {
+  @media print {
     display: none;
   }
 }
@@ -715,9 +705,9 @@ sub, sup {
   font-size: 0.9em;
   font-style: italic;
   margin-top: 2em;
-}
-.docInfo .prepared {
-  float: right;
+  & .prepared {
+    float: right;
+  }
 }
 
 /* table of contents */
@@ -807,23 +797,27 @@ hr.addr {
   max-width: calc(100% - 16px);
 }
 @media (min-width: 500px) {
-  #authors-addresses > section {
-    column-count: 2;
-    column-gap: 20px;
-  }
-  #authors-addresses > section > h2 {
-    column-span: all;
-  }
-  /* hack for break-inside: avoid-column */
-  #authors-addresses address {
-    display: inline-block;
-    break-inside: avoid-column;
+  #authors-addresses {
+    & > section {
+      column-count: 2;
+      column-gap: 20px;
+    }
+    & > section > h2 {
+      column-span: all;
+    }
+    /* hack for break-inside: avoid-column */
+    & address {
+      display: inline-block;
+      break-inside: avoid-column;
+    }
   }
 }
 
 /* Comments */
-.rfcEditorRemove p:first-of-type {
-  font-style: italic;
+.rfcEditorRemove {
+  & p:first-of-type {
+    font-style: italic;
+  }
 }
 .cref {
   background-color: rgba(249, 232, 105, 0.3);
@@ -834,19 +828,21 @@ hr.addr {
 }
 
 @media screen {
-  #toc nav {
-    font-family: var(--font-title);
-    font-weight: 360;
-    & > ul { margin-bottom: 2em; }
-    & ul {
-      margin: 0 0 0 4px;
-      & :is(p, li) {
-        margin: 2px 0;
+  #toc {
+    & nav {
+      font-family: var(--font-title);
+      font-weight: 360;
+      & > ul { margin-bottom: 2em; }
+      & ul {
+        margin: 0 0 0 4px;
+        & :is(p, li) {
+          margin: 2px 0;
+        }
       }
     }
-  }
-  #toc a.toplink {
-    float: right;
+    & a.toplink {
+      float: right;
+    }
   }
 }
 @media not screen {
@@ -867,54 +863,54 @@ hr.addr {
     margin: 0;
     border-bottom: 1px solid #ccc;
     opacity: 0.6;
-  }
-  #toc h2 {
-    margin: 0;
-    padding: 2px 0 2px 6px;
-    padding-right: 1em;
-    font-size: 18px;
-    line-height: 24px;
-    min-width: 190px;
-    text-align: right;
-    background-color: #444;
-    color: white;
-    cursor: pointer;
-    &::before { /* css hamburger */
-      float: right;
-      position: relative;
-      width: 1em;
-      height: 1px;
-      left: -164px;
-      margin: 8px 0 0 0;
-      background: white none repeat scroll 0 0;
-      box-shadow: 0 4px 0 0 white, 0 8px 0 0 white;
-      content: "";
+    & h2 {
+      margin: 0;
+      padding: 2px 0 2px 6px;
+      padding-right: 1em;
+      font-size: 18px;
+      line-height: 24px;
+      min-width: 190px;
+      text-align: right;
+      background-color: #444;
+      color: white;
+      cursor: pointer;
+      &::before { /* css hamburger */
+        float: right;
+        position: relative;
+        width: 1em;
+        height: 1px;
+        left: -164px;
+        margin: 8px 0 0 0;
+        background: white none repeat scroll 0 0;
+        box-shadow: 0 4px 0 0 white, 0 8px 0 0 white;
+        content: "";
+      }
     }
-  }
-  #toc nav {
-    display: none;
-    background-color: var(--background-color);
-    padding: 0.5em 1em 1em;
-    overflow: auto;
-    overscroll-behavior: contain;
-    height: calc(100vh - 48px);
-    border-left: 1px solid #ddd;
-  }
-  #toc.active {
-    opacity: 1;
-    & nav { display: block; }
-  }
-  /* Make the collapsed ToC header render white on gray also when it's a link */
-  #toc h2 a,
-  #toc h2 a:is(:link, :focus, :hover),
-  #toc a.toplink,
-  #toc a.toplink:hover {
-    color: white;
-    background-color: #444;
-    text-decoration: none;
-  }
-  #toc a.toplink {
-    margin: 2px 0.5em 0;
+    & nav {
+      display: none;
+      background-color: var(--background-color);
+      padding: 0.5em 1em 1em;
+      overflow: auto;
+      overscroll-behavior: contain;
+      height: calc(100vh - 48px);
+      border-left: 1px solid #ddd;
+    }
+    &.active {
+      opacity: 1;
+      & nav { display: block; }
+    }
+    /* Make the collapsed ToC header render white on gray also when it's a link */
+    & h2 a,
+    & h2 a:is(:link, :focus, :hover),
+    & a.toplink,
+    & a.toplink:hover {
+      color: white;
+      background-color: #444;
+      text-decoration: none;
+    }
+    & a.toplink {
+      margin: 2px 0.5em 0;
+    }
   }
 }
 
@@ -933,26 +929,26 @@ hr.addr {
     margin: 0;
     padding: 0;
     z-index: 1;
-  }
-  #toc h2 {
-    margin: 0;
-    padding: 0.25em 1em 1em 0;
-  }
-  #toc nav {
-    display: block;
-    height: calc(90vh - 84px);
-    bottom: 0;
-    padding: 0.5em 0 2em;
-    overflow: auto;
-    overscroll-behavior: contain;
-    scrollbar-width: thin;
+    & h2 {
+      margin: 0;
+      padding: 0.25em 1em 1em 0;
+    }
+    & nav {
+      display: block;
+      height: calc(90vh - 84px);
+      bottom: 0;
+      padding: 0.5em 0 2em;
+      overflow: auto;
+      overscroll-behavior: contain;
+      scrollbar-width: thin;
+    }
+    & a.toplink {
+      margin: 8px 0.5em 0;
+    }
   }
   img { /* future proofing */
     max-width: 100%;
     height: auto;
-  }
-  #toc a.toplink {
-    margin: 8px 0.5em 0;
   }
 }
 
@@ -968,12 +964,13 @@ hr.addr {
   #n-copyright-notice {
     border-bottom: none;
   }
-  #toc, #n-introduction {
-    page-break-before: always;
-  }
   #toc {
+    page-break-before: always;
     border-top: none;
     padding-top: 0;
+  }
+  #n-introduction {
+    page-break-before: always;
   }
   figure, pre, .vcard {
     page-break-inside: avoid;
@@ -1035,17 +1032,19 @@ hr.addr {
 }
 
 /* SVG Trick: a prefix match works because only black and white are allowed */
-svg :is([stroke="black"], [stroke^="#000"]) {
-  stroke: var(--text-color);
-}
-svg :is([stroke="white"], [stroke^="#fff"]) {
-  stroke: var(--background-color);
-}
-svg :is([fill="black"], [fill^="#000"], :not([fill])) {
-  fill: var(--text-color);
-}
-svg :is([fill="white"], [fill^="#fff"]) {
-  fill: var(--background-color);
+svg {
+  & :is([stroke="black"], [stroke^="#000"]) {
+    stroke: var(--text-color);
+  }
+  & :is([stroke="white"], [stroke^="#fff"]) {
+    stroke: var(--background-color);
+  }
+  & :is([fill="black"], [fill^="#000"], :not([fill])) {
+    fill: var(--text-color);
+  }
+  & :is([fill="white"], [fill^="#fff"]) {
+    fill: var(--background-color);
+  }
 }
 </style>
 
@@ -1055,11 +1054,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">template</td>
-<td class="right">March 2026</td>
+<td class="right">June 2026</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Wills, et al.</td>
-<td class="center">Expires 13 September 2026</td>
+<td class="center">Expires 28 December 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1072,12 +1071,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-tt-netmod-yang-config-templates-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-03-12" class="published">12 March 2026</time>
+<time datetime="2026-06-26" class="published">26 June 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-09-13">13 September 2026</time></dd>
+<dd class="expires"><time datetime="2026-12-28">28 December 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1107,7 +1106,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
    configuration data can be defined in one or more templates and
    applied repeatedly.  This avoids the redundant definition of
    identical configuration and ensures the consistency of it, thus
-   allowing devices to be managed more conveniently and efficiently.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+   allowing configuration data to be managed more conveniently and efficiently.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
 </section>
 <section class="note rfcEditorRemove" id="section-note.1">
       <h2 id="name-discussion-venues">
@@ -1139,7 +1138,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 13 September 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 28 December 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1305,26 +1304,23 @@ svg :is([fill="white"], [fill^="#fff"]) {
    multiple subtrees with similar or identical nodes within them, such
    that the datastore contains repetitive data with limited variation.
    If a client has to repeatedly configure the same nodes for each
-   subtree, this can become complex, error-prone, and masks the intent
-   of the client.<a href="#section-1-1" class="pilcrow">¶</a></p>
+   subtree, this can become complex and error-prone.<a href="#section-1-1" class="pilcrow">¶</a></p>
 <p id="section-1-2">This document proposes a solution to improve this, called
-   "Configuration Templates", that results in a smaller running
-   datastore even when the configuration in &lt;running&gt; is large.<a href="#section-1-2" class="pilcrow">¶</a></p>
-<p id="section-1-3">A Configuration Template is a fragment of configuration that the
-   device is instructed to replicate multiple times to generate copies
+   "Configuration Templates". A configuration template is a fragment of configuration that the
+   server is instructed to replicate multiple times to generate copies
    of the configuration.  This allows repetitive subtrees of
    configuration to be written only once, in the template.  When needed,
    individual instantiations of a template can override the values of
-   nodes, or add new instance-specific nodes.<a href="#section-1-3" class="pilcrow">¶</a></p>
-<p id="section-1-4">NMDA <span>[<a href="#RFC8342" class="cite xref">RFC8342</a>]</span> allows the configuration templates to be defined in
+   nodes, or add new instance-specific nodes.<a href="#section-1-2" class="pilcrow">¶</a></p>
+<p id="section-1-3">NMDA <span>[<a href="#RFC8342" class="cite xref">RFC8342</a>]</span> allows the configuration templates to be defined in
    &lt;running&gt; and expanded in &lt;intended&gt;, but it does not specify details
-   about how configuration templates could be created and applied.<a href="#section-1-4" class="pilcrow">¶</a></p>
-<p id="section-1-5">This document defines the use of configuration templates in the
+   about how configuration templates could be created and applied.<a href="#section-1-3" class="pilcrow">¶</a></p>
+<p id="section-1-4">This document defines the use of configuration templates in the
    context of YANG-driven network management protocols such as NETCONF
    <span>[<a href="#RFC6241" class="cite xref">RFC6241</a>]</span> and RESTCONF <span>[<a href="#RFC8040" class="cite xref">RFC8040</a>]</span>.  Configuration templates can be
    used with any YANG data model, this document doesn't make any
-   assumption on the YANG data model design, i.e. it does not rely on a
-   shared profile/group being defined in the YANG data model.<a href="#section-1-5" class="pilcrow">¶</a></p>
+   assumption on the YANG data model design, i.e., it does not rely on a
+   shared profile/group being defined in the YANG data model.<a href="#section-1-4" class="pilcrow">¶</a></p>
 <div id="editorial-note-to-be-removed-by-rfc-editor">
 <section id="section-1.1">
         <h3 id="name-editorial-note-to-be-remove">
@@ -1341,7 +1337,7 @@ elsewhere in this document.<a href="#section-1.1-2" class="pilcrow">¶</a></p>
             <p id="section-1.1-4.1.1">XXXX --&gt; the assigned RFC number for this draft<a href="#section-1.1-4.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-1.1-4.2">
-            <p id="section-1.1-4.2.1">2025-05-28 --&gt; the actual date of the publication of this document<a href="#section-1.1-4.2.1" class="pilcrow">¶</a></p>
+            <p id="section-1.1-4.2.1">2026-06-15 --&gt; the actual date of the publication of this document<a href="#section-1.1-4.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
@@ -1359,16 +1355,21 @@ described in BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</s
 appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶</a></p>
 <p id="section-2-2">The meanings of the symbols in tree diagrams are defined in
 <span>[<a href="#RFC8340" class="cite xref">RFC8340</a>]</span>.<a href="#section-2-2" class="pilcrow">¶</a></p>
-<p id="section-2-3">This document uses the YANG terminology defined in <span><a href="https://rfc-editor.org/rfc/rfc7950#section-3" class="relref">Section 3</a> of [<a href="#RFC7950" class="cite xref">RFC7950</a>]</span>.<a href="#section-2-3" class="pilcrow">¶</a></p>
-<p id="section-2-4">Besides, this document defines the following terminology:<a href="#section-2-4" class="pilcrow">¶</a></p>
-<span class="break"></span><dl class="dlParallel" id="section-2-5">
-        <dt id="section-2-5.1">Configuration Template:</dt>
-        <dd style="margin-left: 1.5em" id="section-2-5.2">
-          <p id="section-2-5.2.1">A chunk of reusable configuration data that
+<p id="section-2-3">This document uses the terminology defined in <span><a href="https://rfc-editor.org/rfc/rfc7950#section-3" class="relref">Section 3</a> of [<a href="#RFC7950" class="cite xref">RFC7950</a>]</span> and <span><a href="https://rfc-editor.org/rfc/rfc8342#section-3" class="relref">Section 3</a> of [<a href="#RFC8342" class="cite xref">RFC8342</a>]</span>.<a href="#section-2-3" class="pilcrow">¶</a></p>
+<p id="section-2-4">This document uses the following terminology in <span>[<a href="#RFC6241" class="cite xref">RFC6241</a>]</span>:<a href="#section-2-4" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-2-5.1">
+          <p id="section-2-5.1.1">configuration data<a href="#section-2-5.1.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<p id="section-2-6">Besides, this document defines the following terminology:<a href="#section-2-6" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-2-7">
+        <dt id="section-2-7.1">configuration template:</dt>
+        <dd style="margin-left: 1.5em" id="section-2-7.2">
+          <p id="section-2-7.2.1">A chunk of reusable configuration data that
     could be applied to the configuration repeatedly, in order to
     simplify the delivery of network configuration and ensure the
-    consistency of it.  A configuration template may also be called
-    "template" or "YANG template" throughout this document.<a href="#section-2-5.2.1" class="pilcrow">¶</a></p>
+    consistency of it.  A configuration template is referred to interchangeably as "template" or "YANG template" throughout this document.<a href="#section-2-7.2.1" class="pilcrow">¶</a></p>
 </dd>
       <dd class="break"></dd>
 </dl>
@@ -1379,25 +1380,22 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
       <h2 id="name-requirements">
 <a href="#section-3" class="section-number selfRef">3. </a><a href="#name-requirements" class="section-name selfRef">Requirements</a>
       </h2>
-<p id="section-3-1">This section describes the requirements that the Configuration
-  Templates solution must satisfy.  These requirements were all
-  discussed in the Interim Meetings, and a rough consensus was reached
-  on each of them by the participants in the meetings.  A general theme
-  of the Configuration Templates work is to come up with a "Minimal
-  Viable Product" that is useful but not over-complicated.  More
-  advanced features could be considered as extensions in later drafts.<a href="#section-3-1" class="pilcrow">¶</a></p>
+<p id="section-3-1">This section describes requirements that the configuration
+  templates solution must satisfy. A general theme
+  of the configuration template work is to come up with a "Minimal
+  Viable Product (MVP)" that delivers a baseline solution with essential functionality but avoids excessive complexity. More
+  advanced features could be considered as extensions in future work.<a href="#section-3-1" class="pilcrow">¶</a></p>
 <div id="defining-and-managing-templates">
 <section id="section-3.1">
         <h3 id="name-defining-and-managing-templ">
 <a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-defining-and-managing-templ" class="section-name selfRef">Defining and Managing Templates</a>
         </h3>
-<p id="section-3.1-1">Templates can be used with any YANG module.  They contain nodes of
-  configuration data, and are stored persistently in the running
-  datastore of the device.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
-<p id="section-3.1-2">A client can view and manipulate a template, including the
-  configuration inside it, by manipulating it in the &lt;running&gt;
-  datastore.  In this sense, a template and its contents behaves like
-  any other subtree of configuration.<a href="#section-3.1-2" class="pilcrow">¶</a></p>
+<p id="section-3.1-1">Templates can be defined with any YANG module. They contain nodes of
+  configuration data, and are stored in the running
+  datastore of the server after creation.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.1-2">A client can view and manipulate a template in &lt;running&gt;. System may generate a template in &lt;system&gt; (<span>[<a href="#I-D.ietf-netmod-system-config" class="cite xref">I-D.ietf-netmod-system-config</a>]</span>).
+  In this sense, a template and its contents behave like
+  any other configuration data.<a href="#section-3.1-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="template-inherits">
@@ -1405,16 +1403,11 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
         <h3 id="name-applying-templates">
 <a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-applying-templates" class="section-name selfRef">Applying Templates</a>
         </h3>
-<p id="section-3.2-1">A template can be applied to zero or more nodes in the &lt;running&gt;
+<p id="section-3.2-1">A template can be applied to zero or more nodes in the running
   datastore.  Each node can have zero or more templates applied to it,
-  and the order they are applied is specified by the client.  The order
-  is important when determining the final intended configuration -- see
-  the next section.<a href="#section-3.2-1" class="pilcrow">¶</a></p>
-<p id="section-3.2-2">Templates can be applied at multiple points in the hierachy.  The
-  next section states the requirements when a node applies a template
-  and it has an ancestor that also applies a template.<a href="#section-3.2-2" class="pilcrow">¶</a></p>
-<p id="section-3.2-3">When viewing the &lt;running&gt; datastore, there is a mechanism to see
-  which templates have been applied to each node, and in which order.<a href="#section-3.2-3" class="pilcrow">¶</a></p>
+  and the order specified by the client determines the precedence with which templates are applied within that node.<a href="#section-3.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.2-2">Templates can be applied at multiple nodes in the hierachy. When viewing the contents of &lt;running&gt;, there is a mechanism to see
+  which templates have been applied to each node, and in which order.<a href="#section-3.2-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="producing-the-intended-datastore">
@@ -1422,24 +1415,22 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
         <h3 id="name-producing-the-intended-data">
 <a href="#section-3.3" class="section-number selfRef">3.3. </a><a href="#name-producing-the-intended-data" class="section-name selfRef">Producing the Intended Datastore</a>
         </h3>
-<p id="section-3.3-1">The device's &lt;intended&gt; datastore is the result of combining all the
-applications of templates together with non-template config.  This is
-called "expanding out" the templates.<a href="#section-3.3-1" class="pilcrow">¶</a></p>
+<p id="section-3.3-1">The server's intended datastore is the result of combining all the
+applications of templates together with non-template configuration (i.e., configuration explicitly created by clients rather than derived from applied templates) in &lt;running&gt; and &lt;system&gt; (see <span>[<a href="#I-D.ietf-netmod-system-config" class="cite xref">I-D.ietf-netmod-system-config</a>]</span>).  This is called template expansion.<a href="#section-3.3-1" class="pilcrow">¶</a></p>
 <p id="section-3.3-2">The intended configuration inside a subtree is the result of taking
 the relevant contents of every template applied to the subtree's root
 node and its ancestors, and combining it with the (non-template) data
 nodes inside the subtree.<a href="#section-3.3-2" class="pilcrow">¶</a></p>
 <p id="section-3.3-3">A node inside a subtree may be present in multiple templates that
-have been applied, and/or it may be present as non-template config
-inside the subtree.  The requirements for combining the templates and
-the non-template config together are as follows:<a href="#section-3.3-3" class="pilcrow">¶</a></p>
+have been applied, and/or it may be present as non-template configuration
+inside the subtree. The requirements for template expansion are as follows:<a href="#section-3.3-3" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.3-4.1">
-            <p id="section-3.3-4.1.1">The value of a node in the &lt;intended&gt; configuration is determined
-by using precedence to decide where to take the value from.<a href="#section-3.3-4.1.1" class="pilcrow">¶</a></p>
+            <p id="section-3.3-4.1.1">The value of a node in &lt;intended&gt; is determined
+by using precedence rule to decide where to take the value from.<a href="#section-3.3-4.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.3-4.2">
-            <p id="section-3.3-4.2.1">Non-template config always has the highest precedence.<a href="#section-3.3-4.2.1" class="pilcrow">¶</a></p>
+            <p id="section-3.3-4.2.1">Non-template configuration always has the highest precedence.<a href="#section-3.3-4.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.3-4.3">
             <p id="section-3.3-4.3.1">When templates are applied to multiple ancestors, the innermost
@@ -1451,9 +1442,8 @@ order of application (as indicated by the client when applying the
 templates) determines the precedence within that node.<a href="#section-3.3-4.4.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-3.3-5">Whenever the contents of a template is updated in &lt;running&gt;, the
-result of expanding out the template appears in &lt;intended&gt; and takes
-effect on the device.<a href="#section-3.3-5" class="pilcrow">¶</a></p>
+<p id="section-3.3-5">Whenever the contents of a template is updated in &lt;running&gt; or &lt;system&gt;, the
+result of template expansion appears in &lt;intended&gt;.<a href="#section-3.3-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="pattern-matching-in-templates">
@@ -1476,12 +1466,11 @@ for certain interface names that match the regular expression.<a href="#section-
         <h3 id="name-off-box-template-expansion">
 <a href="#section-3.5" class="section-number selfRef">3.5. </a><a href="#name-off-box-template-expansion" class="section-name selfRef">Off-box Template Expansion</a>
         </h3>
-<p id="section-3.5-1">If the client knows the contents of the &lt;running&gt; datastore (non-
-template config, template definitions and template applications), it
-must be possible for the client to calculate the result of template
-expansion.<a href="#section-3.5-1" class="pilcrow">¶</a></p>
+<p id="section-3.5-1">If the client knows the complete contents of &lt;running&gt; and &lt;system&gt;, which include non-
+template configuration, template definitions and template applications, the client must be able to calculate the result of template
+expansion, i.e., the contents of &lt;intended&gt;.<a href="#section-3.5-1" class="pilcrow">¶</a></p>
 <p id="section-3.5-2">In other words, the outcome of template expansion depends solely on
-the &lt;running&gt; datastore and not the state of the device.<a href="#section-3.5-2" class="pilcrow">¶</a></p>
+the contents of running and system datastores.<a href="#section-3.5-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -1497,15 +1486,10 @@ the &lt;running&gt; datastore and not the state of the device.<a href="#section-
 <a href="#section-4.1" class="section-number selfRef">4.1. </a><a href="#name-defining-templates" class="section-name selfRef">Defining Templates</a>
         </h3>
 <p id="section-4.1-1">A configuration template must first be defined before it can be applied (see <a href="#inheriting-temp" class="auto internal xref">Section 4.2</a>). The creation,
-modification, and deletion of configuration templates is achieved by network
+modification, and deletion of configuration templates are achieved by network
 management operations via NETCONF or RESTCONF protocols. The contents of the configuration
 template must be an instantiated chunk of data starting from any level node in the hierarchies of any YANG data model.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
-<p id="section-4.1-2">(Editor's note: more work may be needed here to ensure the template
-is a valid subtree of config from a schema perspective.  This may
-mean we need a way of saying where the root of the template is in the
-schema, for example with a set of "outer" nodes with
-operation="none").<a href="#section-4.1-2" class="pilcrow">¶</a></p>
-<p id="section-4.1-3">The YANG data model of configuration templates is defined in <a href="#template-yang" class="auto internal xref">Section 7</a>.<a href="#section-4.1-3" class="pilcrow">¶</a></p>
+<p id="section-4.1-2">The YANG data model of configuration templates is defined in <a href="#template-yang" class="auto internal xref">Section 7</a>.<a href="#section-4.1-2" class="pilcrow">¶</a></p>
 <div id="regex">
 <section id="section-4.1.1">
           <h4 id="name-templates-with-regular-expr">
@@ -1517,7 +1501,7 @@ a template takes effect for.<a href="#section-4.1.1-1" class="pilcrow">¶</a></p
  semantics of this.  Also, the regular expressions will be very simple
  (again, this needs to be defined), and therefore it may be better to
  call them 'globs' or 'patterns')<a href="#section-4.1.1-2" class="pilcrow">¶</a></p>
-<p id="section-4.1.1-3">For example, Figure 1 provides an interface configuration template
+<p id="section-4.1.1-3">For example, <a href="#regex-example" class="auto internal xref">Figure 1</a> provides an interface configuration template
  that sets "type" as ethernetCsmacd and "mtu" as 1500 for interfaces
  named with the prefix "eth":<a href="#section-4.1.1-3" class="pilcrow">¶</a></p>
 <span id="name-example-of-an-interface-tem"></span><div id="regex-example">
@@ -1553,11 +1537,10 @@ a template takes effect for.<a href="#section-4.1.1-1" class="pilcrow">¶</a></p
         <h3 id="name-applying-templates-2">
 <a href="#section-4.2" class="section-number selfRef">4.2. </a><a href="#name-applying-templates-2" class="section-name selfRef">Applying Templates</a>
         </h3>
-<p id="section-4.2-1">For each configuration node in the &lt;running&gt; datastore, one or more
-templates can be applied.  This causes configuration from the
-templates to be combined with child configuration in the &lt;running&gt;
-datastore to produce a final set of &lt;intended&gt; configuration that
-will be used by the device.<a href="#section-4.2-1" class="pilcrow">¶</a></p>
+<p id="section-4.2-1">For each configuration node, including container, list, anydata, anyxml, leaf-list, and leaf, one or more
+templates can be applied. This causes configuration from one or more
+templates to be combined with explicitly provided configuration data
+to produce a final set of &lt;intended&gt; that is intended to be applied by the server.<a href="#section-4.2-1" class="pilcrow">¶</a></p>
 <div id="the-apply-templates-metadata">
 <section id="section-4.2.1">
           <h4 id="name-the-apply-templates-metadat">
@@ -1675,7 +1658,7 @@ applies template t1 to the interfaces container:<a href="#section-4.2.2-5" class
 <div class="alignLeft art-text artwork" id="section-4.2.2-10">
 <pre>
     &lt;interfaces xmlns="urn:example:interface"
-                ct:apply-templates="t1 t1"&gt;
+                ct:apply-templates="t1 t2"&gt;
       &lt;interface&gt;
         &lt;name&gt;loopback0&lt;/name&gt;
       &lt;/interface&gt;
@@ -1819,7 +1802,7 @@ The process rules are as follows:<a href="#section-4.4-2" class="pilcrow">¶</a>
 by using precedence to decide where to take the value from.<a href="#section-4.4-3.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-4.4-3.2">
-            <p id="section-4.4-3.2.1">Non-template config always has the highest precedence.<a href="#section-4.4-3.2.1" class="pilcrow">¶</a></p>
+            <p id="section-4.4-3.2.1">Non-template configuration always has the highest precedence.<a href="#section-4.4-3.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-4.4-3.3">
             <p id="section-4.4-3.3.1">When templates are applied to multiple ancestors, the innermost
@@ -1831,11 +1814,10 @@ order of application (as indicated by the client when applying the
 templates) determines the precedence within that node.<a href="#section-4.4-3.4.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-4.4-4">If a client has knowledge of the complete contents of &lt;running&gt;,
+<p id="section-4.4-4">If a client has knowledge of the complete contents of &lt;running&gt; and &lt;system&gt;,
 it can calculate the exact result of template expansion, independent of the server's operational state.<a href="#section-4.4-4" class="pilcrow">¶</a></p>
-<p id="section-4.4-5">Whenever the contents of a template is updated in &lt;running&gt;, the
-result of expanding out the template appears in &lt;intended&gt; and takes
-effect on the device.<a href="#section-4.4-5" class="pilcrow">¶</a></p>
+<p id="section-4.4-5">Whenever the contents of an applied template is updated in &lt;running&gt; or &lt;system&gt;, the
+result of template expansion appears in &lt;intended&gt;.<a href="#section-4.4-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="deletion-of-templates">
@@ -1844,7 +1826,7 @@ effect on the device.<a href="#section-4.4-5" class="pilcrow">¶</a></p>
 <a href="#section-4.5" class="section-number selfRef">4.5. </a><a href="#name-deletion-of-templates" class="section-name selfRef">Deletion of Templates</a>
         </h3>
 <p id="section-4.5-1">After a template has been applied to a node in the data tree,
-the template configuration itself <span class="bcp14">MAY</span> be allowed to be deleted
+the configuration template itself <span class="bcp14">MAY</span> be allowed to be deleted
 while the expanded configuration still remains in the intended datastore.<a href="#section-4.5-1" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -1942,7 +1924,7 @@ module: ietf-config-template
 <a href="#section-7.2" class="section-number selfRef">7.2. </a><a href="#name-yang-module" class="section-name selfRef">YANG Module</a>
         </h3>
 <div class="breakable sourcecode" id="section-7.2-1">
-<pre>&lt;CODE BEGINS&gt; file "ietf-template@2025-05-28.yang"
+<pre>&lt;CODE BEGINS&gt; file "ietf-config-template@2026-06-15.yang"
 
 module ietf-config-template {
   yang-version 1.1;
@@ -1988,7 +1970,7 @@ module ietf-config-template {
      (RFC 8174) when, and only when, they appear in all
      capitals, as shown here.";
 
-   revision 2025-05-28 {
+   revision 2026-06-15 {
      description
        "Initial revision.";
      reference
@@ -2128,8 +2110,12 @@ module ietf-config-template {
 <span class="refAuthor">Bierman, A.</span>, <span class="refAuthor">Bjorklund, M.</span>, and <span class="refAuthor">K. Watsen</span>, <span class="refTitle">"RESTCONF Protocol"</span>, <span class="seriesInfo">RFC 8040</span>, <span class="seriesInfo">DOI 10.17487/RFC8040</span>, <time datetime="2017-01" class="refDate">January 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8040">https://www.rfc-editor.org/rfc/rfc8040</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC8174">[RFC8174]</dt>
-      <dd>
+        <dd>
 <span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05" class="refDate">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8174">https://www.rfc-editor.org/rfc/rfc8174</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8342">[RFC8342]</dt>
+      <dd>
+<span class="refAuthor">Bjorklund, M.</span>, <span class="refAuthor">Schoenwaelder, J.</span>, <span class="refAuthor">Shafer, P.</span>, <span class="refAuthor">Watsen, K.</span>, and <span class="refAuthor">R. Wilton</span>, <span class="refTitle">"Network Management Datastore Architecture (NMDA)"</span>, <span class="seriesInfo">RFC 8342</span>, <span class="seriesInfo">DOI 10.17487/RFC8342</span>, <time datetime="2018-03" class="refDate">March 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8342">https://www.rfc-editor.org/rfc/rfc8342</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 </dl>
 </section>
@@ -2153,12 +2139,8 @@ module ietf-config-template {
 <span class="refAuthor">Lhotka, L.</span>, <span class="refTitle">"Defining and Using Metadata with YANG"</span>, <span class="seriesInfo">RFC 7952</span>, <span class="seriesInfo">DOI 10.17487/RFC7952</span>, <time datetime="2016-08" class="refDate">August 2016</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7952">https://www.rfc-editor.org/rfc/rfc7952</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC8340">[RFC8340]</dt>
-        <dd>
-<span class="refAuthor">Bjorklund, M.</span> and <span class="refAuthor">L. Berger, Ed.</span>, <span class="refTitle">"YANG Tree Diagrams"</span>, <span class="seriesInfo">BCP 215</span>, <span class="seriesInfo">RFC 8340</span>, <span class="seriesInfo">DOI 10.17487/RFC8340</span>, <time datetime="2018-03" class="refDate">March 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8340">https://www.rfc-editor.org/rfc/rfc8340</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="RFC8342">[RFC8342]</dt>
       <dd>
-<span class="refAuthor">Bjorklund, M.</span>, <span class="refAuthor">Schoenwaelder, J.</span>, <span class="refAuthor">Shafer, P.</span>, <span class="refAuthor">Watsen, K.</span>, and <span class="refAuthor">R. Wilton</span>, <span class="refTitle">"Network Management Datastore Architecture (NMDA)"</span>, <span class="seriesInfo">RFC 8342</span>, <span class="seriesInfo">DOI 10.17487/RFC8342</span>, <time datetime="2018-03" class="refDate">March 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8342">https://www.rfc-editor.org/rfc/rfc8342</a>&gt;</span>. </dd>
+<span class="refAuthor">Bjorklund, M.</span> and <span class="refAuthor">L. Berger, Ed.</span>, <span class="refTitle">"YANG Tree Diagrams"</span>, <span class="seriesInfo">BCP 215</span>, <span class="seriesInfo">RFC 8340</span>, <span class="seriesInfo">DOI 10.17487/RFC8340</span>, <time datetime="2018-03" class="refDate">March 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8340">https://www.rfc-editor.org/rfc/rfc8340</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 </dl>
 </section>
