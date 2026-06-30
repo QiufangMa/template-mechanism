@@ -287,7 +287,7 @@ templates to be merged with explicitly provided configuration data
 to produce a final set of configuration that is intended to be applied by the server.
 Any update to the applied templates will be reflected in the merging result.
 
-### The "apply-templates" Metadata {apply-templates}
+### The "apply-templates" Metadata {#apply-templates}
 
 Template application is indicated using the "apply-templates"
 metadata annotation {{?RFC7952}}.  The value of this is a list of space-separated template
