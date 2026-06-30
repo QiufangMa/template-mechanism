@@ -18,12 +18,6 @@ keyword:
 
 author:
 -
-   fullname: Robert Wills
-   organization: Cisco
-   role: editor
-   country: United Kingdom
-   email: rowills@cisco.com
--
    fullname: Qiufang Ma
    organization: Huawei
    role: editor
@@ -40,6 +34,12 @@ author:
    email: deepak.rajaram@nokia.com
 
 contributor:
+-
+   fullname: Robert Wills
+   organization: Cisco
+   role: editor
+   country: United Kingdom
+   email: rowills@cisco.com
 -
    fullname: Qin Wu
    organization: Huawei
@@ -227,6 +227,26 @@ modification, and deletion of configuration templates are achieved by network
 management operations via NETCONF or RESTCONF protocols. The contents of the configuration
 template must be an instantiated chunk of data starting from any level node in the hierarchies of any YANG data model.
 
+For example, {{base-template}} provides an interface configuration template named "base-interface":
+
+~~~~
+<templates xmlns="urn:ietf:params:xml:ns:yang:ietf-config-template">
+ <template>
+   <id>base-interface</id>
+   <content>
+     <interfaces xmlns="urn:example:interface">
+       <interface>
+         <enabled>true</enabled>
+         <mtu>65536</mtu>
+         <description>default provisioned interface</description>
+       </interface>
+     </interfaces>
+   </content>
+ </template>
+</templates>
+~~~~
+{: #base-template title="Example of An Interface Template" artwork-align="center"}
+
 The YANG data model of configuration templates is defined in {{template-yang}}.
 
 ### Template Definition with Pattern Matching {#regex}
@@ -237,7 +257,7 @@ Any regular expression pattern MUST conform to {{!RFC9485}}, which defines
 a subset of XML Schema Definition (XSD) regular expressions {{XSD-TYPES}}.
 
  For example, {{regex-example}} provides an interface configuration template
- that sets "type" as ethernetCsmacd and "mtu" as 1500 for interfaces
+ that sets "type" as ethernetCsmacd and "mtu" as 1500 for all interfaces
  names match the pattern "eth.*", i.e., starting with the prefix "eth":
 
 ~~~~
@@ -250,40 +270,41 @@ a subset of XML Schema Definition (XSD) regular expressions {{XSD-TYPES}}.
           <name>eth.*</name>
           <type>ethernetCsmacd</type>
           <mtu>1500</mtu>
+          <description>default provisioned ethernet interface</description>
         </interface>
       </interfaces>
     </content>
   </template>
 </templates>
 ~~~~
-{: #regex-example title="Example of An Interface template" artwork-align="center"}
+{: #regex-example title="Example of An Interface Template with Pattern Matching" artwork-align="center"}
 
 ## Applying Templates {#inheriting-temp}
 
 For each configuration node, including container, list, anydata, anyxml, leaf-list, and leaf, one or more
 templates can be applied. This causes configuration from one or more
-templates to be combined with explicitly provided configuration data
-to produce a final set of \<intended\> that is intended to be applied by the server.
+templates to be merged with explicitly provided configuration data
+to produce a final set of configuration that is intended to be applied by the server.
+Any update to the applied templates will be reflected in the merging result.
 
-
-### The "apply-templates" Metadata
+### The "apply-templates" Metadata {apply-templates}
 
 Template application is indicated using the "apply-templates"
-metadata.  The value of this is a list of space-separated template
-identifiers.  If the template is applied to a node in the data tree,
+metadata annotation {{?RFC7952}}.  The value of this is a list of space-separated template
+identifiers. The order of appearance of the template identifiers in the list determines their precedence when producing the merging result. If the template is applied to a node in the data tree,
 the metadata object is added to that specific node.
 
 The encoding of "apply-templates" metadata object follows the way defined
 in {{Section 5 of ?RFC7952}}.
 
-For example, the following interface configuration may be provided
-with the container node "interfaces" applying the template defined in
-{{regex-example}}:
+For example, {{application-example}} provides the interface configuration
+with the container node "interfaces" applying the templates "ethernet-interface" and "base-interface", defined in
+{{regex-example}} and {{base-template}} respectively:
 
 ~~~~
     <interfaces xmlns="urn:example:interface"
       xmlns:ct="urn:ietf:params:xml:ns:yang:ietf-config-template"
-      ct:apply-templates="ethernet-interface">
+      ct:apply-templates="ethernet-interface base-interface">
       <interface>
         <name>loopback0</name>
       </interface>
@@ -295,147 +316,166 @@ with the container node "interfaces" applying the template defined in
       </interface>
     </interfaces>
 ~~~~
+{: #application-example title="An Example of Applying Templates" artwork-align="center"}
 
-And the above interface configuration renders the following expanded configuration:
+And the above interface configuration renders the expanded configuration shown in {{expansion-result-1}}:
 
 ~~~~
     <interfaces xmlns="urn:example:interface">
       <interface>
         <name>loopback0</name>
+        <enabled>true</enabled>
+        <mtu>65536</mtu>
+        <description>default provisioned interface</description>
       </interface>
       <interface>
         <name>eth0</name>
+        <enabled>true</enabled>
         <type>ethernetCsmacd</type>
         <mtu>1500</mtu>
+        <description>default provisioned ethernet interface</description>
       </interface>
       <interface>
         <name>eth1</name>
+        <enabled>true</enabled>
         <type>ethernetCsmacd</type>
         <mtu>1500</mtu>
+        <description>default provisioned ethernet interface</description>
       </interface>
     </interfaces>
 ~~~~
+{: #expansion-result-1 title="Template Expansion" artwork-align="center"}
 
 ### Creating, editing and deleting the "apply-templates" metadata
 
-The apply-templates metadata can be modified by the client by
-specifying it as an attribute in an \<edit-config\> request.  There are
-three cases:
+The "apply-templates" metadata annotation may be modified by the client by
+specifying a different value in subsequent operations. Any modification to this annotation MUST provide the complete, updated list of template identifiers on the target node, rather than merging with or appending to it. There are
+three cases when modifying the "apply-templates" annotation:
 
-*  The apply-templates attribute is specified and the value is non-
-   empty (i.e. a list of templates to apply to the node).  The apply-
-   templates metadata is changed to match the value in the request.
+*  The "apply-templates" annotation is specified and the value is non-
+   empty (i.e. a list of templates to apply to the node). The "apply-
+   templates" metadata is changed to match the exact value in the request.
 
-> Editor's Note: What if a specific node has some templates applied, and another \<edit-config\> provides another set of values of apply-template? It is a merge or full replace? Should this whole solution be combined with NETCONF "operation" attribute?
 
-*  The apply-templates attribute is specified and the value is the
-   empty string.  The apply-templates metadata is removed and thus no
+*  The "apply-templates" annotation is specified and the value is either empty or
+   contains only whitespace. The "apply-templates" metadata is removed and thus no
    templates are applied to the node.
 
-*  The apply-templates attribute not specified.  The apply-templates
+*  The "apply-templates" annotation is not specified. The "apply-templates"
    metadata currently present on the node (if any) is unchanged.
 
-For example, this request creates a single loopback0 interface and
-applies template t1 to the interfaces container:
+For example, {{update-application-1}} creates two interface entries named "loopback0" and "eth0" and applies template "base-interface" to the interfaces container:
 
 ~~~~
-    <edit-config>
-      ...
-      <config>
-        <interfaces xmlns="urn:example:interface"
-                    ct:apply-templates="t1">
-          <interface>
-            <name>loopback0</name>
-          </interface>
-        </interfaces>
-      </config>
-    </edit-config>
+<interfaces xmlns="urn:example:interface"
+  xmlns:ct="urn:ietf:params:xml:ns:yang:ietf-config-template"
+  ct:apply-templates="base-interface">
+  <interface>
+    <name>loopback0</name>
+  </interface>
+  <interface>
+    <name>eth0</name>
+  </interface>
+</interfaces>
 ~~~~
+{: #update-application-1 title="An Initial Template Application Example" artwork-align="center"}
 
-This request also applies template t2 to the interfaces container:
-
-~~~~
-    <edit-config>
-      ...
-      <config>
-        <interfaces xmlns="urn:example:interface"
-                    ct:apply-templates="t1 t2" />
-      </config>
-    </edit-config>
-~~~~
-
-After this request, \<running\> is as follows:
+A subsequent request in {{update-application-2}} also applies template "ethernet-interface" to the interfaces container:
 
 ~~~~
-    <interfaces xmlns="urn:example:interface"
-                ct:apply-templates="t1 t2">
-      <interface>
-        <name>loopback0</name>
-      </interface>
-    </interfaces>
+<interfaces xmlns="urn:example:interface"
+            ct:apply-templates="ethernet-interface base-interface"/>
 ~~~~
+{: #update-application-2 title="Request to Prepend a Second Template" artwork-align="center"}
 
-This request adds a new interface list entry, and leaves the applied
+After this request, \<running\> is as shown in {{update-application-3}}:
+
+~~~~
+<interfaces xmlns="urn:example:interface"
+  xmlns:ct="urn:ietf:params:xml:ns:yang:ietf-config-template"
+  ct:apply-templates="ethernet-interface base-interface">
+  <interface>
+    <name>loopback0</name>
+  </interface>
+  <interface>
+    <name>eth0</name>
+  </interface>
+</interfaces>
+~~~~
+{: #update-application-3 title="Running Contents After Multiple Template Application" artwork-align="center"}
+
+{{update-application-4}} adds a new interface list entry, and leaves the applied
 templates unchanged:
 
 ~~~~
-    <edit-config>
-      ...
-      <config>
-        <interfaces xmlns="urn:example:interface">
-          <interface>
-            <name>eth0</name>
-          </interface>
-        </interfaces>
-      </config>
-    </edit-config>
+<interfaces xmlns="urn:example:interface">
+  <interface>
+    <name>eth1</name>
+  </interface>
+</interfaces>
 ~~~~
+{: #update-application-4 title="Request to Add a New Interface Entry" artwork-align="center"}
 
-After this request, \<running\> is as follows:
+After this request, \<running\> is as shown in {{update-application-5}}.
 
 ~~~~
-    <interfaces xmlns="urn:example:interface"
-                ct:apply-templates="t1 t1">
-      <interface>
-        <name>loopback0</name>
-      </interface>
-      <interface>
-        <name>eth0</name>
-      </interface>
-    </interfaces>
+<interfaces xmlns="urn:example:interface"
+  xmlns:ct="urn:ietf:params:xml:ns:yang:ietf-config-template"
+  ct:apply-templates="ethernet-interface base-interface">
+  <interface>
+    <name>loopback0</name>
+  </interface>
+  <interface>
+    <name>eth0</name>
+  </interface>
+  <interface>
+    <name>eth1</name>
+  </interface>
+</interfaces>
 ~~~~
+{: #update-application-5 title="Running Contents After Interface Addition" artwork-align="center"}
 
 Finally, this request deletes all the templates, and leaves the list
 entries unchanged:
 
 ~~~~
-    <edit-config>
-      ...
-      <config>
-        <interfaces xmlns="urn:example:interface"
-                    ct:apply-templates="" />
-        </interfaces>
-      </config>
-    </edit-config>
+<interfaces xmlns="urn:example:interface"
+  xmlns:ct="urn:ietf:params:xml:ns:yang:ietf-config-template"
+  ct:apply-templates="">
+  <interface>
+    <name>loopback0</name>
+  </interface>
+  <interface>
+    <name>eth0</name>
+  </interface>
+  <interface>
+    <name>eth1</name>
+  </interface>
+</interfaces>
 ~~~~
+{: #update-application-6 title="Request to Clear All Applied Templates" artwork-align="center"}
 
 After this request, \<running\> is as follows:
 
 ~~~~
-    <interfaces xmlns="urn:example:interface">
-      <interface>
-        <name>loopback0</name>
-      </interface>
-      <interface>
-        <name>eth0</name>
-      </interface>
-    </interfaces>
+<interfaces xmlns="urn:example:interface">
+  <interface>
+    <name>loopback0</name>
+  </interface>
+  <interface>
+    <name>eth0</name>
+  </interface>
+  <interface>
+    <name>eth1</name>
+  </interface>
+</interfaces>
 ~~~~
+{: #update-application-7 title="Running Contents After Removing Template Applications" artwork-align="center"}
 
 ## Overriding Templates {#overriding-temp}
 
 The client may want to to override some configuration in a template
- when it is applied to a particular node in \<running\>.  The client can
+ when it is applied to a particular node in read-write datastores (e.g., \<running\> or \<candidate\>).  The client can
  achieve this by providing the desired value at the corresponding
  level when applying the template.  Configuration explicitly provided
  by the client always takes precedence over the same node defined in
@@ -444,48 +484,46 @@ The client may want to to override some configuration in a template
  A template node can be overriden by having its value changed, but it
  can't be deleted.
 
- As an example of overriding a node in a template, a client may
+ {{override-template}} provides an example of overriding a node in a template, a client may
  configure physically present interfaces "eth0" and "eth1" inheriting
- the template defined in Figure 1, but the "mtu" value of "eth1" needs
+ the template defined in {{base-template}}, but the "mtu" value of "eth1" needs
  to be 9122:
 
 ~~~~
-    <interfaces xmlns="urn:example:interface"
-      xmlns:ct="urn:ietf:params:xml:ns:yang:ietf-config-template"
-      ct:apply-templates="ethernet-interface">
-      <interface>
-        <name>loopback0</name>
-      </interface>
-      <interface>
-        <name>eth0</name>
-      </interface>
-      <interface>
-        <name>eth1</name>
-        <mtu>9122</mtu>
-      </interface>
-    </interfaces>
+<interfaces xmlns="urn:example:interface"
+  xmlns:ct="urn:ietf:params:xml:ns:yang:ietf-config-template"
+  ct:apply-templates="base-interface">
+  <interface>
+    <name>eth0</name>
+  </interface>
+  <interface>
+    <name>eth1</name>
+    <mtu>9122</mtu>
+  </interface>
+</interfaces>
 ~~~~
+{: #override-template title="Example of Explicit Configuration Overriding a Template" artwork-align="center"}
 
- And the above interface configuration renders the following expanded
- configuration:
+ And the above interface configuration renders the expanded
+ configuration shown in {{override-template-expansion}}.
 
 ~~~~
     <interfaces xmlns="urn:example:interface">
       <interface>
-        <name>loopback0</name>
-      </interface>
-      <interface>
         <name>eth0</name>
-        <type>ethernetCsmacd</type>
-        <mtu>1500</mtu>
+        <enabled>true</enabled>
+        <mtu>65536</mtu>
+        <description>default provisioned interface</description>
       </interface>
       <interface>
         <name>eth1</name>
-        <type>ethernetCsmacd</type>
+        <enabled>true</enabled>
         <mtu>9122</mtu>
+        <description>default provisioned interface</description>
       </interface>
     </interfaces>
 ~~~~
+{: #override-template-expansion title="Expanded Configuration Result with Overridden MTU" artwork-align="center"}
 
 ## Expanding Templates {#expand-templates}
 
@@ -498,7 +536,7 @@ precedence.
 the process of expanding templates to derive \<intended\> is deterministic and depends solely on the contents of \<running\>.
 The process rules are as follows:
 
-*  The value of a node in the \<intended\> configuration is determined
+*  The value of a node in \<intended\> after template expansion is determined
    by using precedence to decide where to take the value from.
 
 *  Non-template configuration always has the highest precedence.
@@ -518,9 +556,10 @@ result of template expansion appears in \<intended\>.
 
 ## Deletion of Templates
 
-After a template has been applied to a node in the data tree,
-the configuration template itself MAY be allowed to be deleted
-while the expanded configuration still remains in the intended datastore.
+A configuration template can not be deleted if it is currently actively applied to any data node.
+When a client attempts to delete a template definition from read-write datastores (e.g., \<running\> or \<candidate\>) that is in use, the server MUST reject the deletion request with the error-tag value "data-missing", indicating that the template is still in use.
+
+To successfully delete a template, a client MUST first update the target configuration nodes to remove the template identifier from their "apply-templates" metadata attribute (as described in {{apply-templates}}), and then subsequently delete the template definition itself.
 
 ## Validity of Templates
 
@@ -534,8 +573,6 @@ possible during the processing of template creation, e.g., servers
 may validate type constraints for the leaf, including those defined
 in the type's "range", "length", and "pattern" properties. Implementations
 may also consider using mechanism defined in {{?I-D.ietf-netmod-yang-anydata-validation}} to validate anydata.
-
-> Editor's Note: Should the validity of template configuration be mandatory or optional?
 
 That said, if a template is applied in the configuration data tree,
 the results of the template configuration merging with configuration
@@ -634,10 +671,10 @@ This appendix aims to track which of identified requirements have been addressed
 | Requirement | Fulfilled | Requirement Description |
 | R1: Allowed Multiple templates to be applied at a single node | Y | see {{inheriting-temp}} |
 | R2: Templates must work with any YANG module | Y | see {{define-templates}} |
-| R3: Templates must be validated when defined | N | Needs further discussion, see Editor's note from {{define-templates}} |
+| R3: Templates must be validated when defined | N | Per discussion at IETF 125, the consensus seems to be to make a best effort to validate the template at definition time, and that the current text is sufficient |
 | R4: Local-config overrides template-config | Y | see {{overriding-temp}} |
 | R5: Living template: modified template data gets expanded for all consumers | Y | see {{expand-templates}} |
-| R6: Support basic programmatic elements in templates | N | Seems to add some complexity |
+| R6: Support basic programmatic elements (loops, conditions) in templates | N | Seems to add some complexity |
 | R7: Allow a server to constrain which nodes can be templates consumer | Y | See {{operational-consideration}} |
 | R8: Configuration with both expanded and unexpanded templates is able to be returned | Y | see {{interact-NMDA}} and {{operational-consideration}} |
 | R9: \<running\> contains the unexpanded template | Y | see {{interact-NMDA}}, also stated explicitly in {{operational-consideration}} |
