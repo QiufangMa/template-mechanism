@@ -5,7 +5,6 @@
 <meta content="Common,Latin" name="scripts">
 <meta content="initial-scale=1.0" name="viewport">
 <title>YANG Configuration Templates</title>
-<meta content="Robert Wills" name="author">
 <meta content="Qiufang Ma" name="author">
 <meta content="Deepak Rajaram" name="author">
 <meta content="
@@ -1057,8 +1056,8 @@ svg {
 <td class="right">June 2026</td>
 </tr></thead>
 <tfoot><tr>
-<td class="left">Wills, et al.</td>
-<td class="center">Expires 28 December 2026</td>
+<td class="left">Ma &amp; Rajaram</td>
+<td class="center">Expires 1 January 2027</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1071,19 +1070,14 @@ svg {
 <dd class="internet-draft">draft-tt-netmod-yang-config-templates-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-06-26" class="published">26 June 2026</time>
+<time datetime="2026-06-30" class="published">30 June 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-12-28">28 December 2026</time></dd>
+<dd class="expires"><time datetime="2027-01-01">1 January 2027</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
-<div class="author">
-      <div class="author-name">R. Wills, <span class="editor">Ed.</span>
-</div>
-<div class="org">Cisco</div>
-</div>
 <div class="author">
       <div class="author-name">Q. Ma, <span class="editor">Ed.</span>
 </div>
@@ -1138,7 +1132,7 @@ svg {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 28 December 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 1 January 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1489,7 +1483,32 @@ the contents of running and system datastores.<a href="#section-3.5-2" class="pi
 modification, and deletion of configuration templates are achieved by network
 management operations via NETCONF or RESTCONF protocols. The contents of the configuration
 template must be an instantiated chunk of data starting from any level node in the hierarchies of any YANG data model.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
-<p id="section-4.1-2">The YANG data model of configuration templates is defined in <a href="#template-yang" class="auto internal xref">Section 7</a>.<a href="#section-4.1-2" class="pilcrow">¶</a></p>
+<p id="section-4.1-2">For example, <a href="#base-template" class="auto internal xref">Figure 1</a> provides an interface configuration template named "base-interface":<a href="#section-4.1-2" class="pilcrow">¶</a></p>
+<span id="name-example-of-an-interface-tem"></span><div id="base-template">
+<figure id="figure-1">
+          <div class="alignCenter art-text artwork" id="section-4.1-3.1">
+<pre>
+&lt;templates xmlns="urn:ietf:params:xml:ns:yang:ietf-config-template"&gt;
+ &lt;template&gt;
+   &lt;id&gt;base-interface&lt;/id&gt;
+   &lt;content&gt;
+     &lt;interfaces xmlns="urn:example:interface"&gt;
+       &lt;interface&gt;
+         &lt;enabled&gt;true&lt;/enabled&gt;
+         &lt;mtu&gt;65536&lt;/mtu&gt;
+         &lt;description&gt;default provisioned interface&lt;/description&gt;
+       &lt;/interface&gt;
+     &lt;/interfaces&gt;
+   &lt;/content&gt;
+ &lt;/template&gt;
+&lt;/templates&gt;
+</pre>
+</div>
+<figcaption><a href="#figure-1" class="selfRef">Figure 1</a>:
+<a href="#name-example-of-an-interface-tem" class="selfRef">Example of An Interface Template</a>
+          </figcaption></figure>
+</div>
+<p id="section-4.1-4">The YANG data model of configuration templates is defined in <a href="#template-yang" class="auto internal xref">Section 7</a>.<a href="#section-4.1-4" class="pilcrow">¶</a></p>
 <div id="regex">
 <section id="section-4.1.1">
           <h4 id="name-template-definition-with-pa">
@@ -1498,11 +1517,11 @@ template must be an instantiated chunk of data starting from any level node in t
 <p id="section-4.1.1-1">To allow a single template to apply to multiple instances with similar naming conventions without explicit replication, a regular expression string may be used within key leafs to restrict which list entries a template takes effect for. It <span class="bcp14">MUST NOT</span> be used on any nodes other than a list key with built-in type "string", or types derived from "string".<a href="#section-4.1.1-1" class="pilcrow">¶</a></p>
 <p id="section-4.1.1-2">Any regular expression pattern <span class="bcp14">MUST</span> conform to <span>[<a href="#RFC9485" class="cite xref">RFC9485</a>]</span>, which defines
 a subset of XML Schema Definition (XSD) regular expressions <span>[<a href="#XSD-TYPES" class="cite xref">XSD-TYPES</a>]</span>.<a href="#section-4.1.1-2" class="pilcrow">¶</a></p>
-<p id="section-4.1.1-3">For example, <a href="#regex-example" class="auto internal xref">Figure 1</a> provides an interface configuration template
- that sets "type" as ethernetCsmacd and "mtu" as 1500 for interfaces
+<p id="section-4.1.1-3">For example, <a href="#regex-example" class="auto internal xref">Figure 2</a> provides an interface configuration template
+ that sets "type" as ethernetCsmacd and "mtu" as 1500 for all interfaces
  names match the pattern "eth.*", i.e., starting with the prefix "eth":<a href="#section-4.1.1-3" class="pilcrow">¶</a></p>
-<span id="name-example-of-an-interface-tem"></span><div id="regex-example">
-<figure id="figure-1">
+<span id="name-example-of-an-interface-temp"></span><div id="regex-example">
+<figure id="figure-2">
             <div class="alignCenter art-text artwork" id="section-4.1.1-4.1">
 <pre>
 &lt;templates xmlns="urn:ietf:params:xml:ns:yang:ietf-config-template"&gt;
@@ -1514,6 +1533,7 @@ a subset of XML Schema Definition (XSD) regular expressions <span>[<a href="#XSD
           &lt;name&gt;eth.*&lt;/name&gt;
           &lt;type&gt;ethernetCsmacd&lt;/type&gt;
           &lt;mtu&gt;1500&lt;/mtu&gt;
+          &lt;description&gt;default provisioned ethernet interface&lt;/description&gt;
         &lt;/interface&gt;
       &lt;/interfaces&gt;
     &lt;/content&gt;
@@ -1521,8 +1541,8 @@ a subset of XML Schema Definition (XSD) regular expressions <span>[<a href="#XSD
 &lt;/templates&gt;
 </pre>
 </div>
-<figcaption><a href="#figure-1" class="selfRef">Figure 1</a>:
-<a href="#name-example-of-an-interface-tem" class="selfRef">Example of An Interface template</a>
+<figcaption><a href="#figure-2" class="selfRef">Figure 2</a>:
+<a href="#name-example-of-an-interface-temp" class="selfRef">Example of An Interface Template with Pattern Matching</a>
             </figcaption></figure>
 </div>
 </section>
@@ -1536,27 +1556,30 @@ a subset of XML Schema Definition (XSD) regular expressions <span>[<a href="#XSD
         </h3>
 <p id="section-4.2-1">For each configuration node, including container, list, anydata, anyxml, leaf-list, and leaf, one or more
 templates can be applied. This causes configuration from one or more
-templates to be combined with explicitly provided configuration data
-to produce a final set of &lt;intended&gt; that is intended to be applied by the server.<a href="#section-4.2-1" class="pilcrow">¶</a></p>
-<div id="the-apply-templates-metadata">
+templates to be merged with explicitly provided configuration data
+to produce a final set of configuration that is intended to be applied by the server.
+Any update to the applied templates will be reflected in the merging result.<a href="#section-4.2-1" class="pilcrow">¶</a></p>
+<div id="apply-templates">
 <section id="section-4.2.1">
           <h4 id="name-the-apply-templates-metadat">
 <a href="#section-4.2.1" class="section-number selfRef">4.2.1. </a><a href="#name-the-apply-templates-metadat" class="section-name selfRef">The "apply-templates" Metadata</a>
           </h4>
 <p id="section-4.2.1-1">Template application is indicated using the "apply-templates"
-metadata.  The value of this is a list of space-separated template
-identifiers.  If the template is applied to a node in the data tree,
+metadata annotation <span>[<a href="#RFC7952" class="cite xref">RFC7952</a>]</span>.  The value of this is a list of space-separated template
+identifiers. The order of appearance of the template identifiers in the list determines their precedence when producing the merging result. If the template is applied to a node in the data tree,
 the metadata object is added to that specific node.<a href="#section-4.2.1-1" class="pilcrow">¶</a></p>
 <p id="section-4.2.1-2">The encoding of "apply-templates" metadata object follows the way defined
 in <span><a href="https://rfc-editor.org/rfc/rfc7952#section-5" class="relref">Section 5</a> of [<a href="#RFC7952" class="cite xref">RFC7952</a>]</span>.<a href="#section-4.2.1-2" class="pilcrow">¶</a></p>
-<p id="section-4.2.1-3">For example, the following interface configuration may be provided
-with the container node "interfaces" applying the template defined in
-<a href="#regex-example" class="auto internal xref">Figure 1</a>:<a href="#section-4.2.1-3" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-4.2.1-4">
+<p id="section-4.2.1-3">For example, <a href="#application-example" class="auto internal xref">Figure 3</a> provides the interface configuration
+with the container node "interfaces" applying the templates "ethernet-interface" and "base-interface", defined in
+<a href="#regex-example" class="auto internal xref">Figure 2</a> and <a href="#base-template" class="auto internal xref">Figure 1</a> respectively:<a href="#section-4.2.1-3" class="pilcrow">¶</a></p>
+<span id="name-an-example-of-applying-temp"></span><div id="application-example">
+<figure id="figure-3">
+            <div class="alignCenter art-text artwork" id="section-4.2.1-4.1">
 <pre>
     &lt;interfaces xmlns="urn:example:interface"
       xmlns:ct="urn:ietf:params:xml:ns:yang:ietf-config-template"
-      ct:apply-templates="ethernet-interface"&gt;
+      ct:apply-templates="ethernet-interface base-interface"&gt;
       &lt;interface&gt;
         &lt;name&gt;loopback0&lt;/name&gt;
       &lt;/interface&gt;
@@ -1567,27 +1590,44 @@ with the container node "interfaces" applying the template defined in
         &lt;name&gt;eth1&lt;/name&gt;
       &lt;/interface&gt;
     &lt;/interfaces&gt;
-</pre><a href="#section-4.2.1-4" class="pilcrow">¶</a>
+</pre>
 </div>
-<p id="section-4.2.1-5">And the above interface configuration renders the following expanded configuration:<a href="#section-4.2.1-5" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-4.2.1-6">
+<figcaption><a href="#figure-3" class="selfRef">Figure 3</a>:
+<a href="#name-an-example-of-applying-temp" class="selfRef">An Example of Applying Templates</a>
+            </figcaption></figure>
+</div>
+<p id="section-4.2.1-5">And the above interface configuration renders the expanded configuration shown in <a href="#expansion-result-1" class="auto internal xref">Figure 4</a>:<a href="#section-4.2.1-5" class="pilcrow">¶</a></p>
+<span id="name-template-expansion"></span><div id="expansion-result-1">
+<figure id="figure-4">
+            <div class="alignCenter art-text artwork" id="section-4.2.1-6.1">
 <pre>
     &lt;interfaces xmlns="urn:example:interface"&gt;
       &lt;interface&gt;
         &lt;name&gt;loopback0&lt;/name&gt;
+        &lt;enabled&gt;true&lt;/enabled&gt;
+        &lt;mtu&gt;65536&lt;/mtu&gt;
+        &lt;description&gt;default provisioned interface&lt;/description&gt;
       &lt;/interface&gt;
       &lt;interface&gt;
         &lt;name&gt;eth0&lt;/name&gt;
+        &lt;enabled&gt;true&lt;/enabled&gt;
         &lt;type&gt;ethernetCsmacd&lt;/type&gt;
         &lt;mtu&gt;1500&lt;/mtu&gt;
+        &lt;description&gt;default provisioned ethernet interface&lt;/description&gt;
       &lt;/interface&gt;
       &lt;interface&gt;
         &lt;name&gt;eth1&lt;/name&gt;
+        &lt;enabled&gt;true&lt;/enabled&gt;
         &lt;type&gt;ethernetCsmacd&lt;/type&gt;
         &lt;mtu&gt;1500&lt;/mtu&gt;
+        &lt;description&gt;default provisioned ethernet interface&lt;/description&gt;
       &lt;/interface&gt;
     &lt;/interfaces&gt;
-</pre><a href="#section-4.2.1-6" class="pilcrow">¶</a>
+</pre>
+</div>
+<figcaption><a href="#figure-4" class="selfRef">Figure 4</a>:
+<a href="#name-template-expansion" class="selfRef">Template Expansion</a>
+            </figcaption></figure>
 </div>
 </section>
 </div>
@@ -1596,128 +1636,167 @@ with the container node "interfaces" applying the template defined in
           <h4 id="name-creating-editing-and-deleti">
 <a href="#section-4.2.2" class="section-number selfRef">4.2.2. </a><a href="#name-creating-editing-and-deleti" class="section-name selfRef">Creating, editing and deleting the "apply-templates" metadata</a>
           </h4>
-<p id="section-4.2.2-1">The apply-templates metadata can be modified by the client by
-specifying it as an attribute in an &lt;edit-config&gt; request.  There are
-three cases:<a href="#section-4.2.2-1" class="pilcrow">¶</a></p>
+<p id="section-4.2.2-1">The "apply-templates" metadata annotation may be modified by the client by
+specifying a different value in subsequent operations. Any modification to this annotation <span class="bcp14">MUST</span> provide the complete, updated list of template identifiers on the target node, rather than merging with or appending to it. There are
+three cases when modifying the "apply-templates" annotation:<a href="#section-4.2.2-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-4.2.2-2.1">
-              <p id="section-4.2.2-2.1.1">The apply-templates attribute is specified and the value is non-
-empty (i.e. a list of templates to apply to the node).  The apply-
-templates metadata is changed to match the value in the request.<a href="#section-4.2.2-2.1.1" class="pilcrow">¶</a></p>
+              <p id="section-4.2.2-2.1.1">The "apply-templates" annotation is specified and the value is non-
+empty (i.e. a list of templates to apply to the node). The "apply-
+templates" metadata is changed to match the exact value in the request.<a href="#section-4.2.2-2.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-4.2.2-2.2">
+              <p id="section-4.2.2-2.2.1">The "apply-templates" annotation is specified and the value is either empty or
+contains only whitespace. The "apply-templates" metadata is removed and thus no
+templates are applied to the node.<a href="#section-4.2.2-2.2.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-4.2.2-2.3">
+              <p id="section-4.2.2-2.3.1">The "apply-templates" annotation is not specified. The "apply-templates"
+metadata currently present on the node (if any) is unchanged.<a href="#section-4.2.2-2.3.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
-<ul class="normal ulEmpty">
-<li class="normal ulEmpty" id="section-4.2.2-3.1">
-              <p id="section-4.2.2-3.1.1">Editor's Note: What if a specific node has some templates applied, and another &lt;edit-config&gt; provides another set of values of apply-template? It is a merge or full replace? Should this whole solution be combined with NETCONF "operation" attribute?<a href="#section-4.2.2-3.1.1" class="pilcrow">¶</a></p>
-</li>
-          </ul>
-<ul class="normal">
-<li class="normal" id="section-4.2.2-4.1">
-              <p id="section-4.2.2-4.1.1">The apply-templates attribute is specified and the value is the
-empty string.  The apply-templates metadata is removed and thus no
-templates are applied to the node.<a href="#section-4.2.2-4.1.1" class="pilcrow">¶</a></p>
-</li>
-            <li class="normal" id="section-4.2.2-4.2">
-              <p id="section-4.2.2-4.2.1">The apply-templates attribute not specified.  The apply-templates
-metadata currently present on the node (if any) is unchanged.<a href="#section-4.2.2-4.2.1" class="pilcrow">¶</a></p>
-</li>
-          </ul>
-<p id="section-4.2.2-5">For example, this request creates a single loopback0 interface and
-applies template t1 to the interfaces container:<a href="#section-4.2.2-5" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-4.2.2-6">
+<p id="section-4.2.2-3">For example, <a href="#update-application-1" class="auto internal xref">Figure 5</a> creates two interface entries named "loopback0" and "eth0" and applies template "base-interface" to the interfaces container:<a href="#section-4.2.2-3" class="pilcrow">¶</a></p>
+<span id="name-an-initial-template-applica"></span><div id="update-application-1">
+<figure id="figure-5">
+            <div class="alignCenter art-text artwork" id="section-4.2.2-4.1">
 <pre>
-    &lt;edit-config&gt;
-      ...
-      &lt;config&gt;
-        &lt;interfaces xmlns="urn:example:interface"
-                    ct:apply-templates="t1"&gt;
-          &lt;interface&gt;
-            &lt;name&gt;loopback0&lt;/name&gt;
-          &lt;/interface&gt;
-        &lt;/interfaces&gt;
-      &lt;/config&gt;
-    &lt;/edit-config&gt;
-</pre><a href="#section-4.2.2-6" class="pilcrow">¶</a>
+&lt;interfaces xmlns="urn:example:interface"
+  xmlns:ct="urn:ietf:params:xml:ns:yang:ietf-config-template"
+  ct:apply-templates="base-interface"&gt;
+  &lt;interface&gt;
+    &lt;name&gt;loopback0&lt;/name&gt;
+  &lt;/interface&gt;
+  &lt;interface&gt;
+    &lt;name&gt;eth0&lt;/name&gt;
+  &lt;/interface&gt;
+&lt;/interfaces&gt;
+</pre>
 </div>
-<p id="section-4.2.2-7">This request also applies template t2 to the interfaces container:<a href="#section-4.2.2-7" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-4.2.2-8">
-<pre>
-    &lt;edit-config&gt;
-      ...
-      &lt;config&gt;
-        &lt;interfaces xmlns="urn:example:interface"
-                    ct:apply-templates="t1 t2" /&gt;
-      &lt;/config&gt;
-    &lt;/edit-config&gt;
-</pre><a href="#section-4.2.2-8" class="pilcrow">¶</a>
+<figcaption><a href="#figure-5" class="selfRef">Figure 5</a>:
+<a href="#name-an-initial-template-applica" class="selfRef">An Initial Template Application Example</a>
+            </figcaption></figure>
 </div>
-<p id="section-4.2.2-9">After this request, &lt;running&gt; is as follows:<a href="#section-4.2.2-9" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-4.2.2-10">
+<p id="section-4.2.2-5">A subsequent request in <a href="#update-application-2" class="auto internal xref">Figure 6</a> also applies template "ethernet-interface" to the interfaces container:<a href="#section-4.2.2-5" class="pilcrow">¶</a></p>
+<span id="name-request-to-prepend-a-second"></span><div id="update-application-2">
+<figure id="figure-6">
+            <div class="alignCenter art-text artwork" id="section-4.2.2-6.1">
 <pre>
-    &lt;interfaces xmlns="urn:example:interface"
-                ct:apply-templates="t1 t2"&gt;
-      &lt;interface&gt;
-        &lt;name&gt;loopback0&lt;/name&gt;
-      &lt;/interface&gt;
-    &lt;/interfaces&gt;
-</pre><a href="#section-4.2.2-10" class="pilcrow">¶</a>
+&lt;interfaces xmlns="urn:example:interface"
+            ct:apply-templates="ethernet-interface base-interface"/&gt;
+</pre>
 </div>
-<p id="section-4.2.2-11">This request adds a new interface list entry, and leaves the applied
-templates unchanged:<a href="#section-4.2.2-11" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-4.2.2-12">
-<pre>
-    &lt;edit-config&gt;
-      ...
-      &lt;config&gt;
-        &lt;interfaces xmlns="urn:example:interface"&gt;
-          &lt;interface&gt;
-            &lt;name&gt;eth0&lt;/name&gt;
-          &lt;/interface&gt;
-        &lt;/interfaces&gt;
-      &lt;/config&gt;
-    &lt;/edit-config&gt;
-</pre><a href="#section-4.2.2-12" class="pilcrow">¶</a>
+<figcaption><a href="#figure-6" class="selfRef">Figure 6</a>:
+<a href="#name-request-to-prepend-a-second" class="selfRef">Request to Prepend a Second Template</a>
+            </figcaption></figure>
 </div>
-<p id="section-4.2.2-13">After this request, &lt;running&gt; is as follows:<a href="#section-4.2.2-13" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-4.2.2-14">
+<p id="section-4.2.2-7">After this request, &lt;running&gt; is as shown in <a href="#update-application-3" class="auto internal xref">Figure 7</a>:<a href="#section-4.2.2-7" class="pilcrow">¶</a></p>
+<span id="name-running-contents-after-mult"></span><div id="update-application-3">
+<figure id="figure-7">
+            <div class="alignCenter art-text artwork" id="section-4.2.2-8.1">
 <pre>
-    &lt;interfaces xmlns="urn:example:interface"
-                ct:apply-templates="t1 t1"&gt;
-      &lt;interface&gt;
-        &lt;name&gt;loopback0&lt;/name&gt;
-      &lt;/interface&gt;
-      &lt;interface&gt;
-        &lt;name&gt;eth0&lt;/name&gt;
-      &lt;/interface&gt;
-    &lt;/interfaces&gt;
-</pre><a href="#section-4.2.2-14" class="pilcrow">¶</a>
+&lt;interfaces xmlns="urn:example:interface"
+  xmlns:ct="urn:ietf:params:xml:ns:yang:ietf-config-template"
+  ct:apply-templates="ethernet-interface base-interface"&gt;
+  &lt;interface&gt;
+    &lt;name&gt;loopback0&lt;/name&gt;
+  &lt;/interface&gt;
+  &lt;interface&gt;
+    &lt;name&gt;eth0&lt;/name&gt;
+  &lt;/interface&gt;
+&lt;/interfaces&gt;
+</pre>
 </div>
-<p id="section-4.2.2-15">Finally, this request deletes all the templates, and leaves the list
-entries unchanged:<a href="#section-4.2.2-15" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-4.2.2-16">
-<pre>
-    &lt;edit-config&gt;
-      ...
-      &lt;config&gt;
-        &lt;interfaces xmlns="urn:example:interface"
-                    ct:apply-templates="" /&gt;
-        &lt;/interfaces&gt;
-      &lt;/config&gt;
-    &lt;/edit-config&gt;
-</pre><a href="#section-4.2.2-16" class="pilcrow">¶</a>
+<figcaption><a href="#figure-7" class="selfRef">Figure 7</a>:
+<a href="#name-running-contents-after-mult" class="selfRef">Running Contents After Multiple Template Application</a>
+            </figcaption></figure>
 </div>
-<p id="section-4.2.2-17">After this request, &lt;running&gt; is as follows:<a href="#section-4.2.2-17" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-4.2.2-18">
+<p id="section-4.2.2-9"><a href="#update-application-4" class="auto internal xref">Figure 8</a> adds a new interface list entry, and leaves the applied
+templates unchanged:<a href="#section-4.2.2-9" class="pilcrow">¶</a></p>
+<span id="name-request-to-add-a-new-interf"></span><div id="update-application-4">
+<figure id="figure-8">
+            <div class="alignCenter art-text artwork" id="section-4.2.2-10.1">
 <pre>
-    &lt;interfaces xmlns="urn:example:interface"&gt;
-      &lt;interface&gt;
-        &lt;name&gt;loopback0&lt;/name&gt;
-      &lt;/interface&gt;
-      &lt;interface&gt;
-        &lt;name&gt;eth0&lt;/name&gt;
-      &lt;/interface&gt;
-    &lt;/interfaces&gt;
-</pre><a href="#section-4.2.2-18" class="pilcrow">¶</a>
+&lt;interfaces xmlns="urn:example:interface"&gt;
+  &lt;interface&gt;
+    &lt;name&gt;eth1&lt;/name&gt;
+  &lt;/interface&gt;
+&lt;/interfaces&gt;
+</pre>
+</div>
+<figcaption><a href="#figure-8" class="selfRef">Figure 8</a>:
+<a href="#name-request-to-add-a-new-interf" class="selfRef">Request to Add a New Interface Entry</a>
+            </figcaption></figure>
+</div>
+<p id="section-4.2.2-11">After this request, &lt;running&gt; is as shown in <a href="#update-application-5" class="auto internal xref">Figure 9</a>.<a href="#section-4.2.2-11" class="pilcrow">¶</a></p>
+<span id="name-running-contents-after-inte"></span><div id="update-application-5">
+<figure id="figure-9">
+            <div class="alignCenter art-text artwork" id="section-4.2.2-12.1">
+<pre>
+&lt;interfaces xmlns="urn:example:interface"
+  xmlns:ct="urn:ietf:params:xml:ns:yang:ietf-config-template"
+  ct:apply-templates="ethernet-interface base-interface"&gt;
+  &lt;interface&gt;
+    &lt;name&gt;loopback0&lt;/name&gt;
+  &lt;/interface&gt;
+  &lt;interface&gt;
+    &lt;name&gt;eth0&lt;/name&gt;
+  &lt;/interface&gt;
+  &lt;interface&gt;
+    &lt;name&gt;eth1&lt;/name&gt;
+  &lt;/interface&gt;
+&lt;/interfaces&gt;
+</pre>
+</div>
+<figcaption><a href="#figure-9" class="selfRef">Figure 9</a>:
+<a href="#name-running-contents-after-inte" class="selfRef">Running Contents After Interface Addition</a>
+            </figcaption></figure>
+</div>
+<p id="section-4.2.2-13">Finally, this request deletes all the templates, and leaves the list
+entries unchanged:<a href="#section-4.2.2-13" class="pilcrow">¶</a></p>
+<span id="name-request-to-clear-all-applie"></span><div id="update-application-6">
+<figure id="figure-10">
+            <div class="alignCenter art-text artwork" id="section-4.2.2-14.1">
+<pre>
+&lt;interfaces xmlns="urn:example:interface"
+  xmlns:ct="urn:ietf:params:xml:ns:yang:ietf-config-template"
+  ct:apply-templates=""&gt;
+  &lt;interface&gt;
+    &lt;name&gt;loopback0&lt;/name&gt;
+  &lt;/interface&gt;
+  &lt;interface&gt;
+    &lt;name&gt;eth0&lt;/name&gt;
+  &lt;/interface&gt;
+  &lt;interface&gt;
+    &lt;name&gt;eth1&lt;/name&gt;
+  &lt;/interface&gt;
+&lt;/interfaces&gt;
+</pre>
+</div>
+<figcaption><a href="#figure-10" class="selfRef">Figure 10</a>:
+<a href="#name-request-to-clear-all-applie" class="selfRef">Request to Clear All Applied Templates</a>
+            </figcaption></figure>
+</div>
+<p id="section-4.2.2-15">After this request, &lt;running&gt; is as follows:<a href="#section-4.2.2-15" class="pilcrow">¶</a></p>
+<span id="name-running-contents-after-remo"></span><div id="update-application-7">
+<figure id="figure-11">
+            <div class="alignCenter art-text artwork" id="section-4.2.2-16.1">
+<pre>
+&lt;interfaces xmlns="urn:example:interface"&gt;
+  &lt;interface&gt;
+    &lt;name&gt;loopback0&lt;/name&gt;
+  &lt;/interface&gt;
+  &lt;interface&gt;
+    &lt;name&gt;eth0&lt;/name&gt;
+  &lt;/interface&gt;
+  &lt;interface&gt;
+    &lt;name&gt;eth1&lt;/name&gt;
+  &lt;/interface&gt;
+&lt;/interfaces&gt;
+</pre>
+</div>
+<figcaption><a href="#figure-11" class="selfRef">Figure 11</a>:
+<a href="#name-running-contents-after-remo" class="selfRef">Running Contents After Removing Template Applications</a>
+            </figcaption></figure>
 </div>
 </section>
 </div>
@@ -1729,55 +1808,63 @@ entries unchanged:<a href="#section-4.2.2-15" class="pilcrow">¶</a></p>
 <a href="#section-4.3" class="section-number selfRef">4.3. </a><a href="#name-overriding-templates" class="section-name selfRef">Overriding Templates</a>
         </h3>
 <p id="section-4.3-1">The client may want to to override some configuration in a template
- when it is applied to a particular node in &lt;running&gt;.  The client can
+ when it is applied to a particular node in read-write datastores (e.g., &lt;running&gt; or &lt;candidate&gt;).  The client can
  achieve this by providing the desired value at the corresponding
  level when applying the template.  Configuration explicitly provided
  by the client always takes precedence over the same node defined in
  template.<a href="#section-4.3-1" class="pilcrow">¶</a></p>
 <p id="section-4.3-2">A template node can be overriden by having its value changed, but it
  can't be deleted.<a href="#section-4.3-2" class="pilcrow">¶</a></p>
-<p id="section-4.3-3">As an example of overriding a node in a template, a client may
+<p id="section-4.3-3"><a href="#override-template" class="auto internal xref">Figure 12</a> provides an example of overriding a node in a template, a client may
  configure physically present interfaces "eth0" and "eth1" inheriting
- the template defined in Figure 1, but the "mtu" value of "eth1" needs
+ the template defined in <a href="#base-template" class="auto internal xref">Figure 1</a>, but the "mtu" value of "eth1" needs
  to be 9122:<a href="#section-4.3-3" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-4.3-4">
+<span id="name-example-of-explicit-configu"></span><div id="override-template">
+<figure id="figure-12">
+          <div class="alignCenter art-text artwork" id="section-4.3-4.1">
 <pre>
-    &lt;interfaces xmlns="urn:example:interface"
-      xmlns:ct="urn:ietf:params:xml:ns:yang:ietf-config-template"
-      ct:apply-templates="ethernet-interface"&gt;
-      &lt;interface&gt;
-        &lt;name&gt;loopback0&lt;/name&gt;
-      &lt;/interface&gt;
-      &lt;interface&gt;
-        &lt;name&gt;eth0&lt;/name&gt;
-      &lt;/interface&gt;
-      &lt;interface&gt;
-        &lt;name&gt;eth1&lt;/name&gt;
-        &lt;mtu&gt;9122&lt;/mtu&gt;
-      &lt;/interface&gt;
-    &lt;/interfaces&gt;
-</pre><a href="#section-4.3-4" class="pilcrow">¶</a>
+&lt;interfaces xmlns="urn:example:interface"
+  xmlns:ct="urn:ietf:params:xml:ns:yang:ietf-config-template"
+  ct:apply-templates="base-interface"&gt;
+  &lt;interface&gt;
+    &lt;name&gt;eth0&lt;/name&gt;
+  &lt;/interface&gt;
+  &lt;interface&gt;
+    &lt;name&gt;eth1&lt;/name&gt;
+    &lt;mtu&gt;9122&lt;/mtu&gt;
+  &lt;/interface&gt;
+&lt;/interfaces&gt;
+</pre>
 </div>
-<p id="section-4.3-5">And the above interface configuration renders the following expanded
- configuration:<a href="#section-4.3-5" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-4.3-6">
+<figcaption><a href="#figure-12" class="selfRef">Figure 12</a>:
+<a href="#name-example-of-explicit-configu" class="selfRef">Example of Explicit Configuration Overriding a Template</a>
+          </figcaption></figure>
+</div>
+<p id="section-4.3-5">And the above interface configuration renders the expanded
+ configuration shown in <a href="#override-template-expansion" class="auto internal xref">Figure 13</a>.<a href="#section-4.3-5" class="pilcrow">¶</a></p>
+<span id="name-expanded-configuration-resu"></span><div id="override-template-expansion">
+<figure id="figure-13">
+          <div class="alignCenter art-text artwork" id="section-4.3-6.1">
 <pre>
     &lt;interfaces xmlns="urn:example:interface"&gt;
       &lt;interface&gt;
-        &lt;name&gt;loopback0&lt;/name&gt;
-      &lt;/interface&gt;
-      &lt;interface&gt;
         &lt;name&gt;eth0&lt;/name&gt;
-        &lt;type&gt;ethernetCsmacd&lt;/type&gt;
-        &lt;mtu&gt;1500&lt;/mtu&gt;
+        &lt;enabled&gt;true&lt;/enabled&gt;
+        &lt;mtu&gt;65536&lt;/mtu&gt;
+        &lt;description&gt;default provisioned interface&lt;/description&gt;
       &lt;/interface&gt;
       &lt;interface&gt;
         &lt;name&gt;eth1&lt;/name&gt;
-        &lt;type&gt;ethernetCsmacd&lt;/type&gt;
+        &lt;enabled&gt;true&lt;/enabled&gt;
         &lt;mtu&gt;9122&lt;/mtu&gt;
+        &lt;description&gt;default provisioned interface&lt;/description&gt;
       &lt;/interface&gt;
     &lt;/interfaces&gt;
-</pre><a href="#section-4.3-6" class="pilcrow">¶</a>
+</pre>
+</div>
+<figcaption><a href="#figure-13" class="selfRef">Figure 13</a>:
+<a href="#name-expanded-configuration-resu" class="selfRef">Expanded Configuration Result with Overridden MTU</a>
+          </figcaption></figure>
 </div>
 </section>
 </div>
@@ -1795,7 +1882,7 @@ precedence.<a href="#section-4.4-1" class="pilcrow">¶</a></p>
 The process rules are as follows:<a href="#section-4.4-2" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-4.4-3.1">
-            <p id="section-4.4-3.1.1">The value of a node in the &lt;intended&gt; configuration is determined
+            <p id="section-4.4-3.1.1">The value of a node in &lt;intended&gt; after template expansion is determined
 by using precedence to decide where to take the value from.<a href="#section-4.4-3.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-4.4-3.2">
@@ -1822,9 +1909,9 @@ result of template expansion appears in &lt;intended&gt;.<a href="#section-4.4-5
         <h3 id="name-deletion-of-templates">
 <a href="#section-4.5" class="section-number selfRef">4.5. </a><a href="#name-deletion-of-templates" class="section-name selfRef">Deletion of Templates</a>
         </h3>
-<p id="section-4.5-1">After a template has been applied to a node in the data tree,
-the configuration template itself <span class="bcp14">MAY</span> be allowed to be deleted
-while the expanded configuration still remains in the intended datastore.<a href="#section-4.5-1" class="pilcrow">¶</a></p>
+<p id="section-4.5-1">A configuration template can not be deleted if it is currently actively applied to any data node.
+When a client attempts to delete a template definition from read-write datastores (e.g., &lt;running&gt; or &lt;candidate&gt;) that is in use, the server <span class="bcp14">MUST</span> reject the deletion request with the error-tag value "data-missing", indicating that the template is still in use.<a href="#section-4.5-1" class="pilcrow">¶</a></p>
+<p id="section-4.5-2">To successfully delete a template, a client <span class="bcp14">MUST</span> first update the target configuration nodes to remove the template identifier from their "apply-templates" metadata attribute (as described in <a href="#apply-templates" class="auto internal xref">Section 4.2.1</a>), and then subsequently delete the template definition itself.<a href="#section-4.5-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="validity-of-templates">
@@ -1842,15 +1929,10 @@ possible during the processing of template creation, e.g., servers
 may validate type constraints for the leaf, including those defined
 in the type's "range", "length", and "pattern" properties. Implementations
 may also consider using mechanism defined in <span>[<a href="#I-D.ietf-netmod-yang-anydata-validation" class="cite xref">I-D.ietf-netmod-yang-anydata-validation</a>]</span> to validate anydata.<a href="#section-4.6-1" class="pilcrow">¶</a></p>
-<ul class="normal ulEmpty">
-<li class="normal ulEmpty" id="section-4.6-2.1">
-            <p id="section-4.6-2.1.1">Editor's Note: Should the validity of template configuration be mandatory or optional?<a href="#section-4.6-2.1.1" class="pilcrow">¶</a></p>
-</li>
-        </ul>
-<p id="section-4.6-3">That said, if a template is applied in the configuration data tree,
+<p id="section-4.6-2">That said, if a template is applied in the configuration data tree,
 the results of the template configuration merging with configuration
 explicitly provided by the client <span class="bcp14">MUST</span> always be valid, as defined in
-<span><a href="https://rfc-editor.org/rfc/rfc7950#section-8.1" class="relref">Section 8.1</a> of [<a href="#RFC7950" class="cite xref">RFC7950</a>]</span>.<a href="#section-4.6-3" class="pilcrow">¶</a></p>
+<span><a href="https://rfc-editor.org/rfc/rfc7950#section-8.1" class="relref">Section 8.1</a> of [<a href="#RFC7950" class="cite xref">RFC7950</a>]</span>.<a href="#section-4.6-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2184,8 +2266,7 @@ module ietf-config-template {
           <tr>
             <td class="text-left" rowspan="1" colspan="1">R3: Templates must be validated when defined</td>
             <td class="text-left" rowspan="1" colspan="1">N</td>
-            <td class="text-left" rowspan="1" colspan="1">Needs further discussion, see Editor's note from <a href="#define-templates" class="auto internal xref">Section 4.1</a>
-</td>
+            <td class="text-left" rowspan="1" colspan="1">Per discussion at IETF 125, the consensus seems to be to make a best effort to validate the template at definition time, and that the current text is sufficient</td>
           </tr>
           <tr>
             <td class="text-left" rowspan="1" colspan="1">R4: Local-config overrides template-config</td>
@@ -2200,7 +2281,7 @@ module ietf-config-template {
 </td>
           </tr>
           <tr>
-            <td class="text-left" rowspan="1" colspan="1">R6: Support basic programmatic elements in templates</td>
+            <td class="text-left" rowspan="1" colspan="1">R6: Support basic programmatic elements (loops, conditions) in templates</td>
             <td class="text-left" rowspan="1" colspan="1">N</td>
             <td class="text-left" rowspan="1" colspan="1">Seems to add some complexity</td>
           </tr>
@@ -2302,6 +2383,15 @@ presenters for kick-starting discussions on Yang Templates:<a href="#appendix-B-
 <a href="#name-contributors" class="section-name selfRef">Contributors</a>
       </h2>
 <address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Robert Wills</span></div>
+<div dir="auto" class="left"><span class="org">Cisco</span></div>
+<div dir="auto" class="left"><span class="country-name">United Kingdom</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:rowills@cisco.com" class="email">rowills@cisco.com</a>
+</div>
+</address>
+<address class="vcard">
         <div dir="auto" class="left"><span class="fn nameRole">Qin Wu</span></div>
 <div dir="auto" class="left"><span class="org">Huawei</span></div>
 <div dir="auto" class="left"><span class="street-address">101 Software Avenue, Yuhua District</span></div>
@@ -2320,15 +2410,6 @@ presenters for kick-starting discussions on Yang Templates:<a href="#appendix-B-
       <h2 id="name-authors-addresses">
 <a href="#name-authors-addresses" class="section-name selfRef">Authors' Addresses</a>
       </h2>
-<address class="vcard">
-        <div dir="auto" class="left"><span class="fn nameRole">Robert Wills (<span class="role">editor</span>)</span></div>
-<div dir="auto" class="left"><span class="org">Cisco</span></div>
-<div dir="auto" class="left"><span class="country-name">United Kingdom</span></div>
-<div class="email">
-<span>Email:</span>
-<a href="mailto:rowills@cisco.com" class="email">rowills@cisco.com</a>
-</div>
-</address>
 <address class="vcard">
         <div dir="auto" class="left"><span class="fn nameRole">Qiufang Ma (<span class="role">editor</span>)</span></div>
 <div dir="auto" class="left"><span class="org">Huawei</span></div>
