@@ -37,7 +37,6 @@ contributor:
 -
    fullname: Robert Wills
    organization: Cisco
-   role: editor
    country: United Kingdom
    email: rowills@cisco.com
 -
