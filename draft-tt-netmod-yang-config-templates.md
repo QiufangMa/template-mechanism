@@ -18,9 +18,12 @@ keyword:
 
 author:
 -
+   fullname: Kent Watsen
+   organzation: Watsen Networks
+   email: kent+ietf@watsen.net
+-
    fullname: Qiufang Ma
    organization: Huawei
-   role: editor
    street: 101 Software Avenue, Yuhua District
    city: Jiangsu
    code: 210012
@@ -29,7 +32,6 @@ author:
 -
    fullname: Deepak Rajaram
    organization: Nokia
-   role: editor
    country: India
    email: deepak.rajaram@nokia.com
 
@@ -117,7 +119,7 @@ elsewhere in this document.
 Please apply the following replacements:
 
    * XXXX --> the assigned RFC number for this draft
-   * 2026-06-15 --> the actual date of the publication of this document
+   * 2026-07-03 --> the actual date of the publication of this document
 
 # Conventions and Definitions
 
@@ -614,8 +616,8 @@ The following tree diagram {{?RFC8340}} illustrates the "ietf-config-template" m
 ## YANG Module
 
 ~~~~
-<CODE BEGINS> file "ietf-config-template@2026-06-15.yang"
-{::include-fold ./yang/ietf-config-template.yang}
+<CODE BEGINS> file "ietf-config-template@2026-07-03.yang"
+{::include ./yang/ietf-config-template.yang}
 <CODE ENDS>
 ~~~~
 
