@@ -919,6 +919,12 @@ Appendix A.  Requirement Implementation Status
    been addressed in the current version, and, where applicable, how
    they are fulfilled by the proposed mechanism.
 
+   These requirements are sourced from https://github.com/netmod-wg/
+   template-reqs/issues, specifically those that 1) have already been
+   discussed during interims and shown consensus, 2) present split
+   opinions and thus require further discussion, or 3) are new technical
+   requirements added by folks after interim discussion.
+
     +=====================+===========+===============================+
     | Requirement         | Fulfilled | Requirement Description       |
     +=====================+===========+===============================+
