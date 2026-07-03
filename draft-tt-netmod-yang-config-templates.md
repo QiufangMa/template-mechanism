@@ -19,7 +19,7 @@ keyword:
 author:
 -
    fullname: Kent Watsen
-   organzation: Watsen Networks
+   organization: Watsen Networks
    email: kent+ietf@watsen.net
 -
    fullname: Qiufang Ma
