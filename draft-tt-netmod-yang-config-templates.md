@@ -669,6 +669,8 @@ Note to the RFC Editor: Please remove this section before publication.
 
 This appendix aims to track which of identified requirements have been addressed in the current version, and, where applicable, how they are fulfilled by the proposed mechanism.
 
+These requirements are sourced from https://github.com/netmod-wg/template-reqs/issues, specifically those that 1) have already been discussed during interims and shown consensus, 2) present split opinions and thus require further discussion, or 3) are new technical requirements added by folks after interim discussion.
+
 | Requirement | Fulfilled | Requirement Description |
 | R1: Allowed Multiple templates to be applied at a single node | Y | see {{inheriting-temp}} |
 | R2: Templates must work with any YANG module | Y | see {{define-templates}} |
