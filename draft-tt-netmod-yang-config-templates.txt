@@ -3,7 +3,7 @@
 
 
 Network Modeling                                               K. Watsen
-Internet-Draft                                                          
+Internet-Draft                                           Watsen Networks
 Intended status: Standards Track                                   Q. Ma
 Expires: 4 January 2027                                           Huawei
                                                               D. Rajaram
@@ -1058,6 +1058,7 @@ Contributors
 Authors' Addresses
 
    Kent Watsen
+   Watsen Networks
    Email: kent+ietf@watsen.net
 
 
