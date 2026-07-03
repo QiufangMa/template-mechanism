@@ -5,6 +5,7 @@
 <meta content="Common,Latin" name="scripts">
 <meta content="initial-scale=1.0" name="viewport">
 <title>YANG Configuration Templates</title>
+<meta content="Kent Watsen" name="author">
 <meta content="Qiufang Ma" name="author">
 <meta content="Deepak Rajaram" name="author">
 <meta content="
@@ -34,7 +35,7 @@
     pycountry 24.6.1
     PyYAML 6.0.3
     requests 2.33.1
-    wcwidth 0.8.1
+    wcwidth 0.8.2
 -->
 <link href="draft-tt-netmod-yang-config-templates.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -1053,11 +1054,11 @@ svg {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">template</td>
-<td class="right">June 2026</td>
+<td class="right">July 2026</td>
 </tr></thead>
 <tfoot><tr>
-<td class="left">Ma &amp; Rajaram</td>
-<td class="center">Expires 1 January 2027</td>
+<td class="left">Watsen, et al.</td>
+<td class="center">Expires 4 January 2027</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1070,22 +1071,23 @@ svg {
 <dd class="internet-draft">draft-tt-netmod-yang-config-templates-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-06-30" class="published">30 June 2026</time>
+<time datetime="2026-07-03" class="published">3 July 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2027-01-01">1 January 2027</time></dd>
+<dd class="expires"><time datetime="2027-01-04">4 January 2027</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
-      <div class="author-name">Q. Ma, <span class="editor">Ed.</span>
+      <div class="author-name">K. Watsen</div>
 </div>
+<div class="author">
+      <div class="author-name">Q. Ma</div>
 <div class="org">Huawei</div>
 </div>
 <div class="author">
-      <div class="author-name">D. Rajaram, <span class="editor">Ed.</span>
-</div>
+      <div class="author-name">D. Rajaram</div>
 <div class="org">Nokia</div>
 </div>
 </dd>
@@ -1132,7 +1134,7 @@ svg {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 1 January 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 4 January 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1331,7 +1333,7 @@ elsewhere in this document.<a href="#section-1.1-2" class="pilcrow">¶</a></p>
             <p id="section-1.1-4.1.1">XXXX --&gt; the assigned RFC number for this draft<a href="#section-1.1-4.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-1.1-4.2">
-            <p id="section-1.1-4.2.1">2026-06-15 --&gt; the actual date of the publication of this document<a href="#section-1.1-4.2.1" class="pilcrow">¶</a></p>
+            <p id="section-1.1-4.2.1">2026-07-03 --&gt; the actual date of the publication of this document<a href="#section-1.1-4.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
@@ -2003,7 +2005,7 @@ module: ietf-config-template
 <a href="#section-7.2" class="section-number selfRef">7.2. </a><a href="#name-yang-module" class="section-name selfRef">YANG Module</a>
         </h3>
 <div class="breakable sourcecode" id="section-7.2-1">
-<pre>&lt;CODE BEGINS&gt; file "ietf-config-template@2026-06-15.yang"
+<pre>&lt;CODE BEGINS&gt; file "ietf-config-template@2026-07-03.yang"
 
 module ietf-config-template {
   yang-version 1.1;
@@ -2411,7 +2413,14 @@ presenters for kick-starting discussions on Yang Templates:<a href="#appendix-B-
 <a href="#name-authors-addresses" class="section-name selfRef">Authors' Addresses</a>
       </h2>
 <address class="vcard">
-        <div dir="auto" class="left"><span class="fn nameRole">Qiufang Ma (<span class="role">editor</span>)</span></div>
+        <div dir="auto" class="left"><span class="fn nameRole">Kent Watsen</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:kent+ietf@watsen.net" class="email">kent+ietf@watsen.net</a>
+</div>
+</address>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Qiufang Ma</span></div>
 <div dir="auto" class="left"><span class="org">Huawei</span></div>
 <div dir="auto" class="left"><span class="street-address">101 Software Avenue, Yuhua District</span></div>
 <div dir="auto" class="left"><span class="locality">Jiangsu</span></div>
@@ -2423,7 +2432,7 @@ presenters for kick-starting discussions on Yang Templates:<a href="#appendix-B-
 </div>
 </address>
 <address class="vcard">
-        <div dir="auto" class="left"><span class="fn nameRole">Deepak Rajaram (<span class="role">editor</span>)</span></div>
+        <div dir="auto" class="left"><span class="fn nameRole">Deepak Rajaram</span></div>
 <div dir="auto" class="left"><span class="org">Nokia</span></div>
 <div dir="auto" class="left"><span class="country-name">India</span></div>
 <div class="email">

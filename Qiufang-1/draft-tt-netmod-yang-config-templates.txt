@@ -2,11 +2,13 @@
 
 
 
-Network Modeling                                              Q. Ma, Ed.
-Internet-Draft                                                    Huawei
-Intended status: Standards Track                         D. Rajaram, Ed.
-Expires: 1 January 2027                                            Nokia
-                                                            30 June 2026
+Network Modeling                                               K. Watsen
+Internet-Draft                                                          
+Intended status: Standards Track                                   Q. Ma
+Expires: 4 January 2027                                           Huawei
+                                                              D. Rajaram
+                                                                   Nokia
+                                                             3 July 2026
 
 
                       YANG Configuration Templates
@@ -49,7 +51,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 1 January 2027.
+   This Internet-Draft will expire on 4 January 2027.
 
 Copyright Notice
 
@@ -146,7 +148,7 @@ Table of Contents
 
    *  XXXX --> the assigned RFC number for this draft
 
-   *  2026-06-15 --> the actual date of the publication of this document
+   *  2026-07-03 --> the actual date of the publication of this document
 
 2.  Conventions and Definitions
 
@@ -690,7 +692,7 @@ Table of Contents
 
 7.2.  YANG Module
 
-   <CODE BEGINS> file "ietf-config-template@2026-06-15.yang"
+   <CODE BEGINS> file "ietf-config-template@2026-07-03.yang"
    module ietf-config-template {
      yang-version 1.1;
      namespace "urn:ietf:params:xml:ns:yang:ietf-config-template";
@@ -1044,7 +1046,11 @@ Contributors
 
 Authors' Addresses
 
-   Qiufang Ma (editor)
+   Kent Watsen
+   Email: kent+ietf@watsen.net
+
+
+   Qiufang Ma
    Huawei
    101 Software Avenue, Yuhua District
    Jiangsu
@@ -1053,7 +1059,7 @@ Authors' Addresses
    Email: maqiufang1@huawei.com
 
 
-   Deepak Rajaram (editor)
+   Deepak Rajaram
    Nokia
    India
    Email: deepak.rajaram@nokia.com
