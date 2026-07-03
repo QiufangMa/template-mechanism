@@ -2,11 +2,13 @@
 
 
 
-Network Modeling                                              Q. Ma, Ed.
-Internet-Draft                                                    Huawei
-Intended status: Standards Track                         D. Rajaram, Ed.
-Expires: 1 January 2027                                            Nokia
-                                                            30 June 2026
+Network Modeling                                               K. Watsen
+Internet-Draft                                                          
+Intended status: Standards Track                                   Q. Ma
+Expires: 4 January 2027                                           Huawei
+                                                              D. Rajaram
+                                                                   Nokia
+                                                             3 July 2026
 
 
                       YANG Configuration Templates
@@ -49,7 +51,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 1 January 2027.
+   This Internet-Draft will expire on 4 January 2027.
 
 Copyright Notice
 
@@ -146,7 +148,7 @@ Table of Contents
 
    *  XXXX --> the assigned RFC number for this draft
 
-   *  2026-06-15 --> the actual date of the publication of this document
+   *  2026-07-03 --> the actual date of the publication of this document
 
 2.  Conventions and Definitions
 
@@ -690,7 +692,7 @@ Table of Contents
 
 7.2.  YANG Module
 
-   <CODE BEGINS> file "ietf-config-template@2026-06-15.yang"
+   <CODE BEGINS> file "ietf-config-template@2026-07-03.yang"
    module ietf-config-template {
      yang-version 1.1;
      namespace "urn:ietf:params:xml:ns:yang:ietf-config-template";
@@ -705,16 +707,21 @@ Table of Contents
      organization
        "IETF NETMOD (Network Modeling) Working Group";
      contact
-       "WG Web:   <https://datatracker.ietf.org/wg/netmod/>
-        WG List:  <mailto:netmod@ietf.org>
-        Author: Qiufang Ma
-                <mailto:maqiufang1@huawei.com>";
+       "WG Web:  https://datatracker.ietf.org/wg/netmod/
+        WG List: NETMOD <mailto:netmod@ietf.org>
+
+        Editor: Kent Watsen
+                <mailto:kent+ietf@watsen.net>
+        Editor: Qiufang Ma
+                <mailto:maqiufang1@huawei.com>
+        Editor: Deepak Rajaram
+                <mailto:deepak.rajaram@nokia.com>";
 
      description
        "This module defines a template list with a RPC to expand
         the template.
 
-        Copyright (c) 2025 IETF Trust and the persons identified
+        Copyright (c) 2026 IETF Trust and the persons identified
         as authors of the code. All rights reserved.
 
         Redistribution and use in source and binary forms, with
@@ -735,7 +742,7 @@ Table of Contents
         (RFC 8174) when, and only when, they appear in all
         capitals, as shown here.";
 
-      revision 2026-06-15 {
+      revision 2026-07-03 {
         description
           "Initial revision.";
         reference
@@ -912,6 +919,12 @@ Appendix A.  Requirement Implementation Status
    been addressed in the current version, and, where applicable, how
    they are fulfilled by the proposed mechanism.
 
+   These requirements are sourced from https://github.com/netmod-wg/
+   template-reqs/issues, specifically those that 1) have already been
+   discussed during interims and shown consensus, 2) present split
+   opinions and thus require further discussion, or 3) are new technical
+   requirements added by folks after interim discussion.
+
     +=====================+===========+===============================+
     | Requirement         | Fulfilled | Requirement Description       |
     +=====================+===========+===============================+
@@ -1044,7 +1057,11 @@ Contributors
 
 Authors' Addresses
 
-   Qiufang Ma (editor)
+   Kent Watsen
+   Email: kent+ietf@watsen.net
+
+
+   Qiufang Ma
    Huawei
    101 Software Avenue, Yuhua District
    Jiangsu
@@ -1053,7 +1070,7 @@ Authors' Addresses
    Email: maqiufang1@huawei.com
 
 
-   Deepak Rajaram (editor)
+   Deepak Rajaram
    Nokia
    India
    Email: deepak.rajaram@nokia.com
