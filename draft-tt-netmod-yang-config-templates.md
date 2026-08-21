@@ -69,9 +69,7 @@ informative:
 
 --- abstract
 
-   NETCONF and RESTCONF protocols provide programmatic interfaces for
-   accessing configuration data modeled by YANG.  This document defines
-   the use of a YANG-based configuration template mechanism whereby
+   This document defines a YANG-based configuration template mechanism whereby
    configuration data can be defined in one or more templates and
    applied repeatedly.  This avoids the redundant definition of
    identical configuration and ensures the consistency of it, thus
@@ -81,30 +79,44 @@ informative:
 
 # Introduction
 
-   This document considers the case of a datastore that contains
-   multiple subtrees with similar or identical nodes within them, such
-   that the datastore contains repetitive data with limited variation.
-   If a client has to repeatedly configure the same nodes for each
-   subtree, this can become complex and error-prone.
+   This document defines the "template" mechanism mentioned but
+   not defined in Network Management Datastore Architecture (NMDA) {{?RFC8342}}.
 
-   This document proposes a solution to improve this, called
-   "Configuration Templates". A configuration template is a fragment of configuration that the
-   server is instructed to replicate multiple times to generate copies
-   of the configuration.  This allows repetitive subtrees of
-   configuration to be written only once, in the template.  When needed,
-   individual instantiations of a template can override the values of
-   nodes, or add new instance-specific nodes.
+   Templates enable repetitive configuration to be factored out into
+   a template and subsequently applied wherever the configuration
+   is needed.  This avoids the redundant definition of identical
+   configuration and ensures the consistency of it, thus allowing
+   configuration data to be managed more conveniently and efficiently.
 
-   NMDA {{?RFC8342}} allows the configuration templates to be defined in
-   \<running\> and expanded in \<intended\>, but it does not specify details
-   about how configuration templates could be created and applied.
+   By examnple, an network management system (NMS) may manage many
+   devices.  Devices may be come from different vendors, each of
+   which may have multiple types of devices (router, firewall, etc.),
+   though sharing a common operating system.  Further, each type of
+   device may have different models (e.g., fw-100, fw-1000, etc.).
+   In this case, common "fw-100" configuration could be put into
+   a template called "common-fw-100-template", which itself inherits
+   from a template called "common-fw-template", which itself inherits
+   from a template called "common-vendor-template".  Similarly, a
+   "common-fw-1000-template" could inherit from "common-fw-template"
+   and, likewise, a "common-rtr-template" could inherit from the
+   "common-vendor-template".
 
-   This document defines the use of configuration templates in the
-   context of YANG-driven network management protocols such as NETCONF
-   {{!RFC6241}} and RESTCONF {{!RFC8040}}.  Configuration templates can be
-   used with any YANG data model, this document doesn't make any
-   assumption on the YANG data model design, i.e., it does not rely on a
-   shared profile/group being defined in the YANG data model.
+   Templates are mostly for humans, but are still important in some
+   cases when the configuration of a device is fully automated.
+   Specifically, when provided templates, a device can optimize
+   its memory, enabling higher performance and scability.
+
+   The solution presented in this document supports both servers
+   that do and do not support NMDA.  For server's that support NMDA,
+   the solution is more complete, as templates may be defined in the
+   \<system\> datastore defined in {{?I-D.ietf-netmod-system-config}},
+   and the \<intended\> datastore always returns the configuration
+   with the templates expanded.  For server's that do not support
+   NMDA, a "with-templates-expanded" parameter may be passed by a
+   client when fetching configuration.
+
+   Configuration templates can be used with any YANG data model,
+   including those defined with augmentations and/or deviations.
 
 
 ## Editorial Note (To be removed by RFC Editor)
@@ -137,10 +149,11 @@ This document uses the following terminology in {{!RFC6241}}:
 Besides, this document defines the following terminology:
 
 configuration template:
-: A chunk of reusable configuration data that
-      could be applied to the configuration repeatedly, in order to
-      simplify the delivery of network configuration and ensure the
-      consistency of it.  A configuration template is referred to interchangeably as "template" or "YANG template" throughout this document.
+: A snippet of configuration data that may be applied to the
+  configuration repeatedly, in order to simplify the delivery
+  of network configuration and ensure the consistency of it.
+  A configuration template is referred to interchangeably as
+  "template" or "YANG template" throughout this document.
 
 # Requirements {#requirements}
 
@@ -668,7 +681,7 @@ TODO Security
 Note to the RFC Editor: Please remove this section before publication.
 
 This appendix tracks the status of requirements identified on the
-(Template Requirements Issue Tracker)[https://github.com/netmod-wg/template-reqs/issues].
+[Template Requirements Issue Tracker([https://github.com/netmod-wg/template-reqs/issues).
 
 
 R1: [Wherever a template-reference can occur, more than one template-reference can occur (and they are applied)](https://github.com/netmod-wg/template-reqs/issues/1)
