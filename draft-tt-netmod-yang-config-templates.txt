@@ -5,10 +5,10 @@
 Network Modeling                                               K. Watsen
 Internet-Draft                                           Watsen Networks
 Intended status: Standards Track                                   Q. Ma
-Expires: 4 January 2027                                           Huawei
+Expires: 22 February 2027                                         Huawei
                                                               D. Rajaram
                                                                    Nokia
-                                                             3 July 2026
+                                                          21 August 2026
 
 
                       YANG Configuration Templates
@@ -51,7 +51,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 4 January 2027.
+   This Internet-Draft will expire on 22 February 2027.
 
 Copyright Notice
 
@@ -915,111 +915,235 @@ Appendix A.  Requirement Implementation Status
    Note to the RFC Editor: Please remove this section before
    publication.
 
-   This appendix aims to track which of identified requirements have
-   been addressed in the current version, and, where applicable, how
-   they are fulfilled by the proposed mechanism.
+   This appendix tracks the status of requirements identified on the
+   (Template Requirements Issue Tracker)[https://github.com/netmod-wg/
+   template-reqs/issues].
 
-   These requirements are sourced from https://github.com/netmod-wg/
-   template-reqs/issues, specifically those that 1) have already been
-   discussed during interims and shown consensus, 2) present split
-   opinions and thus require further discussion, or 3) are new technical
-   requirements added by folks after interim discussion.
+   R1: Wherever a template-reference can occur, more than one template-
+   reference can occur (and they are applied) (https://github.com/
+   netmod-wg/template-reqs/issues/1)
 
-    +=====================+===========+===============================+
-    | Requirement         | Fulfilled | Requirement Description       |
-    +=====================+===========+===============================+
-    | R1: Allowed         | Y         | see Section 4.2               |
-    | Multiple templates  |           |                               |
-    | to be applied at a  |           |                               |
-    | single node         |           |                               |
-    +---------------------+-----------+-------------------------------+
-    | R2: Templates must  | Y         | see Section 4.1               |
-    | work with any YANG  |           |                               |
-    | module              |           |                               |
-    +---------------------+-----------+-------------------------------+
-    | R3: Templates must  | N         | Per discussion at IETF 125,   |
-    | be validated when   |           | the consensus seems to be to  |
-    | defined             |           | make a best effort to         |
-    |                     |           | validate the template at      |
-    |                     |           | definition time, and that the |
-    |                     |           | current text is sufficient    |
-    +---------------------+-----------+-------------------------------+
-    | R4: Local-config    | Y         | see Section 4.3               |
-    | overrides template- |           |                               |
-    | config              |           |                               |
-    +---------------------+-----------+-------------------------------+
-    | R5: Living          | Y         | see Section 4.4               |
-    | template: modified  |           |                               |
-    | template data gets  |           |                               |
-    | expanded for all    |           |                               |
-    | consumers           |           |                               |
-    +---------------------+-----------+-------------------------------+
-    | R6: Support basic   | N         | Seems to add some complexity  |
-    | programmatic        |           |                               |
-    | elements (loops,    |           |                               |
-    | conditions) in      |           |                               |
-    | templates           |           |                               |
-    +---------------------+-----------+-------------------------------+
-    | R7: Allow a server  | Y         | See Section 8                 |
-    | to constrain which  |           |                               |
-    | nodes can be        |           |                               |
-    | templates consumer  |           |                               |
-    +---------------------+-----------+-------------------------------+
-    | R8: Configuration   | Y         | see Section 5 and Section 8   |
-    | with both expanded  |           |                               |
-    | and unexpanded      |           |                               |
-    | templates is able   |           |                               |
-    | to be returned      |           |                               |
-    +---------------------+-----------+-------------------------------+
-    | R9: <running>       | Y         | see Section 5, also stated    |
-    | contains the        |           | explicitly in Section 8       |
-    | unexpanded template |           |                               |
-    +---------------------+-----------+-------------------------------+
-    | R10: <intended>     | Y         | see Section 5, also stated    |
-    | contains the        |           | explicitly in Section 8       |
-    | expanded template   |           |                               |
-    +---------------------+-----------+-------------------------------+
-    | R11: Enables off-   | Y         | see Section 4.4               |
-    | box template        |           |                               |
-    | expansion of        |           |                               |
-    | <running>           |           |                               |
-    +---------------------+-----------+-------------------------------+
-    | R12: Support        | Y         | see Section 4.1.1             |
-    | limited regex in    |           |                               |
-    | templates           |           |                               |
-    +---------------------+-----------+-------------------------------+
-    | R13: Have a         | Y         | See Section 4.4               |
-    | precedence rule     |           |                               |
-    | when multiple       |           |                               |
-    | templates are       |           |                               |
-    | applied at a single |           |                               |
-    | node                |           |                               |
-    +---------------------+-----------+-------------------------------+
-    | R14: The innermost  | Y         | See Section 4.4               |
-    | template takes      |           |                               |
-    | precedence when     |           |                               |
-    | templates are       |           |                               |
-    | applied at multiple |           |                               |
-    | ancestor nodes      |           |                               |
-    +---------------------+-----------+-------------------------------+
-    | R15: Enable non-    | N         | have a dedicated section      |
-    | NMDA servers to     |           | (Section 6) for this, but     |
-    | return the expanded |           | empty now                     |
-    | data                |           |                               |
-    +---------------------+-----------+-------------------------------+
-    | Not discussed: R16: | N         | Seems to add some complexity, |
-    | exclude templates   |           | needs further discussion      |
-    | applied at ancestor |           |                               |
-    | nodes               |           |                               |
-    +---------------------+-----------+-------------------------------+
-    | Not discussed: R17: | N         | Needs further discussion      |
-    | Annotations to      |           |                               |
-    | determine which     |           |                               |
-    | template a node was |           |                               |
-    | applied from        |           |                               |
-    +---------------------+-----------+-------------------------------+
+   *  discussed: strongly in favor
 
-                                  Table 1
+   *  status: supported in document (done)
+
+   R2: Templates must be able to reference other templates (hierarchal
+   templates) (https://github.com/netmod-wg/template-reqs/issues/2)
+
+   *  discussed: split opinion (needs more discussion)
+
+   *  unsure if opposed to idea or to doing it in a first release.
+
+   *  status: not supported in document (needs more discussion)
+
+   R3: Templates must work with any YANG module (including augments and
+   deviations) (https://github.com/netmod-wg/template-reqs/issues/3)
+
+   *  discussed: strongly in favor
+
+   *  status: supported in document (done)
+
+   R4: Template syntax must be validated when defined (not only when
+   used) (https://github.com/netmod-wg/template-reqs/issues/4)
+
+   *  discussed: split opinion (needs more discussion)
+
+   *  unsure if opposed to idea or to doing it in a first release.
+
+   *  status: supported in document (done)
+
+   R5: Wherever a template-reference can occur, it must be possible to
+   delete nodes from the template (https://github.com/netmod-wg/
+   template-reqs/issues/5)
+
+   *  discussed: mildly NOT in favor
+
+   *  status: not supported in document (done)
+
+   R6: Local-config overrides template-config (https://github.com/
+   netmod-wg/template-reqs/issues/6)
+
+   *  discussed: strongly in favor
+
+   *  status: supported in document (done)
+
+   R7: Templates are persistent (living templates) modifications to them
+   are automatically applied to all consumers (https://github.com/
+   netmod-wg/template-reqs/issues/7)
+
+   *  discussed: strongly in favor
+
+   *  status: supported in document (done)
+
+   R8: Support basic programmatic elements in templates
+   (https://github.com/netmod-wg/template-reqs/issues/8)
+
+   *  discussed: strongly opposed (but Joe Clarke later said he would've
+      voted in favor)
+
+   *  unsure if opposed to idea or to doing it in a first release.
+
+   *  status: NOT supported in document (discuss more?)
+
+   R9: It must be possible to constrain which nodes can be template-
+   consumers (https://github.com/netmod-wg/template-reqs/issues/9)
+
+   *  discussed: strongly in favor
+
+   *  status: NOT supported in document (need to add)
+
+   R10: For living templates, the configuration with both unexpanded and
+   expanded templates is able to be returned (https://github.com/netmod-
+   wg/template-reqs/issues/10)
+
+   *  discussed: strongly in favor
+
+   *  status: supported in document (done)
+
+   R11: Possibility to reorder some user-ordered list/leaf-list entries
+   defined in a template (https://github.com/netmod-wg/template-reqs/
+   issues/11)
+
+   *  discussed: strongly opposed
+
+   *  status: not supported in document (done)
+
+   R12: The <running> datastore contains the unexpanded template
+   (https://github.com/netmod-wg/template-reqs/issues/12)
+
+   *  discussed: strongly in favor
+
+   *  status: supported in document (done)
+
+   R13: For NMDA, the <intended> datastore returns the expanded template
+   (https://github.com/netmod-wg/template-reqs/issues/13)
+
+   *  discussed: strongly in favor
+
+   *  status: supported in document (done)
+
+   R14: Off-box template-expansion of <running> containing templates
+   must be possible (potentially enabling off-box validation)
+   (https://github.com/netmod-wg/template-reqs/issues/14)
+
+   *  discussed: strongly in favor
+
+   *  status: supported in document (done)
+
+   R15: For NMDA, the <intended> datastore returns the unexpanded
+   templates (https://github.com/netmod-wg/template-reqs/issues/15)
+
+   *  discussed: mostly opposed
+
+   *  status: supported in document (done)
+
+   R16: Common data nodes (https://github.com/netmod-wg/template-reqs/
+   issues/16)
+
+   *  never discussed: this requirement is closed in GitHub
+
+   *  status: not supported in document (done)
+
+   R17: For NMDA, The <operational> datastore returns unexpanded
+   template config (depends on #15) (https://github.com/netmod-wg/
+   template-reqs/issues/17)
+
+   *  discussed: mostly opposed
+
+   *  status: not supported in document (done)
+
+   R18: Support limited-regex in template-config for template-consumer
+   application (https://github.com/netmod-wg/template-reqs/issues/18)
+
+   *  discussed: strongly in favor
+
+   *  status: supported in document (done)
+
+   R19: When multiple templates are applied to a node, a precedence
+   order must be defined (either ascending or descending)
+   (https://github.com/netmod-wg/template-reqs/issues/19)
+
+   *  discussed: strongly in favor
+
+   *  status: supported in document (done)
+
+   R20: When templates are applied at multiple ancestor nodes, the
+   innermost (closest) template takes precedence. (https://github.com/
+   netmod-wg/template-reqs/issues/20)
+
+   *  discussed: mostly in favor
+
+   *  status: supported in document (done)
+
+   R21: The solution enables non-nmda servers to return the expanded
+   data (https://github.com/netmod-wg/template-reqs/issues/21)
+
+   *  discussed: strongly in favor
+
+   *  status: not supported in document (need to add, see Section 6)
+
+   R22: Method to exclude templates applied at ancestor nodes
+   (https://github.com/netmod-wg/template-reqs/issues/22)
+
+   *  never discussed
+
+   *  status: needs to be discussed (will schedule an Interim meeting)
+
+   R23: Clarify the ability to apply a template at the datastore root
+   node '/' (https://github.com/netmod-wg/template-reqs/issues/23)
+
+   *  never discussed
+
+   *  status: needs to be discussed (will schedule an Interim meeting)
+
+   R24: Metadata annotation to determine which template a node was
+   applied from (https://github.com/netmod-wg/template-reqs/issues/24)
+
+   *  never discussed
+
+   *  status: needs to be discussed (will schedule an Interim meeting)
+
+   R25: Misaligned module template name (https://github.com/netmod-wg/
+   template-reqs/issues/25)
+
+   *  never discussed
+
+   *  status: needs to be discussed (will schedule an Interim meeting)
+
+   R26: Seems a typo in this example (https://github.com/netmod-wg/
+   template-reqs/issues/26)
+
+   *  never discussed
+
+   *  status: needs to be discussed (will schedule an Interim meeting)
+
+   R27: Adding an example for this might help (https://github.com/
+   netmod-wg/template-reqs/issues/27)
+
+   *  never discussed
+
+   *  status: needs to be discussed (will schedule an Interim meeting)
+
+   R28: Good to have apply-groups-except equivalent feature as in Junos
+   (https://github.com/netmod-wg/template-reqs/issues/28)
+
+   *  never discussed
+
+   *  status: needs to be discussed (will schedule an Interim meeting)
+
+   R29: Provide the ability to see the expanded view of configuration
+   (https://github.com/netmod-wg/template-reqs/issues/29)
+
+   *  never discussed
+
+   *  status: needs to be discussed (will schedule an Interim meeting)
+
+   R30: Can the template be applied to a leaf/leaf-list?
+   (https://github.com/netmod-wg/template-reqs/issues/30)
+
+   *  never discussed
+
+   *  status: needs to be discussed (will schedule an Interim meeting)
 
 Acknowledgments
 

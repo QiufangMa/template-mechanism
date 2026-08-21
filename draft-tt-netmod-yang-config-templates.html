@@ -24,14 +24,14 @@
 <meta content="draft-tt-netmod-yang-config-templates-latest" name="ietf.draft">
 <!-- Generator version information:
   xml2rfc 3.34.0
-    Python 3.14.5
+    Python 3.14.7
     ConfigArgParse 1.7.5
     google-i18n-address 3.1.1
     intervaltree 3.2.1
     Jinja2 3.1.6
     lxml 6.1.1
     natsort 8.4.0
-    platformdirs 4.10.0
+    platformdirs 4.11.3
     pycountry 24.6.1
     PyYAML 6.0.3
     requests 2.33.1
@@ -71,7 +71,6 @@
   src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-latin-ext.woff2') format('woff2');
   unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
-
 @font-face {
   font-family: 'Lora';
   font-style: italic;
@@ -120,7 +119,6 @@
   src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-latin.woff2') format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
-
 @font-face {
   font-family: 'Lora';
   font-style: normal;
@@ -185,7 +183,6 @@
   font-display: swap;
   src: local('Oxygen Mono'), local('OxygenMono-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/oxygenmono-regular-latin.woff2') format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
 }
 
 @font-face {
@@ -1054,11 +1051,11 @@ svg {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">template</td>
-<td class="right">July 2026</td>
+<td class="right">August 2026</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Watsen, et al.</td>
-<td class="center">Expires 4 January 2027</td>
+<td class="center">Expires 22 February 2027</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1071,12 +1068,12 @@ svg {
 <dd class="internet-draft">draft-tt-netmod-yang-config-templates-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-07-03" class="published">3 July 2026</time>
+<time datetime="2026-08-21" class="published">21 August 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2027-01-04">4 January 2027</time></dd>
+<dd class="expires"><time datetime="2027-02-22">22 February 2027</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1135,7 +1132,7 @@ svg {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 4 January 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 22 February 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -2247,117 +2244,287 @@ module ietf-config-template {
 <a href="#appendix-A" class="section-number selfRef">Appendix A. </a><a href="#name-requirement-implementation-" class="section-name selfRef">Requirement Implementation Status</a>
       </h2>
 <p id="appendix-A-1">Note to the RFC Editor: Please remove this section before publication.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
-<p id="appendix-A-2">This appendix aims to track which of identified requirements have been addressed in the current version, and, where applicable, how they are fulfilled by the proposed mechanism.<a href="#appendix-A-2" class="pilcrow">¶</a></p>
-<p id="appendix-A-3">These requirements are sourced from https://github.com/netmod-wg/template-reqs/issues, specifically those that 1) have already been discussed during interims and shown consensus, 2) present split opinions and thus require further discussion, or 3) are new technical requirements added by folks after interim discussion.<a href="#appendix-A-3" class="pilcrow">¶</a></p>
-<table class="center" id="table-1">
-        <caption><a href="#table-1" class="selfRef">Table 1</a></caption>
-<thead>
-          <tr>
-            <th class="text-left" rowspan="1" colspan="1">Requirement</th>
-            <th class="text-left" rowspan="1" colspan="1">Fulfilled</th>
-            <th class="text-left" rowspan="1" colspan="1">Requirement Description</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="text-left" rowspan="1" colspan="1">R1: Allowed Multiple templates to be applied at a single node</td>
-            <td class="text-left" rowspan="1" colspan="1">Y</td>
-            <td class="text-left" rowspan="1" colspan="1">see <a href="#inheriting-temp" class="auto internal xref">Section 4.2</a>
-</td>
-          </tr>
-          <tr>
-            <td class="text-left" rowspan="1" colspan="1">R2: Templates must work with any YANG module</td>
-            <td class="text-left" rowspan="1" colspan="1">Y</td>
-            <td class="text-left" rowspan="1" colspan="1">see <a href="#define-templates" class="auto internal xref">Section 4.1</a>
-</td>
-          </tr>
-          <tr>
-            <td class="text-left" rowspan="1" colspan="1">R3: Templates must be validated when defined</td>
-            <td class="text-left" rowspan="1" colspan="1">N</td>
-            <td class="text-left" rowspan="1" colspan="1">Per discussion at IETF 125, the consensus seems to be to make a best effort to validate the template at definition time, and that the current text is sufficient</td>
-          </tr>
-          <tr>
-            <td class="text-left" rowspan="1" colspan="1">R4: Local-config overrides template-config</td>
-            <td class="text-left" rowspan="1" colspan="1">Y</td>
-            <td class="text-left" rowspan="1" colspan="1">see <a href="#overriding-temp" class="auto internal xref">Section 4.3</a>
-</td>
-          </tr>
-          <tr>
-            <td class="text-left" rowspan="1" colspan="1">R5: Living template: modified template data gets expanded for all consumers</td>
-            <td class="text-left" rowspan="1" colspan="1">Y</td>
-            <td class="text-left" rowspan="1" colspan="1">see <a href="#expand-templates" class="auto internal xref">Section 4.4</a>
-</td>
-          </tr>
-          <tr>
-            <td class="text-left" rowspan="1" colspan="1">R6: Support basic programmatic elements (loops, conditions) in templates</td>
-            <td class="text-left" rowspan="1" colspan="1">N</td>
-            <td class="text-left" rowspan="1" colspan="1">Seems to add some complexity</td>
-          </tr>
-          <tr>
-            <td class="text-left" rowspan="1" colspan="1">R7: Allow a server to constrain which nodes can be templates consumer</td>
-            <td class="text-left" rowspan="1" colspan="1">Y</td>
-            <td class="text-left" rowspan="1" colspan="1">See <a href="#operational-consideration" class="auto internal xref">Section 8</a>
-</td>
-          </tr>
-          <tr>
-            <td class="text-left" rowspan="1" colspan="1">R8: Configuration with both expanded and unexpanded templates is able to be returned</td>
-            <td class="text-left" rowspan="1" colspan="1">Y</td>
-            <td class="text-left" rowspan="1" colspan="1">see <a href="#interact-NMDA" class="auto internal xref">Section 5</a> and <a href="#operational-consideration" class="auto internal xref">Section 8</a>
-</td>
-          </tr>
-          <tr>
-            <td class="text-left" rowspan="1" colspan="1">R9: &lt;running&gt; contains the unexpanded template</td>
-            <td class="text-left" rowspan="1" colspan="1">Y</td>
-            <td class="text-left" rowspan="1" colspan="1">see <a href="#interact-NMDA" class="auto internal xref">Section 5</a>, also stated explicitly in <a href="#operational-consideration" class="auto internal xref">Section 8</a>
-</td>
-          </tr>
-          <tr>
-            <td class="text-left" rowspan="1" colspan="1">R10: &lt;intended&gt; contains the expanded template</td>
-            <td class="text-left" rowspan="1" colspan="1">Y</td>
-            <td class="text-left" rowspan="1" colspan="1">see <a href="#interact-NMDA" class="auto internal xref">Section 5</a>, also stated explicitly in <a href="#operational-consideration" class="auto internal xref">Section 8</a>
-</td>
-          </tr>
-          <tr>
-            <td class="text-left" rowspan="1" colspan="1">R11: Enables off-box template expansion of &lt;running&gt;</td>
-            <td class="text-left" rowspan="1" colspan="1">Y</td>
-            <td class="text-left" rowspan="1" colspan="1">see <a href="#expand-templates" class="auto internal xref">Section 4.4</a>
-</td>
-          </tr>
-          <tr>
-            <td class="text-left" rowspan="1" colspan="1">R12: Support limited regex in templates</td>
-            <td class="text-left" rowspan="1" colspan="1">Y</td>
-            <td class="text-left" rowspan="1" colspan="1">see <a href="#regex" class="auto internal xref">Section 4.1.1</a>
-</td>
-          </tr>
-          <tr>
-            <td class="text-left" rowspan="1" colspan="1">R13: Have a precedence rule when multiple templates are applied at a single node</td>
-            <td class="text-left" rowspan="1" colspan="1">Y</td>
-            <td class="text-left" rowspan="1" colspan="1">See <a href="#expand-templates" class="auto internal xref">Section 4.4</a>
-</td>
-          </tr>
-          <tr>
-            <td class="text-left" rowspan="1" colspan="1">R14: The innermost template takes precedence when templates are applied at multiple ancestor nodes</td>
-            <td class="text-left" rowspan="1" colspan="1">Y</td>
-            <td class="text-left" rowspan="1" colspan="1">See <a href="#expand-templates" class="auto internal xref">Section 4.4</a>
-</td>
-          </tr>
-          <tr>
-            <td class="text-left" rowspan="1" colspan="1">R15: Enable non-NMDA servers to return the expanded data</td>
-            <td class="text-left" rowspan="1" colspan="1">N</td>
-            <td class="text-left" rowspan="1" colspan="1">have a dedicated section (<a href="#interact-non-NMDA" class="auto internal xref">Section 6</a>) for this, but empty now</td>
-          </tr>
-          <tr>
-            <td class="text-left" rowspan="1" colspan="1">Not discussed: R16: exclude templates applied at ancestor nodes</td>
-            <td class="text-left" rowspan="1" colspan="1">N</td>
-            <td class="text-left" rowspan="1" colspan="1">Seems to add some complexity, needs further discussion</td>
-          </tr>
-          <tr>
-            <td class="text-left" rowspan="1" colspan="1">Not discussed: R17: Annotations to determine which template a node was applied from</td>
-            <td class="text-left" rowspan="1" colspan="1">N</td>
-            <td class="text-left" rowspan="1" colspan="1">Needs further discussion</td>
-          </tr>
-        </tbody>
-      </table>
+<p id="appendix-A-2">This appendix tracks the status of requirements identified on the
+(Template Requirements Issue Tracker)[https://github.com/netmod-wg/template-reqs/issues].<a href="#appendix-A-2" class="pilcrow">¶</a></p>
+<p id="appendix-A-3">R1: <a href="https://github.com/netmod-wg/template-reqs/issues/1">Wherever a template-reference can occur, more than one template-reference can occur (and they are applied)</a><a href="#appendix-A-3" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-A-4.1">
+          <p id="appendix-A-4.1.1">discussed: strongly in favor<a href="#appendix-A-4.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-4.2">
+          <p id="appendix-A-4.2.1">status: supported in document (done)<a href="#appendix-A-4.2.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<p id="appendix-A-5">R2: <a href="https://github.com/netmod-wg/template-reqs/issues/2">Templates must be able to reference other templates (hierarchal templates)</a><a href="#appendix-A-5" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-A-6.1">
+          <p id="appendix-A-6.1.1">discussed: split opinion (needs more discussion)<a href="#appendix-A-6.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-6.2">
+          <p id="appendix-A-6.2.1">unsure if opposed to idea or to doing it in a first release.<a href="#appendix-A-6.2.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-6.3">
+          <p id="appendix-A-6.3.1">status: not supported in document (needs more discussion)<a href="#appendix-A-6.3.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<p id="appendix-A-7">R3: <a href="https://github.com/netmod-wg/template-reqs/issues/3">Templates must work with any YANG module (including augments and deviations)</a><a href="#appendix-A-7" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-A-8.1">
+          <p id="appendix-A-8.1.1">discussed: strongly in favor<a href="#appendix-A-8.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-8.2">
+          <p id="appendix-A-8.2.1">status: supported in document (done)<a href="#appendix-A-8.2.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<p id="appendix-A-9">R4: <a href="https://github.com/netmod-wg/template-reqs/issues/4">Template syntax must be validated when defined (not only when used)</a><a href="#appendix-A-9" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-A-10.1">
+          <p id="appendix-A-10.1.1">discussed: split opinion (needs more discussion)<a href="#appendix-A-10.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-10.2">
+          <p id="appendix-A-10.2.1">unsure if opposed to idea or to doing it in a first release.<a href="#appendix-A-10.2.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-10.3">
+          <p id="appendix-A-10.3.1">status: supported in document (done)<a href="#appendix-A-10.3.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<p id="appendix-A-11">R5: <a href="https://github.com/netmod-wg/template-reqs/issues/5">Wherever a template-reference can occur, it must be possible to delete nodes from the template</a><a href="#appendix-A-11" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-A-12.1">
+          <p id="appendix-A-12.1.1">discussed: mildly NOT in favor<a href="#appendix-A-12.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-12.2">
+          <p id="appendix-A-12.2.1">status: not supported in document (done)<a href="#appendix-A-12.2.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<p id="appendix-A-13">R6: <a href="https://github.com/netmod-wg/template-reqs/issues/6">Local-config overrides template-config</a><a href="#appendix-A-13" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-A-14.1">
+          <p id="appendix-A-14.1.1">discussed: strongly in favor<a href="#appendix-A-14.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-14.2">
+          <p id="appendix-A-14.2.1">status: supported in document (done)<a href="#appendix-A-14.2.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<p id="appendix-A-15">R7: <a href="https://github.com/netmod-wg/template-reqs/issues/7">Templates are persistent (living templates) modifications to them are automatically applied to all consumers</a><a href="#appendix-A-15" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-A-16.1">
+          <p id="appendix-A-16.1.1">discussed: strongly in favor<a href="#appendix-A-16.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-16.2">
+          <p id="appendix-A-16.2.1">status: supported in document (done)<a href="#appendix-A-16.2.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<p id="appendix-A-17">R8: <a href="https://github.com/netmod-wg/template-reqs/issues/8">Support basic programmatic elements in templates</a><a href="#appendix-A-17" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-A-18.1">
+          <p id="appendix-A-18.1.1">discussed: strongly opposed (but Joe Clarke later said he would've voted in favor)<a href="#appendix-A-18.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-18.2">
+          <p id="appendix-A-18.2.1">unsure if opposed to idea or to doing it in a first release.<a href="#appendix-A-18.2.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-18.3">
+          <p id="appendix-A-18.3.1">status: NOT supported in document (discuss more?)<a href="#appendix-A-18.3.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<p id="appendix-A-19">R9: <a href="https://github.com/netmod-wg/template-reqs/issues/9">It must be possible to constrain which nodes can be template-consumers</a><a href="#appendix-A-19" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-A-20.1">
+          <p id="appendix-A-20.1.1">discussed: strongly in favor<a href="#appendix-A-20.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-20.2">
+          <p id="appendix-A-20.2.1">status: NOT supported in document (need to add)<a href="#appendix-A-20.2.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<p id="appendix-A-21">R10: <a href="https://github.com/netmod-wg/template-reqs/issues/10">For living templates, the configuration with both unexpanded and expanded templates is able to be returned</a><a href="#appendix-A-21" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-A-22.1">
+          <p id="appendix-A-22.1.1">discussed: strongly in favor<a href="#appendix-A-22.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-22.2">
+          <p id="appendix-A-22.2.1">status: supported in document (done)<a href="#appendix-A-22.2.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<p id="appendix-A-23">R11: <a href="https://github.com/netmod-wg/template-reqs/issues/11">Possibility to reorder some user-ordered list/leaf-list entries defined in a template</a><a href="#appendix-A-23" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-A-24.1">
+          <p id="appendix-A-24.1.1">discussed: strongly opposed<a href="#appendix-A-24.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-24.2">
+          <p id="appendix-A-24.2.1">status: not supported in document (done)<a href="#appendix-A-24.2.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<p id="appendix-A-25">R12: <a href="https://github.com/netmod-wg/template-reqs/issues/12">The &lt;running&gt; datastore contains the unexpanded template</a><a href="#appendix-A-25" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-A-26.1">
+          <p id="appendix-A-26.1.1">discussed: strongly in favor<a href="#appendix-A-26.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-26.2">
+          <p id="appendix-A-26.2.1">status: supported in document (done)<a href="#appendix-A-26.2.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<p id="appendix-A-27">R13: <a href="https://github.com/netmod-wg/template-reqs/issues/13">For NMDA, the &lt;intended&gt; datastore returns the expanded template</a><a href="#appendix-A-27" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-A-28.1">
+          <p id="appendix-A-28.1.1">discussed: strongly in favor<a href="#appendix-A-28.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-28.2">
+          <p id="appendix-A-28.2.1">status: supported in document (done)<a href="#appendix-A-28.2.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<p id="appendix-A-29">R14: <a href="https://github.com/netmod-wg/template-reqs/issues/14">Off-box template-expansion of &lt;running&gt; containing templates must be possible (potentially enabling off-box validation)</a><a href="#appendix-A-29" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-A-30.1">
+          <p id="appendix-A-30.1.1">discussed: strongly in favor<a href="#appendix-A-30.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-30.2">
+          <p id="appendix-A-30.2.1">status: supported in document (done)<a href="#appendix-A-30.2.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<p id="appendix-A-31">R15: <a href="https://github.com/netmod-wg/template-reqs/issues/15">For NMDA, the &lt;intended&gt; datastore returns the unexpanded templates</a><a href="#appendix-A-31" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-A-32.1">
+          <p id="appendix-A-32.1.1">discussed: mostly opposed<a href="#appendix-A-32.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-32.2">
+          <p id="appendix-A-32.2.1">status: supported in document (done)<a href="#appendix-A-32.2.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<p id="appendix-A-33">R16: <a href="https://github.com/netmod-wg/template-reqs/issues/16">Common data nodes</a><a href="#appendix-A-33" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-A-34.1">
+          <p id="appendix-A-34.1.1">never discussed: this requirement is closed in GitHub<a href="#appendix-A-34.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-34.2">
+          <p id="appendix-A-34.2.1">status: not supported in document (done)<a href="#appendix-A-34.2.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<p id="appendix-A-35">R17: <a href="https://github.com/netmod-wg/template-reqs/issues/17">For NMDA, The &lt;operational&gt; datastore returns unexpanded template config (depends on #15)</a><a href="#appendix-A-35" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-A-36.1">
+          <p id="appendix-A-36.1.1">discussed: mostly opposed<a href="#appendix-A-36.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-36.2">
+          <p id="appendix-A-36.2.1">status: not supported in document (done)<a href="#appendix-A-36.2.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<p id="appendix-A-37">R18: <a href="https://github.com/netmod-wg/template-reqs/issues/18">Support limited-regex in template-config for template-consumer application</a><a href="#appendix-A-37" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-A-38.1">
+          <p id="appendix-A-38.1.1">discussed: strongly in favor<a href="#appendix-A-38.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-38.2">
+          <p id="appendix-A-38.2.1">status: supported in document (done)<a href="#appendix-A-38.2.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<p id="appendix-A-39">R19: <a href="https://github.com/netmod-wg/template-reqs/issues/19">When multiple templates are applied to a node, a precedence order must be defined (either ascending or descending)</a><a href="#appendix-A-39" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-A-40.1">
+          <p id="appendix-A-40.1.1">discussed: strongly in favor<a href="#appendix-A-40.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-40.2">
+          <p id="appendix-A-40.2.1">status: supported in document (done)<a href="#appendix-A-40.2.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<p id="appendix-A-41">R20: <a href="https://github.com/netmod-wg/template-reqs/issues/20">When templates are applied at multiple ancestor nodes, the innermost (closest) template takes precedence.</a><a href="#appendix-A-41" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-A-42.1">
+          <p id="appendix-A-42.1.1">discussed: mostly in favor<a href="#appendix-A-42.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-42.2">
+          <p id="appendix-A-42.2.1">status: supported in document (done)<a href="#appendix-A-42.2.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<p id="appendix-A-43">R21: <a href="https://github.com/netmod-wg/template-reqs/issues/21">The solution enables non-nmda servers to return the expanded data</a><a href="#appendix-A-43" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-A-44.1">
+          <p id="appendix-A-44.1.1">discussed: strongly in favor<a href="#appendix-A-44.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-44.2">
+          <p id="appendix-A-44.2.1">status: not supported in document (need to add, see <a href="#interact-non-NMDA" class="auto internal xref">Section 6</a>)<a href="#appendix-A-44.2.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<p id="appendix-A-45">R22: <a href="https://github.com/netmod-wg/template-reqs/issues/22">Method to exclude templates applied at ancestor nodes</a><a href="#appendix-A-45" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-A-46.1">
+          <p id="appendix-A-46.1.1">never discussed<a href="#appendix-A-46.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-46.2">
+          <p id="appendix-A-46.2.1">status: needs to be discussed (will schedule an Interim meeting)<a href="#appendix-A-46.2.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<p id="appendix-A-47">R23: <a href="https://github.com/netmod-wg/template-reqs/issues/23">Clarify the ability to apply a template at the datastore root node '/'</a><a href="#appendix-A-47" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-A-48.1">
+          <p id="appendix-A-48.1.1">never discussed<a href="#appendix-A-48.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-48.2">
+          <p id="appendix-A-48.2.1">status: needs to be discussed (will schedule an Interim meeting)<a href="#appendix-A-48.2.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<p id="appendix-A-49">R24: <a href="https://github.com/netmod-wg/template-reqs/issues/24">Metadata annotation to determine which template a node was applied from</a><a href="#appendix-A-49" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-A-50.1">
+          <p id="appendix-A-50.1.1">never discussed<a href="#appendix-A-50.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-50.2">
+          <p id="appendix-A-50.2.1">status: needs to be discussed (will schedule an Interim meeting)<a href="#appendix-A-50.2.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<p id="appendix-A-51">R25: <a href="https://github.com/netmod-wg/template-reqs/issues/25">Misaligned module template name</a><a href="#appendix-A-51" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-A-52.1">
+          <p id="appendix-A-52.1.1">never discussed<a href="#appendix-A-52.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-52.2">
+          <p id="appendix-A-52.2.1">status: needs to be discussed (will schedule an Interim meeting)<a href="#appendix-A-52.2.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<p id="appendix-A-53">R26: <a href="https://github.com/netmod-wg/template-reqs/issues/26">Seems a typo in this example</a><a href="#appendix-A-53" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-A-54.1">
+          <p id="appendix-A-54.1.1">never discussed<a href="#appendix-A-54.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-54.2">
+          <p id="appendix-A-54.2.1">status: needs to be discussed (will schedule an Interim meeting)<a href="#appendix-A-54.2.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<p id="appendix-A-55">R27: <a href="https://github.com/netmod-wg/template-reqs/issues/27">Adding an example for this might help</a><a href="#appendix-A-55" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-A-56.1">
+          <p id="appendix-A-56.1.1">never discussed<a href="#appendix-A-56.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-56.2">
+          <p id="appendix-A-56.2.1">status: needs to be discussed (will schedule an Interim meeting)<a href="#appendix-A-56.2.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<p id="appendix-A-57">R28: <a href="https://github.com/netmod-wg/template-reqs/issues/28">Good to have apply-groups-except equivalent feature as in Junos</a><a href="#appendix-A-57" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-A-58.1">
+          <p id="appendix-A-58.1.1">never discussed<a href="#appendix-A-58.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-58.2">
+          <p id="appendix-A-58.2.1">status: needs to be discussed (will schedule an Interim meeting)<a href="#appendix-A-58.2.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<p id="appendix-A-59">R29: <a href="https://github.com/netmod-wg/template-reqs/issues/29">Provide the ability to see the expanded view of configuration</a><a href="#appendix-A-59" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-A-60.1">
+          <p id="appendix-A-60.1.1">never discussed<a href="#appendix-A-60.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-60.2">
+          <p id="appendix-A-60.2.1">status: needs to be discussed (will schedule an Interim meeting)<a href="#appendix-A-60.2.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<p id="appendix-A-61">R30: <a href="https://github.com/netmod-wg/template-reqs/issues/30">Can the template be applied to a leaf/leaf-list?</a><a href="#appendix-A-61" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-A-62.1">
+          <p id="appendix-A-62.1.1">never discussed<a href="#appendix-A-62.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-62.2">
+          <p id="appendix-A-62.2.1">status: needs to be discussed (will schedule an Interim meeting)<a href="#appendix-A-62.2.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
 </section>
 </div>
 <div id="acknowledgments">
