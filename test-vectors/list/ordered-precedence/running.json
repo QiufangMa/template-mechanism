@@ -1,0 +1,39 @@
+{
+    "ietf-config-templates:templates": [
+        {
+            "name": "t1",
+            "content": {
+                "my-yang-module:list": [
+                    {
+                        "key": "foo",
+                        "val": "t1"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "t2",
+            "content": {
+                "my-yang-module:list": [
+                    {
+                        "key": "foo",
+                        "val": "t2"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "t3",
+            "content": {
+                "my-yang-module:list": [
+                    {
+                        "key": "foo",
+                        "val": "t3"
+                    }
+                ]
+            }
+        }
+    ],
+    "my-yang-module:apply-templates": ["t1", "t2", "t3"]
+}
+

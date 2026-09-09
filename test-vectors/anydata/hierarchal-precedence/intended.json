@@ -1,0 +1,6 @@
+{
+    "my-yang-module:anydata": {
+        "some-other-module:zero": 0
+    }
+}
+

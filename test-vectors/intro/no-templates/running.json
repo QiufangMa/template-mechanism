@@ -1,0 +1,25 @@
+{
+    "my-yang-module:leaf": "1",
+    "my-yang-module:leaf-list": ["1", "2", "3"],
+    "my-yang-module:container": {
+        "mandatory-leaf": "1"
+    },
+    "my-yang-module:list": [
+        {
+            "key": "foo",
+            "val": "1"
+        },
+        {
+            "key": "bar",
+            "val": "1"
+        },
+        {
+            "key": "baz",
+            "val": "1"
+        }
+    ],
+    "my-yang-module:anydata": {
+        "some-other-module:zero": 0
+    }
+}
+

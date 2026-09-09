@@ -1,0 +1,9 @@
+{
+    "my-yang-module:list": [
+        {
+            "key": "foo",
+            "val": "t1"
+        }
+    ]
+}
+

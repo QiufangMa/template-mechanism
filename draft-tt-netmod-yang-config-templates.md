@@ -1,6 +1,6 @@
 ---
 title: "YANG Configuration Templates"
-abbrev: "template"
+abbrev: "YANG Config Templates"
 category: std
 
 docname: draft-tt-netmod-yang-config-templates-latest
@@ -55,25 +55,14 @@ normative:
 
 informative:
 
-  XSD-TYPES:
-     title: "XML Schema Part 2: Datatypes Second Edition"
-     author:
-       -
-         name: Paul V. Biron
-       -
-         name: Kaiser Permanente
-       -
-         name: Ashok Malhotra
-     target: http://www.w3.org/TR/2004/REC-xmlschema-2-20041028
-     date: false
-
 --- abstract
 
-   This document defines a YANG-based configuration template mechanism whereby
-   configuration data can be defined in one or more templates and
-   applied repeatedly.  This avoids the redundant definition of
-   identical configuration and ensures the consistency of it, thus
-   allowing configuration data to be managed more conveniently and efficiently.
+   This document defines a YANG-based configuration template mechanism
+   whereby repetitive configuration data can be factored out into
+   templates and applied where needed.  This avoids the redundant
+   definition of identical configuration and ensures the consistency
+   of it, thus allowing configuration data to be managed more
+   conveniently and efficiently.
 
 --- middle
 
@@ -83,10 +72,16 @@ informative:
    not defined in Network Management Datastore Architecture (NMDA) {{?RFC8342}}.
 
    Templates enable repetitive configuration to be factored out into
-   a template and subsequently applied wherever the configuration
+   hierarchies of living templates and applied where the configuration
    is needed.  This avoids the redundant definition of identical
    configuration and ensures the consistency of it, thus allowing
    configuration data to be managed more conveniently and efficiently.
+
+   Templates are "hierarchal" in that templates may apply yet other
+   templates.  Templates are "living" in that their affect on
+   configuration is maintained so long as the template is applied.
+   Any change made to an applied template has immediate effect on
+   the configuration.
 
    By examnple, an network management system (NMS) may manage many
    devices.  Devices may be come from different vendors, each of
@@ -101,22 +96,33 @@ informative:
    and, likewise, a "common-rtr-template" could inherit from the
    "common-vendor-template".
 
-   Templates are mostly for humans, but are still important in some
-   cases when the configuration of a device is fully automated.
-   Specifically, when provided templates, a device can optimize
-   its memory, enabling higher performance and scability.
+   Templates are mostly for humans, but are still important even
+   when the management of a server's configuration is fully automated.
+   For instance, when provided templates, a server can optimize
+   internal memory usage, enabling higher performance and scability.
 
    The solution presented in this document supports both servers
-   that do and do not support NMDA.  For server's that support NMDA,
-   the solution is more complete, as templates may be defined in the
-   \<system\> datastore defined in {{?I-D.ietf-netmod-system-config}},
-   and the \<intended\> datastore always returns the configuration
-   with the templates expanded.  For server's that do not support
-   NMDA, a "with-templates-expanded" parameter may be passed by a
-   client when fetching configuration.
+   that do and do not support NMDA.  In both cases, templates are
+   edited and applied as configuration in \<running\>.  For servers
+   supporting NMDA, the solution enables templates to also be defined
+   in \<system\> {{?I-D.ietf-netmod-system-config}}, and \<intended\>
+   always returns the configuration with the templates expanded.
+   For servers not supporting NMDA, a "with-templates-expanded"
+   parameter may be passed by a client, when fetching configuration
+   from \<running\>, to obtain the configuration with the templates
+   expanded.
 
-   Configuration templates can be used with any YANG data model,
-   including those defined with augmentations and/or deviations.
+   Templates may be expanded off-box.  If a client has knowledge
+   of the complete contents of \<running\> and \<system\>, if
+   supported by the server, the client can calculate the exact
+   result of template expansion.  Template expansion is
+   independent of the server's operational state.
+
+   Templates can be used with any YANG data model, including
+   those defined with augmentations and/or deviations.
+
+   The template solution is purely configuration, and hence does
+   not require modification to protocols or encodings.
 
 
 ## Editorial Note (To be removed by RFC Editor)
@@ -133,7 +139,7 @@ Please apply the following replacements:
    * XXXX --> the assigned RFC number for this draft
    * 2026-07-03 --> the actual date of the publication of this document
 
-# Conventions and Definitions
+## Conventions and Definitions
 
 {::boilerplate bcp14-tagged}
 
@@ -155,391 +161,366 @@ configuration template:
   A configuration template is referred to interchangeably as
   "template" or "YANG template" throughout this document.
 
-# Requirements {#requirements}
+Examples used in this document encode YANG data using XML,
+as defined in {{?RFC7950}}.  Other encodings such as
+JSON {{?RFC7951}} and CBOR {{?RFC9254}} could have been
+instead.
 
-This section describes requirements that the configuration
-  templates solution must satisfy. A general theme
-  of the configuration template work is to come up with a "Minimal
-  Viable Product (MVP)" that delivers a baseline solution with essential functionality but avoids excessive complexity. More
-  advanced features could be considered as extensions in future work.
+## Applicability Statement
 
-## Defining and Managing Templates
+The solution presented in this document can be implemented by
+any YANG-based server.  The solution is data model independent
+and can be wholly realized as a preprocessor to the existing
+configuration management mechanism on a server.
 
-  Templates can be defined with any YANG module. They contain nodes of
-  configuration data, and are stored in the running
-  datastore of the server after creation.
-
-  A client can view and manipulate a template in \<running\>. System may generate a template in \<system\> ({{?I-D.ietf-netmod-system-config}}).
-  In this sense, a template and its contents behave like
-  any other configuration data.
-
-## Applying Templates {#template-inherits}
-
-A template can be applied to zero or more nodes in the running
-  datastore.  Each node can have zero or more templates applied to it,
-  and the order specified by the client determines the precedence with which templates are applied within that node.
-
-  Templates can be applied at multiple nodes in the hierachy. When viewing the contents of \<running\>, there is a mechanism to see
-  which templates have been applied to each node, and in which order.
-
-## Producing the Intended Datastore
-
-The server's intended datastore is the result of combining all the
-applications of templates together with non-template configuration (i.e., configuration explicitly created by clients rather than derived from applied templates) in \<running\> and \<system\> (see {{?I-D.ietf-netmod-system-config}}).  This is called template expansion.
-
-The intended configuration inside a subtree is the result of taking
-the relevant contents of every template applied to the subtree's root
-node and its ancestors, and combining it with the (non-template) data
-nodes inside the subtree.
-
-A node inside a subtree may be present in multiple templates that
-have been applied, and/or it may be present as non-template configuration
-inside the subtree. The requirements for template expansion are as follows:
-
-*  The value of a node in \<intended\> is determined
-   by using precedence rule to decide where to take the value from.
-
-*  Non-template configuration always has the highest precedence.
-
-*  When templates are applied to multiple ancestors, the innermost
-   ancestor takes precedence.
-
-*  When multiple templates are applied to a particular node, the
-   order of application (as indicated by the client when applying the
-   templates) determines the precedence within that node.
-
-Whenever the contents of a template is updated in \<running\> or \<system\>, the
-result of template expansion appears in \<intended\>.
-
-## Pattern Matching in Templates
-
-The configuration inside a template definition can contain values for
-list keys that are simple regular expressions, using a limited subset
-of regular expression syntax.  This controls which list entries that
-particular subtree of the template takes effect for when the template
-is applied.
-
-An example of this would be to have a template that is applied to a
-top-level "interfaces" container, but the template only takes effect
-for certain interface names that match the regular expression.
-
-## Off-box Template Expansion
-
-If the client knows the complete contents of \<running\> and \<system\>, which include non-
-template configuration, template definitions and template applications, the client must be able to calculate the result of template
-expansion, i.e., the contents of \<intended\>.
-
-In other words, the outcome of template expansion depends solely on
-the contents of running and system datastores.
 
 # Configuration Template Solution
 
-## Defining Templates {#define-templates}
+## Defining Templates {#defining-templates}
 
-A configuration template must first be defined before it can be applied (see {{inheriting-temp}}). The creation,
-modification, and deletion of configuration templates are achieved by network
-management operations via NETCONF or RESTCONF protocols. The contents of the configuration
-template must be an instantiated chunk of data starting from any level node in the hierarchies of any YANG data model.
+Templates must first be defined before they can be applied
+(see {{applying-templates}}).  Templates that are defined
+but not applied have no impact on configuration.
 
-For example, {{base-template}} provides an interface configuration template named "base-interface":
+The creation, modification, and deletion of references to templates
+is achieved by network management operations on the \<running\>
+datastore via YANG driven protocols such as NETCONF {{?RFC6241}}
+and RESTCONF {{?RFC8040}}.
 
-~~~~
-<templates xmlns="urn:ietf:params:xml:ns:yang:ietf-config-template">
- <template>
-   <id>base-interface</id>
-   <content>
-     <interfaces xmlns="urn:example:interface">
-       <interface>
-         <enabled>true</enabled>
-         <mtu>65536</mtu>
-         <description>default provisioned interface</description>
-       </interface>
-     </interfaces>
-   </content>
- </template>
-</templates>
-~~~~
-{: #base-template title="Example of An Interface Template" artwork-align="center"}
+A server supporting templates MUST implement the
+"ietf-config-templates" YANG module defined in {{yang-module}}.
+This module defines a top-level "container" node called "templates"
+having a "list" node called "template".  Each "template" node
+instance is a YANG configuration template containing the
+following decendant nodes:
 
-The YANG data model of configuration templates is defined in {{template-yang}}.
+{:compact}
+  - id: a unique identifier for the template used when applying it.
+  - description: an optional description for the template.
+  - data-path: an optional schema location, if not root.
+  - content: the configuration data the template holds.
 
-### Template Definition with Pattern Matching {#regex}
+Servers SHOULD validate templates at the time they are defined,
+that is, before they are applied, as described in {{applying-templates}}.
+Validation is limited as templates do not need to, e.g., define
+mandatory nodes, but other checks are possible, such as ensuring
+nodes exist in the schema tree and that their values are of the
+correct type.
 
-To allow a single template to apply to multiple instances with similar naming conventions without explicit replication, a regular expression string may be used within key leafs to restrict which list entries a template takes effect for. It MUST NOT be used on any nodes other than a list key with built-in type "string", or types derived from "string".
 
-Any regular expression pattern MUST conform to {{!RFC9485}}, which defines
-a subset of XML Schema Definition (XSD) regular expressions {{XSD-TYPES}}.
+### Templates for Static Configuration {#static-config}
 
- For example, {{regex-example}} provides an interface configuration template
- that sets "type" as ethernetCsmacd and "mtu" as 1500 for all interfaces
- names match the pattern "eth.*", i.e., starting with the prefix "eth":
+Templates MAY be defined to set static configuration, i.e.,
+configuration the is not repetitive, as described in
+{{repetitive-config}}.  Such templates do not reduce the size
+of the configuration, but may be useful if wanting to group
+configuration scattered throughout the tree. For instance,
+for a server providing customer-facing services, there may
+be a group for each customer that sets all the configuration
+needed for the one customer.
 
-~~~~
-<templates xmlns="urn:ietf:params:xml:ns:yang:ietf-config-template">
-  <template>
-    <id>ethernet-interface</id>
-    <content>
-      <interfaces xmlns="urn:example:interface">
-        <interface>
-          <name>eth.*</name>
-          <type>ethernetCsmacd</type>
-          <mtu>1500</mtu>
-          <description>default provisioned ethernet interface</description>
-        </interface>
-      </interfaces>
-    </content>
-  </template>
-</templates>
-~~~~
-{: #regex-example title="Example of An Interface Template with Pattern Matching" artwork-align="center"}
-
-## Applying Templates {#inheriting-temp}
-
-For each configuration node, including container, list, anydata, anyxml, leaf-list, and leaf, one or more
-templates can be applied. This causes configuration from one or more
-templates to be merged with explicitly provided configuration data
-to produce a final set of configuration that is intended to be applied by the server.
-Any update to the applied templates will be reflected in the merging result.
-
-### The "apply-templates" Metadata {#apply-templates}
-
-Template application is indicated using the "apply-templates"
-metadata annotation {{?RFC7952}}.  The value of this is a list of space-separated template
-identifiers. The order of appearance of the template identifiers in the list determines their precedence when producing the merging result. If the template is applied to a node in the data tree,
-the metadata object is added to that specific node.
-
-The encoding of "apply-templates" metadata object follows the way defined
-in {{Section 5 of ?RFC7952}}.
-
-For example, {{application-example}} provides the interface configuration
-with the container node "interfaces" applying the templates "ethernet-interface" and "base-interface", defined in
-{{regex-example}} and {{base-template}} respectively:
+For example, the following template would, if applied, set the
+"/my-yang-module:top-level-node/foo/bar/baz" node to the "empty"
+value, creating any missing ancestor nodes as needed.
 
 ~~~~
-    <interfaces xmlns="urn:example:interface"
-      xmlns:ct="urn:ietf:params:xml:ns:yang:ietf-config-template"
-      ct:apply-templates="ethernet-interface base-interface">
-      <interface>
-        <name>loopback0</name>
-      </interface>
-      <interface>
-        <name>eth0</name>
-      </interface>
-      <interface>
-        <name>eth1</name>
-      </interface>
-    </interfaces>
+{
+    "ietf-config-templates:templates": {
+        "template": [
+            {
+                "name": "my-template",
+                "description": "...",
+                "content": {
+                    "my-yang-module:top-level-node": {
+                        "foo": {
+                            "bar": {
+                                "baz": [null]
+                            }
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}
 ~~~~
-{: #application-example title="An Example of Applying Templates" artwork-align="center"}
 
-And the above interface configuration renders the expanded configuration shown in {{expansion-result-1}}:
-
-~~~~
-    <interfaces xmlns="urn:example:interface">
-      <interface>
-        <name>loopback0</name>
-        <enabled>true</enabled>
-        <mtu>65536</mtu>
-        <description>default provisioned interface</description>
-      </interface>
-      <interface>
-        <name>eth0</name>
-        <enabled>true</enabled>
-        <type>ethernetCsmacd</type>
-        <mtu>1500</mtu>
-        <description>default provisioned ethernet interface</description>
-      </interface>
-      <interface>
-        <name>eth1</name>
-        <enabled>true</enabled>
-        <type>ethernetCsmacd</type>
-        <mtu>1500</mtu>
-        <description>default provisioned ethernet interface</description>
-      </interface>
-    </interfaces>
-~~~~
-{: #expansion-result-1 title="Template Expansion" artwork-align="center"}
-
-### Creating, editing and deleting the "apply-templates" metadata
-
-The "apply-templates" metadata annotation may be modified by the client by
-specifying a different value in subsequent operations. Any modification to this annotation MUST provide the complete, updated list of template identifiers on the target node, rather than merging with or appending to it. There are
-three cases when modifying the "apply-templates" annotation:
-
-*  The "apply-templates" annotation is specified and the value is non-
-   empty (i.e. a list of templates to apply to the node). The "apply-
-   templates" metadata is changed to match the exact value in the request.
-
-
-*  The "apply-templates" annotation is specified and the value is either empty or
-   contains only whitespace. The "apply-templates" metadata is removed and thus no
-   templates are applied to the node.
-
-*  The "apply-templates" annotation is not specified. The "apply-templates"
-   metadata currently present on the node (if any) is unchanged.
-
-For example, {{update-application-1}} creates two interface entries named "loopback0" and "eth0" and applies template "base-interface" to the interfaces container:
+The following template is identical to the one shown previously, but
+uses the "data-path" leaf to compress the "content" leaf's value.
 
 ~~~~
-<interfaces xmlns="urn:example:interface"
-  xmlns:ct="urn:ietf:params:xml:ns:yang:ietf-config-template"
-  ct:apply-templates="base-interface">
-  <interface>
-    <name>loopback0</name>
-  </interface>
-  <interface>
-    <name>eth0</name>
-  </interface>
-</interfaces>
+{
+    "ietf-config-templates:templates": {
+        "template": [
+            {
+                "name": "my-template",
+                "description": "...",
+                "data-path": "/my-yang-module:top-level-node/foo/bar",
+                "content": {
+                    "my-yang-module:baz": [null]
+                }
+            }
+        ]
+    }
+}
 ~~~~
-{: #update-application-1 title="An Initial Template Application Example" artwork-align="center"}
 
-A subsequent request in {{update-application-2}} also applies template "ethernet-interface" to the interfaces container:
-
-~~~~
-<interfaces xmlns="urn:example:interface"
-            ct:apply-templates="ethernet-interface base-interface"/>
-~~~~
-{: #update-application-2 title="Request to Prepend a Second Template" artwork-align="center"}
-
-After this request, \<running\> is as shown in {{update-application-3}}:
+Templates can set values under "list" nodes as well. For instance, the
+following template would, if applied, set the
+"/my-yang-module:top-level-node/foo\[key='f1'\]/bar\[key='b1'\]/baz"
+node to the "empty" value, creating any missing ancestor nodes as needed.
 
 ~~~~
-<interfaces xmlns="urn:example:interface"
-  xmlns:ct="urn:ietf:params:xml:ns:yang:ietf-config-template"
-  ct:apply-templates="ethernet-interface base-interface">
-  <interface>
-    <name>loopback0</name>
-  </interface>
-  <interface>
-    <name>eth0</name>
-  </interface>
-</interfaces>
+{
+    "ietf-config-templates:templates": {
+        "template": [
+            {
+                "name": "my-template",
+                "description": "...",
+                "content": {
+                    "my-yang-module:top-level-node": [
+                        {
+                            "foo": [
+                                {
+                                    "key": "f1",
+                                    "bar": [
+                                        {
+                                            "key": "b1",
+                                            "baz": [null]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}
 ~~~~
-{: #update-application-3 title="Running Contents After Multiple Template Application" artwork-align="center"}
 
-{{update-application-4}} adds a new interface list entry, and leaves the applied
-templates unchanged:
-
-~~~~
-<interfaces xmlns="urn:example:interface">
-  <interface>
-    <name>eth1</name>
-  </interface>
-</interfaces>
-~~~~
-{: #update-application-4 title="Request to Add a New Interface Entry" artwork-align="center"}
-
-After this request, \<running\> is as shown in {{update-application-5}}.
-
-~~~~
-<interfaces xmlns="urn:example:interface"
-  xmlns:ct="urn:ietf:params:xml:ns:yang:ietf-config-template"
-  ct:apply-templates="ethernet-interface base-interface">
-  <interface>
-    <name>loopback0</name>
-  </interface>
-  <interface>
-    <name>eth0</name>
-  </interface>
-  <interface>
-    <name>eth1</name>
-  </interface>
-</interfaces>
-~~~~
-{: #update-application-5 title="Running Contents After Interface Addition" artwork-align="center"}
-
-Finally, this request deletes all the templates, and leaves the list
-entries unchanged:
+The following template is identical to the one shown previously, but
+uses the "data-path" leaf to compress the "content" leaf's value.
 
 ~~~~
-<interfaces xmlns="urn:example:interface"
-  xmlns:ct="urn:ietf:params:xml:ns:yang:ietf-config-template"
-  ct:apply-templates="">
-  <interface>
-    <name>loopback0</name>
-  </interface>
-  <interface>
-    <name>eth0</name>
-  </interface>
-  <interface>
-    <name>eth1</name>
-  </interface>
-</interfaces>
+{
+    "ietf-config-templates:templates": {
+        "template": [
+            {
+                "name": "my-template",
+                "description": "...",
+                "data-path": "/my-yang-module:top-level-node/foo[key='f1']/bar[key='b1']",
+                "content": {
+                    "my-yang-module:baz": [null]
+                }
+            }
+        ]
+    }
+}
 ~~~~
-{: #update-application-6 title="Request to Clear All Applied Templates" artwork-align="center"}
 
-After this request, \<running\> is as follows:
+### Templates for Repetitve Configuration {#repetitive-config}
 
-~~~~
-<interfaces xmlns="urn:example:interface">
-  <interface>
-    <name>loopback0</name>
-  </interface>
-  <interface>
-    <name>eth0</name>
-  </interface>
-  <interface>
-    <name>eth1</name>
-  </interface>
-</interfaces>
-~~~~
-{: #update-application-7 title="Running Contents After Removing Template Applications" artwork-align="center"}
+The previous example shows a template setting configuration under
+a very specific list.  But many times it is desirable to set the
+same configuration under any list or any list whose key values
+match a pattern.
 
-## Overriding Templates {#overriding-temp}
+To allow a single template to apply to multiple list instances
+a wildcard pattern may be used within the key leafs
+to identify which list entries a template takes effect for.
+This only works for list keys with built-in type "string",
+or types derived from "string".
 
-The client may want to to override some configuration in a template
- when it is applied to a particular node in read-write datastores (e.g., \<running\> or \<candidate\>).  The client can
- achieve this by providing the desired value at the corresponding
- level when applying the template.  Configuration explicitly provided
- by the client always takes precedence over the same node defined in
- template.
+The wildcard pattern MUST conform to the "Pattern Matching
+Notation" defined in Section 2.13 of IEEE-1003.1-2008.
 
- A template node can be overriden by having its value changed, but it
- can't be deleted.
-
- {{override-template}} provides an example of overriding a node in a template, a client may
- configure physically present interfaces "eth0" and "eth1" inheriting
- the template defined in {{base-template}}, but the "mtu" value of "eth1" needs
- to be 9122:
+For example, the following template would, if applied, set the
+"baz" node to empty for any existing "bar" list beginning with
+'b' under any existing "foo" list.
 
 ~~~~
-<interfaces xmlns="urn:example:interface"
-  xmlns:ct="urn:ietf:params:xml:ns:yang:ietf-config-template"
-  ct:apply-templates="base-interface">
-  <interface>
-    <name>eth0</name>
-  </interface>
-  <interface>
-    <name>eth1</name>
-    <mtu>9122</mtu>
-  </interface>
-</interfaces>
+{
+    "ietf-config-templates:templates": {
+        "template": [
+            {
+                "name": "my-template",
+                "description": "...",
+                "content": {
+                    "my-yang-module:top-level-node": [
+                        {
+                            "foo": [
+                                {
+                                    "key": "*",
+                                    "bar": [
+                                        {
+                                            "key": "b*",
+                                            "baz": [null]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}
 ~~~~
-{: #override-template title="Example of Explicit Configuration Overriding a Template" artwork-align="center"}
 
- And the above interface configuration renders the expanded
- configuration shown in {{override-template-expansion}}.
+The following template is identical to the one shown previously, but
+uses the "data-path" leaf to compress the "content" leaf's value.
 
 ~~~~
-    <interfaces xmlns="urn:example:interface">
-      <interface>
-        <name>eth0</name>
-        <enabled>true</enabled>
-        <mtu>65536</mtu>
-        <description>default provisioned interface</description>
-      </interface>
-      <interface>
-        <name>eth1</name>
-        <enabled>true</enabled>
-        <mtu>9122</mtu>
-        <description>default provisioned interface</description>
-      </interface>
-    </interfaces>
+{
+    "ietf-config-templates:templates": {
+        "template": [
+            {
+                "name": "my-template",
+                "description": "...",
+                "data-path": "/my-yang-module:top-level-node/foo[key='*']/bar[key='b*']",
+                "content": {
+                    "my-yang-module:baz": [null]
+                }
+            }
+        ]
+    }
+}
 ~~~~
-{: #override-template-expansion title="Expanded Configuration Result with Overridden MTU" artwork-align="center"}
 
-## Expanding Templates {#expand-templates}
+
+## Applying Templates {#applying-templates}
+
+Once templates have been defined (see {{defining-templates}}, they
+may be applied (referenced) to the configuration where needed.
+Templates MUST be applied to have any effect on configuration.
+
+The creation, modification, and deletion of references to templates
+is achieved by network management operations on the \<running\>
+datastore via YANG driven protocols such as NETCONF {{?RFC6241}}
+and RESTCONF {{?RFC8040}}.
+
+Servers MUST validate templates at the time they are applied.
+Validation is acheived by first fully expanding the templates
+(see {{template-expansion}}) and then performing normal YANG
+validation on the expanded configuration.
+
+
+### Configuration Applying Templates {#config-applying-templates}
+
+A server supporting templates MUST conceptually use the
+"apply-templates" grouping, defined in the "ietf-config-templates"
+YANG module, in every "container" and "list" node in the configuration,
+excluding nodes defined by the "ietf-config-templates" YANG module
+itself.
+
+As seen in {{yang-module}}, the "apply-templates" grouping defines
+an ordered-by user "leaf-list" called "apply-templates".  The
+"apply-templates" leaf-list is of type "leafref" having a "path"
+pointing to "/templates/template/name".  That is, it identifies
+a list of templates to apply.
+
+That it is a list, and not a scalar, enables more than one template
+to be applied.  That the list is ordered enables subsequent templates
+overriding values set by earlier templates.  The algorithm for template
+expansion is discussed in {{template-expansion}}.
+
+The following example illustrates the configuration's root node
+applying three templates.
+
+~~~~
+{
+    "ietf-config-templates:templates": {
+        "template": [
+            {
+                "name": "one",
+                "content": {
+                    "my-yang-module:top-level-node": {
+                        "foo": 1
+                    }
+                }
+            },
+            {
+                "name": "two",
+                "content": {
+                    "my-yang-module:top-level-node": {
+                        "foo": 2
+                    }
+                }
+            },
+            {
+                "name": "three",
+                "content": {
+                    "my-yang-module:top-level-node": {
+                        "foo": 3
+                    }
+                }
+            }
+        ]
+    },
+    "my-yang-module:apply-templates": [one, two, three]
+
+}
+~~~~
+
+### Templates Applying Templates
+
+The template's "content" anydata node contains configuration, and
+therefore can apply templates like regular configuration.  It is
+that templates can recursively apply templates that enables this
+enables templates to be "hierarchal".
+
+There MUST NOT be any circular chains of template applications.
+For example, if template "a" applies template "b", "b" cannot
+apply "a".
+
+The following example illustrates the configuration's root node
+applying a template that applies a template that applies a template.
+
+~~~~
+{
+    "ietf-config-templates:templates": [
+        {
+            "name": "three",
+            "content": {
+                "my-yang-module:top-level-node": {
+                    "foo": 3
+                }
+            }
+        },
+        {
+            "name": "two",
+            "content": {
+                "apply-templates": [three]
+            }
+        },
+        {
+            "name": "one",
+            "content": {
+                "apply-templates": [two]
+            }
+        }
+    ],
+    "my-yang-module:apply-templates": [one]
+}
+~~~~
+
+## Template Expansion {#template-expansion}
+
+Templates MUST be expanded, sometimes called "flattened", in order to
+produce a configuration that can be subject to YANG validation and
+applied by the server.
+
+Conceptually, template expansion is a generic (data-model independant)
+pre-processor to a server's backend that knows nothing about templates.
+That said, a server wishing to optimize internal memory usage to enable
+higher performance and scability may have a backend that is template-aware.
+
+This section presents an algorithm for how to expand templates.
+
+### Basic Rules
 
 When a configuration template is applied to a node in the data tree,
 it acts as if the configuration defined in the template is merged
@@ -547,58 +528,170 @@ with the configuration provided explicitly at the corresponding level
 in the data tree, with the explicitly provided configuration taking
 precedence.
 
-the process of expanding templates to derive \<intended\> is deterministic and depends solely on the contents of \<running\>.
-The process rules are as follows:
+The rules are as follows:
 
-*  The value of a node in \<intended\> after template expansion is determined
+*  The value of a node in the expanded configuration is determined
    by using precedence to decide where to take the value from.
 
-*  Non-template configuration always has the highest precedence.
+   -  Non-template configuration always has the highest precedence.
 
-*  When templates are applied to multiple ancestors, the innermost
-   ancestor takes precedence.
+   -  When templates are applied from multiple ancestors and/or self,
+      the innermost (furthest from root) applications takes precedence.
 
-*  When multiple templates are applied to a particular node, the
-   order of application (as indicated by the client when applying the
-   templates) determines the precedence within that node.
+   -  When multiple templates are applied to a particular node, the
+      order of application (as indicated by the client when applying the
+      templates) determines the precedence within that node.
 
-If a client has knowledge of the complete contents of \<running\> and \<system\>,
-it can calculate the exact result of template expansion, independent of the server's operational state.
+   - When a template configuring list elements uses wildcards, and
+     more than one matches, each match is applied in order, with the
+     contents being merged.
 
-Whenever the contents of an applied template is updated in \<running\> or \<system\>, the
-result of template expansion appears in \<intended\>.
+*  When a template configures nodes higher (closer to the root node)
+   in the configuration tree than where the template is applied, the
+   template's higher-level nodes are ignored.
 
-## Deletion of Templates
+### Merging Notes
 
-A configuration template can not be deleted if it is currently actively applied to any data node.
-When a client attempts to delete a template definition from read-write datastores (e.g., \<running\> or \<candidate\>) that is in use, the server MUST reject the deletion request with the error-tag value "data-missing", indicating that the template is still in use.
+Merging configuration is a concept introduced in RFC 4741 without
+a formal definition, which is provided in this section for templates.
 
-To successfully delete a template, a client MUST first update the target configuration nodes to remove the template identifier from their "apply-templates" metadata attribute (as described in {{apply-templates}}), and then subsequently delete the template definition itself.
+Generally, when configuration C1 is merged into C2, nodes in C2 take
+precendence over nodes in C1.  Details follow.
 
-## Validity of Templates
+*  When "leaf" L1 is merged into a "leaf" L2, the L2 leaf is retained
+(L1 is discarded).
 
-The contents of the template alone is not always sufficient to
-enforce the constraints of the data model.  Some constraints may
-depend on configuration outside of the templates to satisfy, e.g., a
-list may contain a mandatory leaf node which is not defined in the
-template but explicitly provided by the client.  However, servers
-SHOULD parse the template and enforce the constraints if it is
-possible during the processing of template creation, e.g., servers
-may validate type constraints for the leaf, including those defined
-in the type's "range", "length", and "pattern" properties. Implementations
-may also consider using mechanism defined in {{?I-D.ietf-netmod-yang-anydata-validation}} to validate anydata.
+*  When "anydata" A1 is merged into a "anydata" A2, the A2 anydata is
+retained (A1 is discarded).
 
-That said, if a template is applied in the configuration data tree,
-the results of the template configuration merging with configuration
-explicitly provided by the client MUST always be valid, as defined in
-{{Section 8.1 of !RFC7950}}.
+*  When "leaf-list" LL1 is merged into a "leaf-list" LL2, new values
+from LL1 are added (in order) to the end of LL2.  Matching values
+are discarded.
 
-# Interaction with NMDA datastores {#interact-NMDA}
+*  When "container" C1 is merged into "container" C2, all non-matching
+descendant nodes are retained, and all matching descendant nodes are
+recursively merged.
+
+*  When "list" LL1 is merged into a "list" LL2, all non-matching elements
+from LL1 are added (in order) to the end of LL2, and all matching
+elements are recursively merged.
+
+For "ordered-by user" lists/leaf-lists, postpending new values/elements
+preserves the understanding that values/elements are processed Left to
+Right (or Top to Bottom).  Thus, postpending values/elements causes the
+less important configuration (C1) to be processed after the more important
+configuration (C2). This may not be semantically accurate in all cases.
+For instance, the merging of two sorted lists of numbers should obstensibly
+be interleaved as necessary to produce an ordered list of numbers.
+
+
+
+### Algorithm
+
+> Note: this section was written by AI
+{:aside}
+
+This section describes an algorithm that implements the rules above.
+The algorithm walks the configuration tree from the root, and, at each
+node, merges the node's explicitly-provided configuration with the
+configuration contributed by any applied templates.
+
+The algorithm relies on the underlying YANG data model in order to
+classify each node (as a "container", "list", "leaf", "leaf-list", or
+"anydata") and to learn each list's key leaf(s), as the merging rules
+differ per node type and cannot be inferred from the encoded data alone.
+
+#### Preparation
+
+Before expansion begins:
+
+1.  Index every template definition by its "name", so that an
+    "apply-templates" reference can be resolved to a template's content.
+
+2.  Remove the template definitions from the configuration, as they are
+    not themselves part of the expanded (\<intended\>) configuration.
+
+Expansion then proceeds by processing the root node as a "container".
+
+#### Collecting a Node's Sources (in Precedence Order)
+
+At each container (including each list entry, which is a container), the
+algorithm assembles an ordered list of "sources" that contribute
+configuration to that location, ordered from highest precedence to
+lowest:
+
+1.  The node's explicitly-provided configuration (i.e., everything
+    except its "apply-templates" value) comes first.
+
+2.  For each name in the node's "apply-templates" value, in the order
+    listed by the client, the template's content is resolved to this
+    location (see below) and appended.  Because a template's content may
+    itself apply further templates, each template's content is processed
+    recursively, so that templates applied by a template rank below the
+    template that applied them.
+
+Processing the sources in this order realizes the precedence rules:
+explicit configuration outranks templates, self-applied templates
+outrank ancestor-applied templates, and, among templates applied at the
+same node, earlier-listed templates outrank later ones.  Applying a
+template that is already being applied further up the current chain is a
+circular reference and is an error.
+
+#### Resolving a Template to the Applied Location ("ignore above")
+
+A template is authored as a full configuration subtree rooted at the top
+of the data tree, but it may be applied deep within the tree.  To find
+the content a template contributes at the location where it is applied,
+the algorithm navigates from the template's root down the same path
+(the sequence of container and list-entry steps) that leads to the
+applied node.  A list-entry step matches a template entry by comparing
+key values, honoring wildcards ("*" and "?") in the template's keys.
+
+If the template configures nothing at (or below) the applied location,
+it contributes nothing.  Any nodes the template configures above the
+applied location are simply never reached by this navigation, which is
+how the "ignore above" rule is realized.
+
+#### Merging the Sources
+
+Once a location's sources have been collected (highest precedence
+first), they are merged according to node type:
+
+*  "container": The children of all sources are grouped by name,
+   preserving the order in which each name is first seen (i.e.,
+   highest-precedence first).  Each group is then merged recursively
+   according to that child's node type.
+
+*  "leaf" and "anydata"/"anyxml": The value from the highest-precedence
+   source is kept; lower-precedence values are discarded.
+
+*  "leaf-list": The higher-precedence values are kept, and any
+   not-yet-present values from lower-precedence sources are appended, in
+   order.  Duplicate values are discarded.
+
+*  "list": Entries are matched by their key value(s).  Concrete (non-
+   wildcard) entries establish the set of resulting entries, in order of
+   first appearance.  A wildcard entry contributes only to already-
+   established (higher-precedence) entries that it matches; when several
+   wildcard entries match the same entry, the later ones take
+   precedence.  Each resulting entry is then merged recursively as a
+   container.
+
+Note that large numbers of templates and/or large configurations may
+have performance issues that can be improved by caching results.
+
+
+
+
+
+# NMDA Considerations
+
+## Servers Supporting NMDA {#interact-NMDA}
 
 Some implementations may have predefined configuration templates for the convenience
 of clients, which are present in \<system\> (if implemented, see {{?I-D.ietf-netmod-system-config}}).
 In addition, clients can always define their own templates in \<running\>.
-However, configuration template data defined by "ietf-config-template" YANG data model
+However, configuration template data defined by "ietf-config-templates" YANG data model
 should not be visible in \<operational\> until being inherited by a node in the data tree.
 
 If a node in the data tree applies a configuration template, the configuration
@@ -606,42 +699,44 @@ template does not expand in \<running\>. A read of \<running\> returns what is
 sent by the client with the "apply-templates" metadata attached to the specific node.
 A configuration template which is inherited or overridden by the node instance MUST be expanded in \<intended\>.
 
-# Interaction with Non-NMDA datastores {#interact-non-NMDA}
+## Servers Not Supporting NMDA {#interact-non-NMDA}
 
-TBC
+TBD
 
-# The "ietf-config-template" YANG Module {#template-yang}
+
+
+# The "ietf-config-templates" YANG Module {#yang-module}
 
 ## Data Model Overview
 
-The following tree diagram {{?RFC8340}} illustrates the "ietf-config-template" module:
+The following tree diagram {{?RFC8340}} illustrates the "ietf-config-templates" module:
 
 ~~~~
 {::include ./yang/ietf-template-tree.txt}
 ~~~~
 
-> Editor's Note: Should we use the RFC7952 metadata annotation for the 'apply-templates' metadata here?
 
-> Editor's Note: the current definition of template configuration
-      uses anydata, but this may not be able to be validated at template
-      definition time because anydata is opaque.
-
-## YANG Module
+## YANG Module {#ietf-config-templates.yang}
 
 ~~~~
-<CODE BEGINS> file "ietf-config-template@2026-07-03.yang"
-{::include ./yang/ietf-config-template.yang}
+<CODE BEGINS> file "ietf-config-templates@2026-07-03.yang"
+{::include ./yang/ietf-config-templates.yang}
 <CODE ENDS>
 ~~~~
 
 
 # Operational Considerations {#operational-consideration}
 
-Implementations MAY restrict the applications of configuration templates to some specific nodes in the YANG data tree. Restrictions should be applied consistently across all client operations. Any attempts to apply a template to a restricted node will be rejected. Implementations are recommended to expose the list of configuration nodes that do not support template application, any mechanisms to achieve this are outside the scope of this document.
 
-Configuration templates are designed to remain unexpanded in \<running\>. This ensures storage efficiency and preserves the client's control over \<running\>, i.e., reads of \<running\> returns the client-submitted configuration with the "apply-templates" metadata attached to target nodes. Any configuration template that is applied in the data tree MUST be expanded in \<intended\>, which holds a merged result of template expansion and configuration explicitly provided by clients.
+Configuration templates are designed to remain unexpanded in \<running\>. This ensures storage efficiency and preserves the client's control over \<running\>, i.e., reads of \<running\> returns the client-submitted configuration with the "apply-templates" leaf-lists attached to target nodes. Any configuration template that is applied in the data tree MUST be expanded in \<intended\>, which holds a merged result of template expansion and configuration explicitly provided by clients.
+
+<!--
+FIXME: Discuss with co-Authors
+
+Implementations MAY restrict, using a mechanism outside the scope of this document, the applications of configuration templates to some specific nodes in the YANG data tree. Restrictions should be applied consistently across all client operations. Any attempts to apply a template to a restricted node will be rejected. Implementations are recommended to expose the list of configuration nodes that do not support template application, any mechanisms to achieve this are outside the scope of this document.
 
 Implementations MAY differ in whether the configuration templates themselves appear in \<intended\>, independent of whether the templates are applied. Implementations MAY also support conditional visibility, where templates appear in \<intended\> only when they are applied by at least one node via the "apply-templates" annotation. Regardless of the approach chosen, implementations MUST ensure the behavior is consistent and deterministic, and SHOULD be documented to allow clients to rely on predictable operational behaviors.
+-->
 
 
 # Security Considerations
@@ -655,7 +750,7 @@ TODO Security
    This document registers the following URI in the "IETF XML Registry" {{!RFC3688}}.
 
 ~~~~
-        URI: urn:ietf:params:xml:ns:yang:ietf-config-template
+        URI: urn:ietf:params:xml:ns:yang:ietf-config-templates
         Registrant Contact: The IESG.
         XML: N/A, the requested URI is an XML namespace.
 ~~~~
@@ -666,8 +761,8 @@ TODO Security
    registry {{!RFC6020}}.
 
 ~~~~
-        name:               ietf-config-template
-        namespace:          urn:ietf:params:xml:ns:yang:ietf-config-template
+        name:               ietf-config-templates
+        namespace:          urn:ietf:params:xml:ns:yang:ietf-config-templates
         prefix:             ct
         maintained by IANA? N
         reference:          RFC XXXX
@@ -675,6 +770,307 @@ TODO Security
 
 
 --- back
+
+
+# Test Vectors
+
+This section provides normative vector tests for implementations.
+
+## Example YANG Module
+
+This section presents a YANG module that is used by the vector tests.
+
+### Original
+
+This is the original YANG module.
+
+~~~~
+{::include-fold ./test-vectors/yang/orig/my-yang-module.yang}
+~~~~
+
+### Annotated
+
+This is the original YANG module after it has been annotated with
+`uses "yct:apply-templates"` statements, as required by {{config-applying-templates}}.
+
+~~~~
+{::include-fold ./test-vectors/yang/with-templates/my-yang-module.yang}
+~~~~
+
+## Basic Tests
+
+### No Templates Applied
+
+When the \<running\> datastore is:
+
+~~~~
+{::include-fold ./test-vectors/intro/no-templates/running.json}
+~~~~
+
+The \<intended\> datastore is:
+
+~~~~
+{::include-fold ./test-vectors/intro/no-templates/intended.json}
+~~~~
+
+### All Configuration in a Single Template
+
+When the \<running\> datastore is:
+
+~~~~
+{::include-fold ./test-vectors/intro/single-template/running.json}
+~~~~
+
+The \<intended\> datastore is:
+
+~~~~
+{::include-fold ./test-vectors/intro/single-template/intended.json}
+~~~~
+
+### All Configuration in a Multiplicity of Templates
+
+When the \<running\> datastore is:
+
+~~~~
+{::include-fold ./test-vectors/intro/splayed-templates/running.json}
+~~~~
+
+The \<intended\> datastore is:
+
+~~~~
+{::include-fold ./test-vectors/intro/splayed-templates/intended.json}
+~~~~
+
+
+## Empty Node Tests
+
+### Empty "apply-template" List
+
+When the \<running\> datastore is:
+
+~~~~
+{::include-fold ./test-vectors/emptiness/empty-list-of-templates/running.json}
+~~~~
+
+The \<intended\> datastore is:
+
+~~~~
+{::include-fold ./test-vectors/emptiness/empty-list-of-templates/intended.json}
+~~~~
+
+### Empty Template Content
+
+When the \<running\> datastore is:
+
+~~~~
+{::include-fold ./test-vectors/emptiness/empty-template/running.json}
+~~~~
+
+The \<intended\> datastore is:
+
+~~~~
+{::include-fold ./test-vectors/emptiness/empty-template/intended.json}
+~~~~
+
+
+## Node "leaf" Tests
+
+### Hierarchal Precedence
+
+When the \<running\> datastore is:
+
+~~~~
+{::include-fold ./test-vectors/leaf/hierarchal-precedence/running.json}
+~~~~
+
+The \<intended\> datastore is:
+
+~~~~
+{::include-fold ./test-vectors/leaf/ordered-precedence/intended.json}
+~~~~
+
+### Ordered Precedence
+
+When the \<running\> datastore is:
+
+~~~~
+{::include-fold ./test-vectors/leaf/ordered-precedence/running.json}
+~~~~
+
+The \<intended\> datastore is:
+
+~~~~
+{::include-fold ./test-vectors/leaf/ordered-precedence/intended.json}
+~~~~
+
+
+## Node "leaf-list" Tests
+
+### Hierarchal Precedence
+
+When the \<running\> datastore is:
+
+~~~~
+{::include-fold ./test-vectors/leaf-list/hierarchal-precedence/running.json}
+~~~~
+
+The \<intended\> datastore is:
+
+~~~~
+{::include-fold ./test-vectors/leaf-list/hierarchal-precedence/intended.json}
+~~~~
+
+### Ordered Precedence
+
+When the \<running\> datastore is:
+
+~~~~
+{::include-fold ./test-vectors/leaf-list/ordered-precedence/running.json}
+~~~~
+
+The \<intended\> datastore is:
+
+~~~~
+{::include-fold ./test-vectors/leaf-list/ordered-precedence/intended.json}
+~~~~
+
+
+## Node "container" Tests
+
+### Hierarchal Precedence
+
+When the \<running\> datastore is:
+
+~~~~
+{::include-fold ./test-vectors/container/hierarchal-precedence/running.json}
+~~~~
+
+The \<intended\> datastore is:
+
+~~~~
+{::include-fold ./test-vectors/container/hierarchal-precedence/intended.json}
+~~~~
+
+### Ignore Above
+
+When the \<running\> datastore is:
+
+~~~~
+{::include-fold ./test-vectors/container/ignore-above/running.json}
+~~~~
+
+The \<intended\> datastore is:
+
+~~~~
+{::include-fold ./test-vectors/container/ignore-above/intended.json}
+~~~~
+
+### Ordered Precedence
+
+When the \<running\> datastore is:
+
+~~~~
+{::include-fold ./test-vectors/container/ordered-precedence/running.json}
+~~~~
+
+The \<intended\> datastore is:
+
+~~~~
+{::include-fold ./test-vectors/container/ordered-precedence/intended.json}
+~~~~
+
+
+## Node "list" Tests
+
+### Hierarchal Precedence
+
+When the \<running\> datastore is:
+
+~~~~
+{::include-fold ./test-vectors/list/hierarchal-precedence/running.json}
+~~~~
+
+The \<intended\> datastore is:
+
+~~~~
+{::include-fold ./test-vectors/list/hierarchal-precedence/intended.json}
+~~~~
+
+### Ignore Above
+
+When the \<running\> datastore is:
+
+~~~~
+{::include-fold ./test-vectors/list/ignore-above/running.json}
+~~~~
+
+The \<intended\> datastore is:
+
+~~~~
+{::include-fold ./test-vectors/list/ignore-above/intended.json}
+~~~~
+
+### Ordered Precedence
+
+When the \<running\> datastore is:
+
+~~~~
+{::include-fold ./test-vectors/list/ordered-precedence/running.json}
+~~~~
+
+The \<intended\> datastore is:
+
+~~~~
+{::include-fold ./test-vectors/list/ordered-precedence/intended.json}
+~~~~
+
+### Wildcards
+
+When the \<running\> datastore is:
+
+~~~~
+{::include-fold ./test-vectors/list/wildcards/running.json}
+~~~~
+
+The \<intended\> datastore is:
+
+~~~~
+{::include-fold ./test-vectors/list/wildcards/intended.json}
+~~~~
+
+
+## Node "anydata" Tests
+
+### Hierarchal Precedence
+
+When the \<running\> datastore is:
+
+~~~~
+{::include-fold ./test-vectors/anydata/hierarchal-precedence/running.json}
+~~~~
+
+The \<intended\> datastore is:
+
+~~~~
+{::include-fold ./test-vectors/anydata/hierarchal-precedence/intended.json}
+~~~~
+
+### Ordered Precedence
+
+When the \<running\> datastore is:
+
+~~~~
+{::include-fold ./test-vectors/anydata/ordered-precedence/running.json}
+~~~~
+
+The \<intended\> datastore is:
+
+~~~~
+{::include-fold ./test-vectors/anydata/ordered-precedence/intended.json}
+~~~~
+
+
+
 
 # Requirement Implementation Status
 
@@ -691,9 +1087,8 @@ R1: [Wherever a template-reference can occur, more than one template-reference c
 
 R2: [Templates must be able to reference other templates (hierarchal templates)](https://github.com/netmod-wg/template-reqs/issues/2)
 
-  - discussed: split opinion (needs more discussion)
-  - unsure if opposed to idea or to doing it in a first release.
-  - status: not supported in document (needs more discussion)
+  - discussed: originally a split opinion, subsequently supported.
+  - status: supported in document (done)
 
 R3: [Templates must work with any YANG module (including augments and deviations)](https://github.com/netmod-wg/template-reqs/issues/3)
 
@@ -702,13 +1097,13 @@ R3: [Templates must work with any YANG module (including augments and deviations
 
 R4: [Template syntax must be validated when defined (not only when used)](https://github.com/netmod-wg/template-reqs/issues/4)
 
-  - discussed: split opinion (needs more discussion)
-  - unsure if opposed to idea or to doing it in a first release.
+  - discussed: originally a split opinion, subsequently supported.
   - status: supported in document (done)
 
 R5: [Wherever a template-reference can occur, it must be possible to delete nodes from the template](https://github.com/netmod-wg/template-reqs/issues/5)
 
   - discussed: mildly NOT in favor
+  - unsure if opposed to idea or to doing it in a first release.
   - status: not supported in document (done)
 
 R6: [Local-config overrides template-config](https://github.com/netmod-wg/template-reqs/issues/6)
@@ -730,11 +1125,12 @@ R8: [Support basic programmatic elements in templates](https://github.com/netmod
 R9: [It must be possible to constrain which nodes can be template-consumers](https://github.com/netmod-wg/template-reqs/issues/9)
 
   - discussed: strongly in favor
-  - status: NOT supported in document (need to add)
+  - really? how can it be important?
+  - status: NOT supported in document (discuss more first?)
 
 R10: [For living templates, the configuration with both unexpanded and expanded templates is able to be returned](https://github.com/netmod-wg/template-reqs/issues/10)
 
-  - discussed: strongly in favor
+  - discussed: strongly in favor (with jstern's refinement)
   - status: supported in document (done)
 
 R11: [Possibility to reorder some user-ordered list/leaf-list entries defined in a template](https://github.com/netmod-wg/template-reqs/issues/11)
@@ -838,371 +1234,6 @@ R30: [Can the template be applied to a leaf/leaf-list?](https://github.com/netmo
   - status: needs to be discussed (will schedule an Interim meeting)
 
 
-
-<!--
-# Usage Examples {#appendix-network}
-
-This section provides some examples to show the use of templates.
-JSON encodings are used to not imply a preference in this document.
-The fictional data model used throughout this section is shown as follows:
-
-~~~~
-{::include-fold ./yang/example-network-systime.yang}
-~~~~
-
-## Creating Templates {#template-creation}
-
-The NTP configuration on multiple network devices may be consistent. To create a
-template for NTP configuration, the following template configuration might be sent to a SDN controller:
-
-~~~~
-{
-    "ietf-templates:templates": {
-        "template": [
-            {
-                "id": "template-ntp",
-                "content": {
-                    "network-device": [
-                        {
-                            "ntp": {
-                                "enabled": "true",
-                                "server": [
-                                    {
-                                        "name": "ntp-server-1",
-                                        "alias": [
-                                            "primary"
-                                        ],
-                                        "address": "ntp.example-1.com"
-                                    },
-                                    {
-                                        "name": "ntp-server-2",
-                                        "alias": [
-                                            "secondary"
-                                        ],
-                                        "address": "ntp.example-2.com"
-                                    }
-                                ]
-                            }
-                        }
-                    ]
-                }
-            }
-        ]
-    }
-}
-~~~~
-
-## Applying Templates
-
-The operator may create another template with an additional NTP server instance
-when inheriting the template created in {{template-creation}}. The configuration
-is shown as follows:
-
-~~~~
-{
-    "ietf-templates:templates": {
-        "template": [
-            {
-                "id": "template-ntp2",
-                "content": {
-                    "network-device": [
-                        {
-                            "@": {
-                                "ietf-template:stmt-extend": "template-ntp"
-                            },
-                            "ntp": {
-                                "server": [
-                                    {
-                                        "name": "ntp-server-3",
-                                        "alias": [
-                                            "secondary"
-                                        ],
-                                        "address": "ntp.example-3.com"
-                                    }
-                                ]
-                            }
-                        }
-                    ]
-                }
-            }
-        ]
-    }
-}
-~~~~
-
-The configuration of template "template-ntp2" renders the following expanded configuration:
-
-~~~~
-{
-    "ietf-templates:templates": {
-        "template": [
-            {
-                "id": "template-ntp2",
-                "content": {
-                    "network-device": [
-                        {
-                            "ntp": {
-                                "enabled": "true",
-                                "server": [
-                                    {
-                                        "name": "ntp-server-1",
-                                        "alias": [
-                                            "primary"
-                                        ],
-                                        "address": "ntp.example-1.com",
-                                        "prefer": true
-                                    },
-                                    {
-                                        "name": "ntp-server-2",
-                                        "alias": [
-                                            "secondary"
-                                        ],
-                                        "address": "ntp.example-2.com"
-                                    },
-                                    {
-                                        "name": "ntp-server-3",
-                                        "alias": [
-                                            "secondary"
-                                        ],
-                                        "address": "ntp.example-3.com"
-                                    }
-                                ]
-                            }
-                        }
-                    ]
-                }
-            }
-        ]
-    }
-}
-~~~~
-
-the following shows the network-level ntp configuration
-using "template-ntp" and "template-ntp2" that may be sent to a SDN controller:
-
-~~~~
-{
-    "example-network-systime:network-device": [
-        {
-            "@": {
-                "ietf-template:stmt-extend": "template-ntp"
-            },
-            "device-id": "ne-0"
-        },
-        {
-            "@": {
-                "ietf-template:stmt-extend": "template-ntp"
-            },
-            "device-id": "ne-1"
-        },
-        {
-            "@": {
-                "ietf-template:stmt-extend": "template-ntp2"
-            },
-            "device-id": "ne-2"
-        },
-        {
-            "@": {
-                "ietf-template:stmt-extend": "template-ntp2"
-            },
-            "device-id": "ne-3"
-        }
-    ]
-}
-~~~~
-
-And it renders the following expanded configuration:
-
-~~~~
-{
-    "example-network-systime:network-device": [
-        {
-            "device-id": "ne-0",
-            "ntp": {
-                "enabled": "true",
-                "server": [
-                    {
-                        "name": "ntp-server-1",
-                        "alias": [
-                            "primary"
-                        ],
-                        "address": "ntp.example-1.com"
-                    },
-                    {
-                        "name": "ntp-server-2",
-                        "alias": [
-                            "secondary"
-                        ],
-                        "address": "ntp.example-2.com"
-                    }
-                ]
-            }
-        },
-        {
-            "device-id": "ne-1",
-            "ntp": {
-                "enabled": "true",
-                "server": [
-                    {
-                        "name": "ntp-server-1",
-                        "alias": [
-                            "primary"
-                        ],
-                        "address": "ntp.example-1.com"
-                    },
-                    {
-                        "name": "ntp-server-2",
-                        "alias": [
-                            "secondary"
-                        ],
-                        "address": "ntp.example-2.com"
-                    }
-                ]
-            }
-        },
-        {
-            "device-id": "ne-2",
-            "ntp": {
-                "enabled": "true",
-                "server": [
-                    {
-                        "name": "ntp-server-1",
-                        "alias": [
-                            "primary"
-                        ],
-                        "address": "ntp.example-1.com"
-                    },
-                    {
-                        "name": "ntp-server-2",
-                        "alias": [
-                            "secondary"
-                        ],
-                        "address": "ntp.example-2.com"
-                    },
-                    {
-                        "name": "ntp-server-3",
-                        "alias": [
-                            "secondary"
-                        ],
-                        "address": "ntp.example-3.com"
-                    }
-                ]
-            }
-        },
-        {
-            "device-id": "ne-3",
-            "ntp": {
-                "enabled": "true",
-                "server": [
-                    {
-                        "name": "ntp-server-1",
-                        "alias": [
-                            "primary"
-                        ],
-                        "address": "ntp.example-1.com"
-                    },
-                    {
-                        "name": "ntp-server-2",
-                        "alias": [
-                            "secondary"
-                        ],
-                        "address": "ntp.example-2.com"
-                    },
-                    {
-                        "name": "ntp-server-3",
-                        "alias": [
-                            "secondary"
-                        ],
-                        "address": "ntp.example-3.com"
-                    }
-                ]
-            }
-        }
-    ]
-}
-~~~~
-
-## Overriding Templates
-
-The client may override the template created in {{template-creation}} to specify
-the NTP server named "ntp-server-2" as the perferred one for device "ne-4":
-
-~~~~
-{
-    "example-network-systime:network-device": [
-        {
-            "@": {
-                "ietf-template:stmt-extend": "template-ntp"
-            },
-            "device-id": "ne-4",
-            "server": [
-                {
-                    "name": "ntp-server-1",
-                    "alias": [
-                        "primary",
-                        "secondary"
-                    ],
-                    "@alias": [
-                        {
-                            "ietf-template:operation-tag": "delete"
-                        }
-                    ],
-                    "address": "ntp.example-1.com"
-                },
-                {
-                    "@": {
-                        "ietf-template:operation-tag": "position-first"
-                    },
-                    "name": "ntp-server-2",
-                    "alias": [
-                        "primary",
-                        "secondary"
-                    ],
-                    "@alias": [
-                        null,
-                        {
-                            "ietf-template:operation-tag": "delete"
-                        }
-                    ],
-                    "address": "ntp.example-2.com"
-                }
-            ]
-        }
-    ]
-}
-~~~~
-
-It is equivalent to the configuration as follows:
-
-~~~~
-{
-    "example-network-systime:network-device": [
-        {
-            "device-id": "ne-4",
-            "ntp": {
-                "enabled": "true",
-                "server": [
-                    {
-                        "name": "ntp-server-2",
-                        "alias": [
-                            "primary"
-                        ],
-                        "address": "ntp.example-2.com"
-                    },
-                    {
-                        "name": "ntp-server-1",
-                        "alias": [
-                            "secondary"
-                        ],
-                        "address": "ntp.example-1.com"
-                    }
-                ]
-            }
-        }
-    ]
-}
-~~~~
--->
 
 # Acknowledgments
 {:numbered="false"}

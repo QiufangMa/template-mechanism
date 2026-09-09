@@ -1,0 +1,6 @@
+{
+    "my-yang-module:container": {
+        "mandatory-leaf": "t1"
+    }
+}
+

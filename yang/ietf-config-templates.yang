@@ -1,7 +1,7 @@
-module ietf-config-template {
+module ietf-config-templates {
   yang-version 1.1;
-  namespace "urn:ietf:params:xml:ns:yang:ietf-config-template";
-  prefix ct;
+  namespace "urn:ietf:params:xml:ns:yang:ietf-config-templates";
+  prefix yct;
 
   import ietf-yang-types {
     prefix yang;
@@ -23,8 +23,8 @@ module ietf-config-template {
              <mailto:deepak.rajaram@nokia.com>";
              
   description
-    "This module defines a template list with a RPC to expand
-     the template.
+    "This module defines a top-level 'templates' node, and an
+     'apply-templates' grouping.
 
      Copyright (c) 2026 IETF Trust and the persons identified
      as authors of the code. All rights reserved.
@@ -54,34 +54,56 @@ module ietf-config-template {
        "RFC XXXX: YANG Templates";
    }
 
-   container templates {
+   list templates {
+     key name;
      description
-       "Specifies the template parameters.";
-     list template {
-       key id;
+       "The list of templates managed on this device.";
+     leaf name {
+       type string;
        description
-         "The list of templates managed on this device.";
-       leaf id {
-         type string;
-         description
-           "The identifier of the template that uniquely identifies a
-            template.";
-       }
-       leaf description {
-         type string;
-         description
-           "A textual description of the template.";
-       }
-       anydata content {
-         description
-           "inline template content.";
-       }
-       leaf last-modified {
-         type yang:timestamp;
-         config false;
-         description
-           "Timestamp when the template is modified last time.";
-       }
+         "The name of the template.";
+     }
+     leaf description {
+       type string;
+       description
+         "A textual description of the template.";
+     }
+     leaf data-path {
+       type yang:xpath1.0; // FIXME: should be YPath?
+       default "/";
+       description
+         "The path location in the server's data tree that the
+         ../content node is an instance of.  The data-path MUST
+         not begin with '/ietf-config-template:templates'.";
+     }
+     anydata content {
+       mandatory true;
+       description
+         "A subset of server configuration beginning at the
+          location identified by the ../data-path node.  All
+          top-level nodes MUST be namespace qualified.  When
+          ../data-path is '/', the content MUST NOT define
+          any nodes under '/ietf-config-template:templates'.";
      }
    }
+
+   grouping apply-templates {
+     description
+       "A grouping that is conceptually used (i.e., the 'uses'
+        statement) at every 'container' and 'list' node in the
+        configuration.";
+     leaf-list apply-templates {
+       type leafref {
+         path /yct:templates/yct:name;
+       }
+       ordered-by user;
+       description
+         "A user-ordered list of template references.";
+     }
+   }
+
+
+   // FIXME: augment "with-templates-expanded" into NETCONF RPCs, what about RESTCONF?
+
+
 }

@@ -1,0 +1,17 @@
+{
+    "my-yang-module:list": [
+        {
+            "key": "foo",
+            "val": "1"
+        },
+        {
+            "key": "bar",
+            "val": "1"
+        },
+        {
+            "key": "baz",
+            "val": "t1"
+        }
+    ]
+}
+

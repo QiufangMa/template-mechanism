@@ -1,0 +1,42 @@
+module my-yang-module {
+  yang-version 1.1;
+  namespace "urn:ietf:params:xml:ns:yang:my-yang-module";
+  prefix mym;
+
+  import ietf-config-templates {
+    prefix yct;
+  }
+
+  uses "yct:apply-templates";
+
+  leaf leaf {
+    type string;
+  }
+
+  leaf-list leaf-list {
+    type string;
+  }
+
+  container container {
+    presence "so mandatory-leaf doesn't make mandatory-container";
+    leaf mandatory-leaf {
+      type string;
+      mandatory true;
+    }
+    uses "yct:apply-templates";
+  }
+
+  list list {
+    key key;
+    leaf key {
+      type string;
+    }
+    leaf val {
+      type string;
+    }
+    uses "yct:apply-templates";
+  }
+
+  anydata anydata;
+
+}

@@ -1,0 +1,16 @@
+{
+    "ietf-config-templates:templates": [
+        {
+            "name": "t1",
+            "content": {
+                "my-yang-module:container": {
+                    "mandatory-leaf": "t1"
+                }
+            }
+        }
+    ],
+    "my-yang-module:apply-templates": ["t1"],
+    "my-yang-module:container": {
+        "mandatory-leaf": "1"
+    }
+}

@@ -1,7 +1,10 @@
-module: ietf-config-template
+module: ietf-config-templates
   +--rw templates
-     +--rw template* [id]
-        +--rw id               string
-        +--rw description?     string
-        +--rw content?         <anydata>
-        +--ro last-modified?   yang:timestamp
+     +--rw template* [name]
+        +--rw name           string
+        +--rw description?   string
+        +--rw data-path?     yang:xpath1.0
+        +--rw content        <anydata>
+
+  grouping apply-templates:
+    +-- apply-templates*   -> /templates/template/name

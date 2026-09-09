@@ -1,0 +1,24 @@
+{
+    "ietf-config-templates:templates": [
+        {
+            "name": "t1",
+            "content": {
+                "my-yang-module:leaf-list": "t1"
+            }
+        },
+        {
+            "name": "t2",
+            "content": {
+                "my-yang-module:leaf-list": "t2"
+            }
+        },
+        {
+            "name": "t3",
+            "content": {
+                "my-yang-module:leaf-list": "t3"
+            }
+        }
+    ],
+    "my-yang-module:apply-templates": ["t1", "t2", "t3"]
+}
+

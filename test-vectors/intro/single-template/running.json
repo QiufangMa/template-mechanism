@@ -1,0 +1,34 @@
+{
+    "ietf-config-templates:templates": [
+        {
+            "name": "t1",
+            "content": {
+                "my-yang-module:leaf": "1",
+                "my-yang-module:leaf-list": ["1", "2", "3"],
+                "my-yang-module:container": {
+                    "mandatory-leaf": "1"
+                },
+                "my-yang-module:list": [
+                    {
+                        "key": "foo",
+                        "val": "1"
+                    },
+                    {
+                        "key": "bar",
+                        "val": "1"
+                    },
+                    {
+                        "key": "baz",
+                        "val": "1"
+                    }
+                ],
+                "my-yang-module:anydata": {
+                    "some-other-module:zero": 0
+                }
+            }
+        }
+    ],
+    "my-yang-module:apply-templates": ["t1"]
+
+}
+

@@ -1,0 +1,9 @@
+{
+    "ietf-config-templates:templates": [
+        {
+            "name": "t1",
+            "content": {}
+        }
+    ],
+    "my-yang-module:apply-templates": ["t1"]
+}
