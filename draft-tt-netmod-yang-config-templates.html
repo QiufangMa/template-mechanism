@@ -16,25 +16,25 @@
    of it, thus allowing configuration data to be managed more
    conveniently and efficiently. 
     " name="description">
-<meta content="xml2rfc 3.34.0" name="generator">
+<meta content="xml2rfc 3.34.1" name="generator">
 <meta content="YANG" name="keyword">
 <meta content="template" name="keyword">
 <meta content="NMDA" name="keyword">
 <meta content="draft-tt-netmod-yang-config-templates-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.34.0
+  xml2rfc 3.34.1
     Python 3.14.7
-    ConfigArgParse 1.7.5
+    ConfigArgParse 1.7.7
     google-i18n-address 3.1.1
     intervaltree 3.2.1
     Jinja2 3.1.6
     lxml 6.1.1
     natsort 8.4.0
-    platformdirs 4.11.7
+    platformdirs 4.11.10
     pycountry 24.6.1
     PyYAML 6.0.3
     requests 2.33.1
-    wcwidth 0.8.3
+    wcwidth 0.8.4
 -->
 <link href="draft-tt-netmod-yang-config-templates.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -1054,7 +1054,7 @@ svg {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Watsen, et al.</td>
-<td class="center">Expires 13 March 2027</td>
+<td class="center">Expires 26 March 2027</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1067,12 +1067,12 @@ svg {
 <dd class="internet-draft">draft-tt-netmod-yang-config-templates-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-09-09" class="published">9 September 2026</time>
+<time datetime="2026-09-22" class="published">22 September 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2027-03-13">13 March 2027</time></dd>
+<dd class="expires"><time datetime="2027-03-26">26 March 2027</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1130,7 +1130,7 @@ svg {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 13 March 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 26 March 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1215,13 +1215,16 @@ svg {
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3">
-            <p id="section-toc.1-1.3.1"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-nmda-considerations" class="internal xref">NMDA Considerations</a></p>
+            <p id="section-toc.1-1.3.1"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-protocol-query-parameters" class="internal xref">Protocol Query Parameters</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.1">
-                <p id="section-toc.1-1.3.2.1.1"><a href="#section-3.1" class="auto internal xref">3.1</a>.  <a href="#name-servers-supporting-nmda" class="internal xref">Servers Supporting NMDA</a></p>
+                <p id="section-toc.1-1.3.2.1.1"><a href="#section-3.1" class="auto internal xref">3.1</a>.  <a href="#name-the-with-template-inheritan" class="internal xref">The "with-template-inheritance" Parameter</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.2">
-                <p id="section-toc.1-1.3.2.2.1"><a href="#section-3.2" class="auto internal xref">3.2</a>.  <a href="#name-servers-not-supporting-nmda" class="internal xref">Servers Not Supporting NMDA</a></p>
+                <p id="section-toc.1-1.3.2.2.1"><a href="#section-3.2" class="auto internal xref">3.2</a>.  <a href="#name-the-with-templates-expanded" class="internal xref">The "with-templates-expanded" Parameter</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.3">
+                <p id="section-toc.1-1.3.2.3.1"><a href="#section-3.3" class="auto internal xref">3.3</a>.  <a href="#name-the-with-inactive-removed-p" class="internal xref">The "with-inactive-removed" Parameter</a></p>
 </li>
             </ul>
 </li>
@@ -1238,9 +1241,41 @@ svg {
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5">
             <p id="section-toc.1-1.5.1"><a href="#section-5" class="auto internal xref">5</a>.  <a href="#name-operational-considerations" class="internal xref">Operational Considerations</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1">
+                <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="auto internal xref">5.1</a>.  <a href="#name-human-oriented" class="internal xref">Human Oriented</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1.2.1">
+                    <p id="section-toc.1-1.5.2.1.2.1.1"><a href="#section-5.1.1" class="auto internal xref">5.1.1</a>.  <a href="#name-smaller-footprint" class="internal xref">Smaller Footprint</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1.2.2">
+                    <p id="section-toc.1-1.5.2.1.2.2.1"><a href="#section-5.1.2" class="auto internal xref">5.1.2</a>.  <a href="#name-lower-cognative-load" class="internal xref">Lower Cognative Load</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.2">
+                <p id="section-toc.1-1.5.2.2.1"><a href="#section-5.2" class="auto internal xref">5.2</a>.  <a href="#name-machine-oriented" class="internal xref">Machine Oriented</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.2.2.1">
+                    <p id="section-toc.1-1.5.2.2.2.1.1"><a href="#section-5.2.1" class="auto internal xref">5.2.1</a>.  <a href="#name-scalability-concerns" class="internal xref">Scalability Concerns</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.2.2.2">
+                    <p id="section-toc.1-1.5.2.2.2.2.1"><a href="#section-5.2.2" class="auto internal xref">5.2.2</a>.  <a href="#name-one-to-many-implications" class="internal xref">One to Many Implications</a></p>
+</li>
+                </ul>
+</li>
+            </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6">
             <p id="section-toc.1-1.6.1"><a href="#section-6" class="auto internal xref">6</a>.  <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.1">
+                <p id="section-toc.1-1.6.2.1.1"><a href="#section-6.1" class="auto internal xref">6.1</a>.  <a href="#name-access-control" class="internal xref">Access Control</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.2">
+                <p id="section-toc.1-1.6.2.2.1"><a href="#section-6.2" class="auto internal xref">6.2</a>.  <a href="#name-the-ietf-config-templates-m" class="internal xref">The "ietf-config-templates" Module</a></p>
+</li>
+            </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7">
             <p id="section-toc.1-1.7.1"><a href="#section-7" class="auto internal xref">7</a>.  <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
@@ -1402,7 +1437,7 @@ svg {
    configuration is maintained so long as the template is applied.
    Any change made to an applied template has immediate effect on
    the configuration.<a href="#section-1-3" class="pilcrow">¶</a></p>
-<p id="section-1-4">By examnple, an network management system (NMS) may manage many
+<p id="section-1-4">By example, an network management system (NMS) may manage many
    devices.  Devices may be come from different vendors, each of
    which may have multiple types of devices (router, firewall, etc.),
    though sharing a common operating system.  Further, each type of
@@ -1418,16 +1453,19 @@ svg {
    when the management of a server's configuration is fully automated.
    For instance, when provided templates, a server can optimize
    internal memory usage, enabling higher performance and scability.<a href="#section-1-5" class="pilcrow">¶</a></p>
-<p id="section-1-6">The solution presented in this document supports both servers
-   that do and do not support NMDA.  In both cases, templates are
-   edited and applied as configuration in &lt;running&gt;.  For servers
-   supporting NMDA, the solution enables templates to also be defined
-   in &lt;system&gt; <span>[<a href="#I-D.ietf-netmod-system-config" class="cite xref">I-D.ietf-netmod-system-config</a>]</span>, and &lt;intended&gt;
-   always returns the configuration with the templates expanded.
-   For servers not supporting NMDA, a "with-templates-expanded"
-   parameter may be passed by a client, when fetching configuration
-   from &lt;running&gt;, to obtain the configuration with the templates
-   expanded.<a href="#section-1-6" class="pilcrow">¶</a></p>
+<p id="section-1-6">The solution presented in this document supports both servers that do
+   and do not support NMDA.  In both cases, templates are edited and
+   applied as configuration in &lt;running&gt;.  For servers supporting NMDA,
+   templates may be defined in &lt;system&gt; <span>[<a href="#I-D.ietf-netmod-system-config" class="cite xref">I-D.ietf-netmod-system-config</a>]</span>,
+   if supported by the server, and &lt;intended&gt; always returns the
+   configuration with the templates expanded.  For servers not
+   supporting NMDA, a "with-templates-expanded" parameter may be passed
+   by a client, when fetching configuration from &lt;running&gt;, to obtain
+   the configuration with the templates expanded.  However templates
+   are expanded, a "with-template-inheritance" parameter may be passed
+   by a client, when fetching expanded configuration, to obtain the
+   expanded configuration with annotations indicating from which
+   template values came from.<a href="#section-1-6" class="pilcrow">¶</a></p>
 <p id="section-1-7">Templates may be expanded off-box.  If a client has knowledge
    of the complete contents of &lt;running&gt; and &lt;system&gt;, if
    supported by the server, the client can calculate the exact
@@ -1435,8 +1473,6 @@ svg {
    independent of the server's operational state.<a href="#section-1-7" class="pilcrow">¶</a></p>
 <p id="section-1-8">Templates can be used with any YANG data model, including
    those defined with augmentations and/or deviations.<a href="#section-1-8" class="pilcrow">¶</a></p>
-<p id="section-1-9">The template solution is purely configuration, and hence does
-   not require modification to protocols or encodings.<a href="#section-1-9" class="pilcrow">¶</a></p>
 <div id="editorial-note-to-be-removed-by-rfc-editor">
 <section id="section-1.1">
         <h3 id="name-editorial-note-to-be-remove">
@@ -1529,7 +1565,7 @@ and RESTCONF <span>[<a href="#RFC8040" class="cite xref">RFC8040</a>]</span>.<a 
 This module defines a top-level "container" node called "templates"
 having a "list" node called "template".  Each "template" node
 instance is a YANG configuration template containing the
-following decendant nodes:<a href="#section-2.1-3" class="pilcrow">¶</a></p>
+following descendant nodes:<a href="#section-2.1-3" class="pilcrow">¶</a></p>
 <ul class="compact">
 <li class="compact" id="section-2.1-4.1">
             <p id="section-2.1-4.1.1">id: a unique identifier for the template used when applying it.<a href="#section-2.1-4.1.1" class="pilcrow">¶</a></p>
@@ -1550,6 +1586,8 @@ Validation is limited as templates do not need to, e.g., define
 mandatory nodes, but other checks are possible, such as ensuring
 nodes exist in the schema tree and that their values are of the
 correct type.<a href="#section-2.1-5" class="pilcrow">¶</a></p>
+<p id="section-2.1-6">The subsections below focus solely on how templates are defined, without
+any consideration for how they are applied.<a href="#section-2.1-6" class="pilcrow">¶</a></p>
 <div id="static-config">
 <section id="section-2.1.1">
           <h4 id="name-templates-for-static-config">
@@ -1753,9 +1791,11 @@ is achieved by network management operations on the &lt;running&gt;
 datastore via YANG driven protocols such as NETCONF <span>[<a href="#RFC6241" class="cite xref">RFC6241</a>]</span>
 and RESTCONF <span>[<a href="#RFC8040" class="cite xref">RFC8040</a>]</span>.<a href="#section-2.2-2" class="pilcrow">¶</a></p>
 <p id="section-2.2-3">Servers <span class="bcp14">MUST</span> validate templates at the time they are applied.
-Validation is acheived by first fully expanding the templates
+Validation is achieved by first fully expanding the templates
 (see <a href="#template-expansion" class="auto internal xref">Section 2.3</a>) and then performing normal YANG
 validation on the expanded configuration.<a href="#section-2.2-3" class="pilcrow">¶</a></p>
+<p id="section-2.2-4">The subsections below focus solely on how templates are applied, without
+any consideration for how they are expanded.<a href="#section-2.2-4" class="pilcrow">¶</a></p>
 <div id="config-applying-templates">
 <section id="section-2.2.1">
           <h4 id="name-configuration-applying-temp">
@@ -1870,7 +1910,7 @@ applying a template that applies a template that applies a template.<a href="#se
 <p id="section-2.3-1">Templates <span class="bcp14">MUST</span> be expanded, sometimes called "flattened", in order to
 produce a configuration that can be subject to YANG validation and
 applied by the server.<a href="#section-2.3-1" class="pilcrow">¶</a></p>
-<p id="section-2.3-2">Conceptually, template expansion is a generic (data-model independant)
+<p id="section-2.3-2">Conceptually, template expansion is a generic (data-model independent)
 pre-processor to a server's backend that knows nothing about templates.
 That said, a server wishing to optimize internal memory usage to enable
 higher performance and scability may have a backend that is template-aware.<a href="#section-2.3-2" class="pilcrow">¶</a></p>
@@ -1926,7 +1966,7 @@ template's higher-level nodes are ignored.<a href="#section-2.3.1-3.2.1" class="
 <p id="section-2.3.2-1">Merging configuration is a concept introduced in RFC 4741 without
 a formal definition, which is provided in this section for templates.<a href="#section-2.3.2-1" class="pilcrow">¶</a></p>
 <p id="section-2.3.2-2">Generally, when configuration C1 is merged into C2, nodes in C2 take
-precendence over nodes in C1.  Details follow.<a href="#section-2.3.2-2" class="pilcrow">¶</a></p>
+precedence over nodes in C1.  Details follow.<a href="#section-2.3.2-2" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-2.3.2-3.1">
               <p id="section-2.3.2-3.1.1">When "leaf" L1 is merged into a "leaf" L2, the L2 leaf is retained
@@ -1967,7 +2007,8 @@ be interleaved as necessary to produce an ordered list of numbers.<a href="#sect
 <a href="#section-2.3.3" class="section-number selfRef">2.3.3. </a><a href="#name-algorithm" class="section-name selfRef">Algorithm</a>
           </h4>
 <aside id="section-2.3.3-1">
-            <p id="section-2.3.3-1.1">Note: this section was written by AI<a href="#section-2.3.3-1.1" class="pilcrow">¶</a></p>
+            <p id="section-2.3.3-1.1">Note: this section was written by AI by analysing an implementation
+that passes all of the test vectors in <a href="#test-vectors" class="auto internal xref">Appendix A</a>.<a href="#section-2.3.3-1.1" class="pilcrow">¶</a></p>
 </aside>
 <p id="section-2.3.3-2">This section describes an algorithm that implements the rules above.
 The algorithm walks the configuration tree from the root, and, at each
@@ -2078,8 +2119,6 @@ precedence.  Each resulting entry is then merged recursively as a
 container.<a href="#section-2.3.3.4-2.4.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
-<p id="section-2.3.3.4-3">Note that large numbers of templates and/or large configurations may
-have performance issues that can be improved by caching results.<a href="#section-2.3.3.4-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2088,33 +2127,67 @@ have performance issues that can be improved by caching results.<a href="#sectio
 </div>
 </section>
 </div>
-<div id="nmda-considerations">
+<div id="protocol-query-parameters">
 <section id="section-3">
-      <h2 id="name-nmda-considerations">
-<a href="#section-3" class="section-number selfRef">3. </a><a href="#name-nmda-considerations" class="section-name selfRef">NMDA Considerations</a>
+      <h2 id="name-protocol-query-parameters">
+<a href="#section-3" class="section-number selfRef">3. </a><a href="#name-protocol-query-parameters" class="section-name selfRef">Protocol Query Parameters</a>
       </h2>
-<div id="interact-NMDA">
+<p id="section-3-1">This section defines query parameters that can be used with YANG-driven
+protocols such as NETCONF <span>[<a href="#RFC6241" class="cite xref">RFC6241</a>]</span> and RESTCONF <span>[<a href="#RFC8040" class="cite xref">RFC8040</a>]</span>.  For
+specific information regarding how these parameters are supported in
+NETCONF and RESTCONF, please see "I-D.ietf-netmod-config-templates-nc"
+and "I-D.ietf-netmod-config-templates-rc" respectively.<a href="#section-3-1" class="pilcrow">¶</a></p>
+<div id="the-with-template-inheritance-parameter">
 <section id="section-3.1">
-        <h3 id="name-servers-supporting-nmda">
-<a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-servers-supporting-nmda" class="section-name selfRef">Servers Supporting NMDA</a>
+        <h3 id="name-the-with-template-inheritan">
+<a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-the-with-template-inheritan" class="section-name selfRef">The "with-template-inheritance" Parameter</a>
         </h3>
-<p id="section-3.1-1">Some implementations may have predefined configuration templates for the convenience
-of clients, which are present in &lt;system&gt; (if implemented, see <span>[<a href="#I-D.ietf-netmod-system-config" class="cite xref">I-D.ietf-netmod-system-config</a>]</span>).
-In addition, clients can always define their own templates in &lt;running&gt;.
-However, configuration template data defined by "ietf-config-templates" YANG data model
-should not be visible in &lt;operational&gt; until being inherited by a node in the data tree.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
-<p id="section-3.1-2">If a node in the data tree applies a configuration template, the configuration
-template does not expand in &lt;running&gt;. A read of &lt;running&gt; returns what is
-sent by the client with the "apply-templates" metadata attached to the specific node.
-A configuration template which is inherited or overridden by the node instance <span class="bcp14">MUST</span> be expanded in &lt;intended&gt;.<a href="#section-3.1-2" class="pilcrow">¶</a></p>
+<aside id="section-3.1-1">
+          <p id="section-3.1-1.1">FIXME: An R24-comment suggest returning such annotations all time - is that preferred?<a href="#section-3.1-1.1" class="pilcrow">¶</a></p>
+</aside>
+<p id="section-3.1-2">When viewing configuration with templates expanded, it can sometimes
+become confusing where certain values were set.  The "with-template-inheritance"
+parameter can be passed into configuration-fetching requests such as
+RESTCONF's <code>GET</code> or NETCONF's <code>&lt;get-data&gt;</code>.<a href="#section-3.1-2" class="pilcrow">¶</a></p>
+<p id="section-3.1-3">When the "with-template-inheritance" parameter is passed, the configuration
+returned is annotated with metadata indicating from which template values
+were set from, if any.<a href="#section-3.1-3" class="pilcrow">¶</a></p>
+<p id="section-3.1-4">The annotation is a string having a value following the pattern
+'node-foo' was inherited from template 'template-bar'`.<a href="#section-3.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="interact-non-NMDA">
+<div id="the-with-templates-expanded-parameter">
 <section id="section-3.2">
-        <h3 id="name-servers-not-supporting-nmda">
-<a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-servers-not-supporting-nmda" class="section-name selfRef">Servers Not Supporting NMDA</a>
+        <h3 id="name-the-with-templates-expanded">
+<a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-the-with-templates-expanded" class="section-name selfRef">The "with-templates-expanded" Parameter</a>
         </h3>
-<p id="section-3.2-1">TBD<a href="#section-3.2-1" class="pilcrow">¶</a></p>
+<aside id="section-3.2-1">
+          <p id="section-3.2-1.1">This section applies only to servers that do not support NMDA.<a href="#section-3.2-1.1" class="pilcrow">¶</a></p>
+</aside>
+<p id="section-3.2-2">For servers supporting NMDA, templates are always expanded when the
+configuration is fetched from &lt;intended&gt;.<a href="#section-3.2-2" class="pilcrow">¶</a></p>
+<p id="section-3.2-3">For servers that do not support NMDA, the "with-templates-expanded"
+parameter can be passed into &lt;running&gt; configuration-fetching requests
+such as RESTCONF's <code>GET</code> or NETCONF's <code>&lt;get-config&gt;</code>.<a href="#section-3.2-3" class="pilcrow">¶</a></p>
+<p id="section-3.2-4">When the "with-templates-expanded" parameter is passed, the response
+is the same as if the configuration had been expanded.<a href="#section-3.2-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="the-with-inactive-removed-parameter">
+<section id="section-3.3">
+        <h3 id="name-the-with-inactive-removed-p">
+<a href="#section-3.3" class="section-number selfRef">3.3. </a><a href="#name-the-with-inactive-removed-p" class="section-name selfRef">The "with-inactive-removed" Parameter</a>
+        </h3>
+<aside id="section-3.3-1">
+          <p id="section-3.3-1.1">This section will be deleted.<a href="#section-3.3-1.1" class="pilcrow">¶</a></p>
+</aside>
+<p id="section-3.3-2">This paramter is NOT related to the template solution.  It is a parameter
+that could be defined by some future "draft-ietf-netmod-inactive-config" I-D.<a href="#section-3.3-2" class="pilcrow">¶</a></p>
+<p id="section-3.3-3">The reason for this section is to lay bare logical extensions to the
+"with-template-expanded" parameter.  That is, we could end up with
+a multiplicity of such parameters for servers that do not support NMDA
+to simulate fetching config from &lt;intended&gt;.<a href="#section-3.3-3" class="pilcrow">¶</a></p>
+<p id="section-3.3-4">Would a generic "get-intended" RPC for non-NMDA servers make more sense?<a href="#section-3.3-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2275,7 +2348,63 @@ module ietf-config-templates {
       <h2 id="name-operational-considerations">
 <a href="#section-5" class="section-number selfRef">5. </a><a href="#name-operational-considerations" class="section-name selfRef">Operational Considerations</a>
       </h2>
-<p id="section-5-1">Configuration templates are designed to remain unexpanded in &lt;running&gt;. This ensures storage efficiency and preserves the client's control over &lt;running&gt;, i.e., reads of &lt;running&gt; returns the client-submitted configuration with the "apply-templates" leaf-lists attached to target nodes. Any configuration template that is applied in the data tree <span class="bcp14">MUST</span> be expanded in &lt;intended&gt;, which holds a merged result of template expansion and configuration explicitly provided by clients.<a href="#section-5-1" class="pilcrow">¶</a></p>
+<div id="human-oriented">
+<section id="section-5.1">
+        <h3 id="name-human-oriented">
+<a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-human-oriented" class="section-name selfRef">Human Oriented</a>
+        </h3>
+<div id="smaller-footprint">
+<section id="section-5.1.1">
+          <h4 id="name-smaller-footprint">
+<a href="#section-5.1.1" class="section-number selfRef">5.1.1. </a><a href="#name-smaller-footprint" class="section-name selfRef">Smaller Footprint</a>
+          </h4>
+<p id="section-5.1.1-1">Configuration templates are designed to factor out repetititive configuration
+to a single definition that is applied repetitively.  Use of templates therefore
+generally reduces the size of &lt;running&gt;.<a href="#section-5.1.1-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="lower-cognative-load">
+<section id="section-5.1.2">
+          <h4 id="name-lower-cognative-load">
+<a href="#section-5.1.2" class="section-number selfRef">5.1.2. </a><a href="#name-lower-cognative-load" class="section-name selfRef">Lower Cognative Load</a>
+          </h4>
+<p id="section-5.1.2-1">Configuration templates enable a label (i.e., the template's name) to be given
+for semantically related configuration, and then for that label to be referenced
+where needed.  The additional structure provided by the template solution
+generally improves readability and understandability.<a href="#section-5.1.2-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="machine-oriented">
+<section id="section-5.2">
+        <h3 id="name-machine-oriented">
+<a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-machine-oriented" class="section-name selfRef">Machine Oriented</a>
+        </h3>
+<div id="scalability-concerns">
+<section id="section-5.2.1">
+          <h4 id="name-scalability-concerns">
+<a href="#section-5.2.1" class="section-number selfRef">5.2.1. </a><a href="#name-scalability-concerns" class="section-name selfRef">Scalability Concerns</a>
+          </h4>
+<p id="section-5.2.1-1">Large numbers of templates and/or large configurations may have performance
+issues during template expansion.  Such issues may be improved by caching
+intermediate expansion results, trading CPU-time for storage.<a href="#section-5.2.1-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="one-to-many-implications">
+<section id="section-5.2.2">
+          <h4 id="name-one-to-many-implications">
+<a href="#section-5.2.2" class="section-number selfRef">5.2.2. </a><a href="#name-one-to-many-implications" class="section-name selfRef">One to Many Implications</a>
+          </h4>
+<p id="section-5.2.2-1">Configuration templates are designed to factor out configuration that is
+applied repetitively, possibly a large number of times.  In some applications,
+(e.g., a network device controller), a single change to a single template
+could entail a potentially slow interaction with a large number of external
+systems.<a href="#section-5.2.2-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
 </section>
 </div>
 <div id="security-considerations">
@@ -2283,7 +2412,23 @@ module ietf-config-templates {
       <h2 id="name-security-considerations">
 <a href="#section-6" class="section-number selfRef">6. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
       </h2>
-<p id="section-6-1">TODO Security<a href="#section-6-1" class="pilcrow">¶</a></p>
+<div id="access-control">
+<section id="section-6.1">
+        <h3 id="name-access-control">
+<a href="#section-6.1" class="section-number selfRef">6.1. </a><a href="#name-access-control" class="section-name selfRef">Access Control</a>
+        </h3>
+<p id="section-6.1-1">Editing configuration in a template <span class="bcp14">MUST</span> be authorized using the same access control
+settings used for standard configuration.<a href="#section-6.1-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="the-ietf-config-templates-module">
+<section id="section-6.2">
+        <h3 id="name-the-ietf-config-templates-m">
+<a href="#section-6.2" class="section-number selfRef">6.2. </a><a href="#name-the-ietf-config-templates-m" class="section-name selfRef">The "ietf-config-templates" Module</a>
+        </h3>
+<p id="section-6.2-1">This section is modelled after...FIXME.<a href="#section-6.2-1" class="pilcrow">¶</a></p>
+</section>
+</div>
 </section>
 </div>
 <div id="iana-considerations">
@@ -3711,7 +3856,7 @@ module my-yang-module {
           <p id="appendix-B-44.1.1">discussed: strongly in favor<a href="#appendix-B-44.1.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-B-44.2">
-          <p id="appendix-B-44.2.1">status: not supported in document (need to add, see <a href="#interact-non-NMDA" class="auto internal xref">Section 3.2</a>)<a href="#appendix-B-44.2.1" class="pilcrow">¶</a></p>
+          <p id="appendix-B-44.2.1">status: supported in document (but does it make sense?)<a href="#appendix-B-44.2.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 <p id="appendix-B-45">R22: <a href="https://github.com/netmod-wg/template-reqs/issues/22">Method to exclude templates applied at ancestor nodes</a><a href="#appendix-B-45" class="pilcrow">¶</a></p>
@@ -3738,7 +3883,13 @@ module my-yang-module {
           <p id="appendix-B-50.1.1">never discussed<a href="#appendix-B-50.1.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-B-50.2">
-          <p id="appendix-B-50.2.1">status: needs to be discussed (will schedule an Interim meeting)<a href="#appendix-B-50.2.1" class="pilcrow">¶</a></p>
+          <p id="appendix-B-50.2.1">supported in document via "with-template-inheritance"?<a href="#appendix-B-50.2.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-B-50.3">
+          <p id="appendix-B-50.3.1">an R24-comment suggest returning such annotations all time - is that preferred?<a href="#appendix-B-50.3.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-B-50.4">
+          <p id="appendix-B-50.4.1">status: needs to be discussed (will schedule an Interim meeting)<a href="#appendix-B-50.4.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 <p id="appendix-B-51">R25: <a href="https://github.com/netmod-wg/template-reqs/issues/25">Misaligned module template name</a><a href="#appendix-B-51" class="pilcrow">¶</a></p>

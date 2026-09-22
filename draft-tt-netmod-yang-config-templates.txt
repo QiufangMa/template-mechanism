@@ -5,10 +5,10 @@
 Network Modeling                                               K. Watsen
 Internet-Draft                                           Watsen Networks
 Intended status: Standards Track                                   Q. Ma
-Expires: 13 March 2027                                            Huawei
+Expires: 26 March 2027                                            Huawei
                                                               D. Rajaram
                                                                    Nokia
-                                                        9 September 2026
+                                                       22 September 2026
 
 
                       YANG Configuration Templates
@@ -49,7 +49,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 13 March 2027.
+   This Internet-Draft will expire on 26 March 2027.
 
 Copyright Notice
 
@@ -82,14 +82,23 @@ Table of Contents
        2.3.1.  Basic Rules
        2.3.2.  Merging Notes
        2.3.3.  Algorithm
-   3.  NMDA Considerations
-     3.1.  Servers Supporting NMDA
-     3.2.  Servers Not Supporting NMDA
+   3.  Protocol Query Parameters
+     3.1.  The "with-template-inheritance" Parameter
+     3.2.  The "with-templates-expanded" Parameter
+     3.3.  The "with-inactive-removed" Parameter
    4.  The "ietf-config-templates" YANG Module
      4.1.  Data Model Overview
      4.2.  YANG Module
    5.  Operational Considerations
+     5.1.  Human Oriented
+       5.1.1.  Smaller Footprint
+       5.1.2.  Lower Cognative Load
+     5.2.  Machine Oriented
+       5.2.1.  Scalability Concerns
+       5.2.2.  One to Many Implications
    6.  Security Considerations
+     6.1.  Access Control
+     6.2.  The "ietf-config-templates" Module
    7.  IANA Considerations
      7.1.  The "IETF XML" Registry
      7.2.  The "YANG Module Names" Registry
@@ -148,7 +157,7 @@ Table of Contents
    change made to an applied template has immediate effect on the
    configuration.
 
-   By examnple, an network management system (NMS) may manage many
+   By example, an network management system (NMS) may manage many
    devices.  Devices may be come from different vendors, each of which
    may have multiple types of devices (router, firewall, etc.), though
    sharing a common operating system.  Further, each type of device may
@@ -169,12 +178,16 @@ Table of Contents
    The solution presented in this document supports both servers that do
    and do not support NMDA.  In both cases, templates are edited and
    applied as configuration in <running>.  For servers supporting NMDA,
-   the solution enables templates to also be defined in <system>
-   [I-D.ietf-netmod-system-config], and <intended> always returns the
+   templates may be defined in <system> [I-D.ietf-netmod-system-config],
+   if supported by the server, and <intended> always returns the
    configuration with the templates expanded.  For servers not
    supporting NMDA, a "with-templates-expanded" parameter may be passed
    by a client, when fetching configuration from <running>, to obtain
-   the configuration with the templates expanded.
+   the configuration with the templates expanded.  However templates are
+   expanded, a "with-template-inheritance" parameter may be passed by a
+   client, when fetching expanded configuration, to obtain the expanded
+   configuration with annotations indicating from which template values
+   came from.
 
    Templates may be expanded off-box.  If a client has knowledge of the
    complete contents of <running> and <system>, if supported by the
@@ -184,9 +197,6 @@ Table of Contents
 
    Templates can be used with any YANG data model, including those
    defined with augmentations and/or deviations.
-
-   The template solution is purely configuration, and hence does not
-   require modification to protocols or encodings.
 
 1.1.  Editorial Note (To be removed by RFC Editor)
 
@@ -258,7 +268,7 @@ Table of Contents
    templates" YANG module defined in Section 4.  This module defines a
    top-level "container" node called "templates" having a "list" node
    called "template".  Each "template" node instance is a YANG
-   configuration template containing the following decendant nodes:
+   configuration template containing the following descendant nodes:
 
    *  id: a unique identifier for the template used when applying it.
    *  description: an optional description for the template.
@@ -270,6 +280,9 @@ Table of Contents
    is limited as templates do not need to, e.g., define mandatory nodes,
    but other checks are possible, such as ensuring nodes exist in the
    schema tree and that their values are of the correct type.
+
+   The subsections below focus solely on how templates are defined,
+   without any consideration for how they are applied.
 
 2.1.1.  Templates for Static Configuration
 
@@ -451,9 +464,12 @@ Table of Contents
    RESTCONF [RFC8040].
 
    Servers MUST validate templates at the time they are applied.
-   Validation is acheived by first fully expanding the templates (see
+   Validation is achieved by first fully expanding the templates (see
    Section 2.3) and then performing normal YANG validation on the
    expanded configuration.
+
+   The subsections below focus solely on how templates are applied,
+   without any consideration for how they are expanded.
 
 2.2.1.  Configuration Applying Templates
 
@@ -556,7 +572,7 @@ Table of Contents
    applied by the server.
 
    Conceptually, template expansion is a generic (data-model
-   independant) pre-processor to a server's backend that knows nothing
+   independent) pre-processor to a server's backend that knows nothing
    about templates.  That said, a server wishing to optimize internal
    memory usage to enable higher performance and scability may have a
    backend that is template-aware.
@@ -600,7 +616,7 @@ Table of Contents
    formal definition, which is provided in this section for templates.
 
    Generally, when configuration C1 is merged into C2, nodes in C2 take
-   precendence over nodes in C1.  Details follow.
+   precedence over nodes in C1.  Details follow.
 
    *  When "leaf" L1 is merged into a "leaf" L2, the L2 leaf is retained
       (L1 is discarded).
@@ -631,7 +647,9 @@ Table of Contents
 
 2.3.3.  Algorithm
 
-      |  Note: this section was written by AI
+      |  Note: this section was written by AI by analysing an
+      |  implementation that passes all of the test vectors in
+      |  Appendix A.
 
    This section describes an algorithm that implements the rules above.
    The algorithm walks the configuration tree from the root, and, at
@@ -722,31 +740,60 @@ Table of Contents
       take precedence.  Each resulting entry is then merged recursively
       as a container.
 
-   Note that large numbers of templates and/or large configurations may
-   have performance issues that can be improved by caching results.
+3.  Protocol Query Parameters
 
-3.  NMDA Considerations
+   This section defines query parameters that can be used with YANG-
+   driven protocols such as NETCONF [RFC6241] and RESTCONF [RFC8040].
+   For specific information regarding how these parameters are supported
+   in NETCONF and RESTCONF, please see "I-D.ietf-netmod-config-
+   templates-nc" and "I-D.ietf-netmod-config-templates-rc" respectively.
 
-3.1.  Servers Supporting NMDA
+3.1.  The "with-template-inheritance" Parameter
 
-   Some implementations may have predefined configuration templates for
-   the convenience of clients, which are present in <system> (if
-   implemented, see [I-D.ietf-netmod-system-config]).  In addition,
-   clients can always define their own templates in <running>.  However,
-   configuration template data defined by "ietf-config-templates" YANG
-   data model should not be visible in <operational> until being
-   inherited by a node in the data tree.
+      |  FIXME: An R24-comment suggest returning such annotations all
+      |  time - is that preferred?
 
-   If a node in the data tree applies a configuration template, the
-   configuration template does not expand in <running>.  A read of
-   <running> returns what is sent by the client with the "apply-
-   templates" metadata attached to the specific node.  A configuration
-   template which is inherited or overridden by the node instance MUST
-   be expanded in <intended>.
+   When viewing configuration with templates expanded, it can sometimes
+   become confusing where certain values were set.  The "with-template-
+   inheritance" parameter can be passed into configuration-fetching
+   requests such as RESTCONF's GET or NETCONF's <get-data>.
 
-3.2.  Servers Not Supporting NMDA
+   When the "with-template-inheritance" parameter is passed, the
+   configuration returned is annotated with metadata indicating from
+   which template values were set from, if any.
 
-   TBD
+   The annotation is a string having a value following the pattern
+   'node-foo' was inherited from template 'template-bar'`.
+
+3.2.  The "with-templates-expanded" Parameter
+
+      |  This section applies only to servers that do not support NMDA.
+
+   For servers supporting NMDA, templates are always expanded when the
+   configuration is fetched from <intended>.
+
+   For servers that do not support NMDA, the "with-templates-expanded"
+   parameter can be passed into <running> configuration-fetching
+   requests such as RESTCONF's GET or NETCONF's <get-config>.
+
+   When the "with-templates-expanded" parameter is passed, the response
+   is the same as if the configuration had been expanded.
+
+3.3.  The "with-inactive-removed" Parameter
+
+      |  This section will be deleted.
+
+   This paramter is NOT related to the template solution.  It is a
+   parameter that could be defined by some future "draft-ietf-netmod-
+   inactive-config" I-D.
+
+   The reason for this section is to lay bare logical extensions to the
+   "with-template-expanded" parameter.  That is, we could end up with a
+   multiplicity of such parameters for servers that do not support NMDA
+   to simulate fetching config from <intended>.
+
+   Would a generic "get-intended" RPC for non-NMDA servers make more
+   sense?
 
 4.  The "ietf-config-templates" YANG Module
 
@@ -882,18 +929,49 @@ Table of Contents
 
 5.  Operational Considerations
 
-   Configuration templates are designed to remain unexpanded in
-   <running>.  This ensures storage efficiency and preserves the
-   client's control over <running>, i.e., reads of <running> returns the
-   client-submitted configuration with the "apply-templates" leaf-lists
-   attached to target nodes.  Any configuration template that is applied
-   in the data tree MUST be expanded in <intended>, which holds a merged
-   result of template expansion and configuration explicitly provided by
-   clients.
+5.1.  Human Oriented
+
+5.1.1.  Smaller Footprint
+
+   Configuration templates are designed to factor out repetititive
+   configuration to a single definition that is applied repetitively.
+   Use of templates therefore generally reduces the size of <running>.
+
+5.1.2.  Lower Cognative Load
+
+   Configuration templates enable a label (i.e., the template's name) to
+   be given for semantically related configuration, and then for that
+   label to be referenced where needed.  The additional structure
+   provided by the template solution generally improves readability and
+   understandability.
+
+5.2.  Machine Oriented
+
+5.2.1.  Scalability Concerns
+
+   Large numbers of templates and/or large configurations may have
+   performance issues during template expansion.  Such issues may be
+   improved by caching intermediate expansion results, trading CPU-time
+   for storage.
+
+5.2.2.  One to Many Implications
+
+   Configuration templates are designed to factor out configuration that
+   is applied repetitively, possibly a large number of times.  In some
+   applications, (e.g., a network device controller), a single change to
+   a single template could entail a potentially slow interaction with a
+   large number of external systems.
 
 6.  Security Considerations
 
-   TODO Security
+6.1.  Access Control
+
+   Editing configuration in a template MUST be authorized using the same
+   access control settings used for standard configuration.
+
+6.2.  The "ietf-config-templates" Module
+
+   This section is modelled after...FIXME.
 
 7.  IANA Considerations
 
@@ -2012,7 +2090,7 @@ Appendix B.  Requirement Implementation Status
 
    *  discussed: strongly in favor
 
-   *  status: not supported in document (need to add, see Section 3.2)
+   *  status: supported in document (but does it make sense?)
 
    R22: Method to exclude templates applied at ancestor nodes
    (https://github.com/netmod-wg/template-reqs/issues/22)
@@ -2032,6 +2110,11 @@ Appendix B.  Requirement Implementation Status
    applied from (https://github.com/netmod-wg/template-reqs/issues/24)
 
    *  never discussed
+
+   *  supported in document via "with-template-inheritance"?
+
+   *  an R24-comment suggest returning such annotations all time - is
+      that preferred?
 
    *  status: needs to be discussed (will schedule an Interim meeting)
 
