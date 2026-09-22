@@ -1,0 +1,2216 @@
+
+
+
+
+Network Modeling                                               K. Watsen
+Internet-Draft                                           Watsen Networks
+Intended status: Standards Track                                   Q. Ma
+Expires: 26 March 2027                                            Huawei
+                                                              D. Rajaram
+                                                                   Nokia
+                                                       22 September 2026
+
+
+                      YANG Configuration Templates
+              draft-tt-netmod-yang-config-templates-latest
+
+Abstract
+
+   This document defines a YANG-based configuration template mechanism
+   whereby repetitive configuration data can be factored out into
+   templates and applied where needed.  This avoids the redundant
+   definition of identical configuration and ensures the consistency of
+   it, thus allowing configuration data to be managed more conveniently
+   and efficiently.
+
+Discussion Venues
+
+   This note is to be removed before publishing as an RFC.
+
+   Discussion of this document takes place on the Network Modeling
+   Working Group mailing list (netmod@ietf.org), which is archived at
+   https://mailarchive.ietf.org/arch/browse/netmod/.
+
+   Source for this draft and an issue tracker can be found at
+   https://github.com/QiufangMa/template-mechanism.
+
+Status of This Memo
+
+   This Internet-Draft is submitted in full conformance with the
+   provisions of BCP 78 and BCP 79.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF).  Note that other groups may also distribute
+   working documents as Internet-Drafts.  The list of current Internet-
+   Drafts is at https://datatracker.ietf.org/drafts/current/.
+
+   Internet-Drafts are draft documents valid for a maximum of six months
+   and may be updated, replaced, or obsoleted by other documents at any
+   time.  It is inappropriate to use Internet-Drafts as reference
+   material or to cite them other than as "work in progress."
+
+   This Internet-Draft will expire on 26 March 2027.
+
+Copyright Notice
+
+   Copyright (c) 2026 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to BCP 78 and the IETF Trust's Legal
+   Provisions Relating to IETF Documents (https://trustee.ietf.org/
+   license-info) in effect on the date of publication of this document.
+   Please review these documents carefully, as they describe your rights
+   and restrictions with respect to this document.  Code Components
+   extracted from this document must include Revised BSD License text as
+   described in Section 4.e of the Trust Legal Provisions and are
+   provided without warranty as described in the Revised BSD License.
+
+Table of Contents
+
+   1.  Introduction
+     1.1.  Editorial Note (To be removed by RFC Editor)
+     1.2.  Conventions and Definitions
+     1.3.  Applicability Statement
+   2.  Configuration Template Solution
+     2.1.  Defining Templates
+       2.1.1.  Templates for Static Configuration
+       2.1.2.  Templates for Repetitve Configuration
+     2.2.  Applying Templates
+       2.2.1.  Configuration Applying Templates
+       2.2.2.  Templates Applying Templates
+     2.3.  Template Expansion
+       2.3.1.  Basic Rules
+       2.3.2.  Merging Notes
+       2.3.3.  Algorithm
+   3.  Protocol Query Parameters
+     3.1.  The "with-template-inheritance" Parameter
+     3.2.  The "with-templates-expanded" Parameter
+     3.3.  The "with-inactive-removed" Parameter
+   4.  The "ietf-config-templates" YANG Module
+     4.1.  Data Model Overview
+     4.2.  YANG Module
+   5.  Operational Considerations
+     5.1.  Human Oriented
+       5.1.1.  Smaller Footprint
+       5.1.2.  Lower Cognative Load
+     5.2.  Machine Oriented
+       5.2.1.  Scalability Concerns
+       5.2.2.  One to Many Implications
+   6.  Security Considerations
+     6.1.  Access Control
+     6.2.  The "ietf-config-templates" Module
+   7.  IANA Considerations
+     7.1.  The "IETF XML" Registry
+     7.2.  The "YANG Module Names" Registry
+   8.  References
+     8.1.  Normative References
+     8.2.  Informative References
+   Appendix A.  Test Vectors
+     A.1.  Example YANG Module
+       A.1.1.  Original
+       A.1.2.  Annotated
+     A.2.  Basic Tests
+       A.2.1.  No Templates Applied
+       A.2.2.  All Configuration in a Single Template
+       A.2.3.  All Configuration in a Multiplicity of Templates
+     A.3.  Empty Node Tests
+       A.3.1.  Empty "apply-template" List
+       A.3.2.  Empty Template Content
+     A.4.  Node "leaf" Tests
+       A.4.1.  Hierarchal Precedence
+       A.4.2.  Ordered Precedence
+     A.5.  Node "leaf-list" Tests
+       A.5.1.  Hierarchal Precedence
+       A.5.2.  Ordered Precedence
+     A.6.  Node "container" Tests
+       A.6.1.  Hierarchal Precedence
+       A.6.2.  Ignore Above
+       A.6.3.  Ordered Precedence
+     A.7.  Node "list" Tests
+       A.7.1.  Hierarchal Precedence
+       A.7.2.  Ignore Above
+       A.7.3.  Ordered Precedence
+       A.7.4.  Wildcards
+     A.8.  Node "anydata" Tests
+       A.8.1.  Hierarchal Precedence
+       A.8.2.  Ordered Precedence
+   Appendix B.  Requirement Implementation Status
+   Acknowledgments
+   Contributors
+   Authors' Addresses
+
+1.  Introduction
+
+   This document defines the "template" mechanism mentioned but not
+   defined in Network Management Datastore Architecture (NMDA)
+   [RFC8342].
+
+   Templates enable repetitive configuration to be factored out into
+   hierarchies of living templates and applied where the configuration
+   is needed.  This avoids the redundant definition of identical
+   configuration and ensures the consistency of it, thus allowing
+   configuration data to be managed more conveniently and efficiently.
+
+   Templates are "hierarchal" in that templates may apply yet other
+   templates.  Templates are "living" in that their affect on
+   configuration is maintained so long as the template is applied.  Any
+   change made to an applied template has immediate effect on the
+   configuration.
+
+   By example, an network management system (NMS) may manage many
+   devices.  Devices may be come from different vendors, each of which
+   may have multiple types of devices (router, firewall, etc.), though
+   sharing a common operating system.  Further, each type of device may
+   have different models (e.g., fw-100, fw-1000, etc.).  In this case,
+   common "fw-100" configuration could be put into a template called
+   "common-fw-100-template", which itself inherits from a template
+   called "common-fw-template", which itself inherits from a template
+   called "common-vendor-template".  Similarly, a "common-fw-
+   1000-template" could inherit from "common-fw-template" and, likewise,
+   a "common-rtr-template" could inherit from the "common-vendor-
+   template".
+
+   Templates are mostly for humans, but are still important even when
+   the management of a server's configuration is fully automated.  For
+   instance, when provided templates, a server can optimize internal
+   memory usage, enabling higher performance and scability.
+
+   The solution presented in this document supports both servers that do
+   and do not support NMDA.  In both cases, templates are edited and
+   applied as configuration in <running>.  For servers supporting NMDA,
+   templates may be defined in <system> [I-D.ietf-netmod-system-config],
+   if supported by the server, and <intended> always returns the
+   configuration with the templates expanded.  For servers not
+   supporting NMDA, a "with-templates-expanded" parameter may be passed
+   by a client, when fetching configuration from <running>, to obtain
+   the configuration with the templates expanded.  However templates are
+   expanded, a "with-template-inheritance" parameter may be passed by a
+   client, when fetching expanded configuration, to obtain the expanded
+   configuration with annotations indicating from which template values
+   came from.
+
+   Templates may be expanded off-box.  If a client has knowledge of the
+   complete contents of <running> and <system>, if supported by the
+   server, the client can calculate the exact result of template
+   expansion.  Template expansion is independent of the server's
+   operational state.
+
+   Templates can be used with any YANG data model, including those
+   defined with augmentations and/or deviations.
+
+1.1.  Editorial Note (To be removed by RFC Editor)
+
+   Note to the RFC Editor: This section is to be removed prior to
+   publication.
+
+   This document contains placeholder values that need to be replaced
+   with finalized values at the time of publication.  This note
+   summarizes all of the substitutions that are needed.  No other RFC
+   Editor instructions are specified elsewhere in this document.
+
+   Please apply the following replacements:
+
+   *  XXXX --> the assigned RFC number for this draft
+
+   *  2026-07-03 --> the actual date of the publication of this document
+
+1.2.  Conventions and Definitions
+
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+   "OPTIONAL" in this document are to be interpreted as described in
+   BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
+   capitals, as shown here.
+
+   The meanings of the symbols in tree diagrams are defined in
+   [RFC8340].
+
+   This document uses the terminology defined in Section 3 of [RFC7950]
+   and Section 3 of [RFC8342].
+
+   This document uses the following terminology in [RFC6241]:
+
+   *  configuration data
+
+   Besides, this document defines the following terminology:
+
+   configuration template:  A snippet of configuration data that may be
+      applied to the configuration repeatedly, in order to simplify the
+      delivery of network configuration and ensure the consistency of
+      it.  A configuration template is referred to interchangeably as
+      "template" or "YANG template" throughout this document.
+
+   Examples used in this document encode YANG data using XML, as defined
+   in [RFC7950].  Other encodings such as JSON [RFC7951] and CBOR
+   [RFC9254] could have been instead.
+
+1.3.  Applicability Statement
+
+   The solution presented in this document can be implemented by any
+   YANG-based server.  The solution is data model independent and can be
+   wholly realized as a preprocessor to the existing configuration
+   management mechanism on a server.
+
+2.  Configuration Template Solution
+
+2.1.  Defining Templates
+
+   Templates must first be defined before they can be applied (see
+   Section 2.2).  Templates that are defined but not applied have no
+   impact on configuration.
+
+   The creation, modification, and deletion of references to templates
+   is achieved by network management operations on the <running>
+   datastore via YANG driven protocols such as NETCONF [RFC6241] and
+   RESTCONF [RFC8040].
+
+   A server supporting templates MUST implement the "ietf-config-
+   templates" YANG module defined in Section 4.  This module defines a
+   top-level "container" node called "templates" having a "list" node
+   called "template".  Each "template" node instance is a YANG
+   configuration template containing the following descendant nodes:
+
+   *  id: a unique identifier for the template used when applying it.
+   *  description: an optional description for the template.
+   *  data-path: an optional schema location, if not root.
+   *  content: the configuration data the template holds.
+
+   Servers SHOULD validate templates at the time they are defined, that
+   is, before they are applied, as described in Section 2.2.  Validation
+   is limited as templates do not need to, e.g., define mandatory nodes,
+   but other checks are possible, such as ensuring nodes exist in the
+   schema tree and that their values are of the correct type.
+
+   The subsections below focus solely on how templates are defined,
+   without any consideration for how they are applied.
+
+2.1.1.  Templates for Static Configuration
+
+   Templates MAY be defined to set static configuration, i.e.,
+   configuration the is not repetitive, as described in Section 2.1.2.
+   Such templates do not reduce the size of the configuration, but may
+   be useful if wanting to group configuration scattered throughout the
+   tree.  For instance, for a server providing customer-facing services,
+   there may be a group for each customer that sets all the
+   configuration needed for the one customer.
+
+   For example, the following template would, if applied, set the "/my-
+   yang-module:top-level-node/foo/bar/baz" node to the "empty" value,
+   creating any missing ancestor nodes as needed.
+
+   {
+       "ietf-config-templates:templates": {
+           "template": [
+               {
+                   "name": "my-template",
+                   "description": "...",
+                   "content": {
+                       "my-yang-module:top-level-node": {
+                           "foo": {
+                               "bar": {
+                                   "baz": [null]
+                               }
+                           }
+                       }
+                   }
+               }
+           ]
+       }
+   }
+
+   The following template is identical to the one shown previously, but
+   uses the "data-path" leaf to compress the "content" leaf's value.
+
+  {
+      "ietf-config-templates:templates": {
+          "template": [
+              {
+                  "name": "my-template",
+                  "description": "...",
+                  "data-path": "/my-yang-module:top-level-node/foo/bar",
+                  "content": {
+                      "my-yang-module:baz": [null]
+                  }
+              }
+          ]
+      }
+  }
+
+   Templates can set values under "list" nodes as well.  For instance,
+   the following template would, if applied, set the "/my-yang-
+   module:top-level-node/foo[key='f1']/bar[key='b1']/baz" node to the
+   "empty" value, creating any missing ancestor nodes as needed.
+
+   {
+       "ietf-config-templates:templates": {
+           "template": [
+               {
+                   "name": "my-template",
+                   "description": "...",
+                   "content": {
+                       "my-yang-module:top-level-node": [
+                           {
+                               "foo": [
+                                   {
+                                       "key": "f1",
+                                       "bar": [
+                                           {
+                                               "key": "b1",
+                                               "baz": [null]
+                                           }
+                                       ]
+                                   }
+                               ]
+                           }
+                       ]
+                   }
+               }
+           ]
+       }
+   }
+
+   The following template is identical to the one shown previously, but
+   uses the "data-path" leaf to compress the "content" leaf's value.
+
+{
+    "ietf-config-templates:templates": {
+        "template": [
+            {
+                "name": "my-template",
+                "description": "...",
+                "data-path": "/my-yang-module:top-level-node/foo[key='f1']/bar[key='b1']",
+                "content": {
+                    "my-yang-module:baz": [null]
+                }
+            }
+        ]
+    }
+}
+
+2.1.2.  Templates for Repetitve Configuration
+
+   The previous example shows a template setting configuration under a
+   very specific list.  But many times it is desirable to set the same
+   configuration under any list or any list whose key values match a
+   pattern.
+
+   To allow a single template to apply to multiple list instances a
+   wildcard pattern may be used within the key leafs to identify which
+   list entries a template takes effect for.  This only works for list
+   keys with built-in type "string", or types derived from "string".
+
+   The wildcard pattern MUST conform to the "Pattern Matching Notation"
+   defined in Section 2.13 of IEEE-1003.1-2008.
+
+   For example, the following template would, if applied, set the "baz"
+   node to empty for any existing "bar" list beginning with 'b' under
+   any existing "foo" list.
+
+   {
+       "ietf-config-templates:templates": {
+           "template": [
+               {
+                   "name": "my-template",
+                   "description": "...",
+                   "content": {
+                       "my-yang-module:top-level-node": [
+                           {
+                               "foo": [
+                                   {
+                                       "key": "*",
+                                       "bar": [
+                                           {
+                                               "key": "b*",
+                                               "baz": [null]
+                                           }
+                                       ]
+                                   }
+                               ]
+                           }
+                       ]
+                   }
+               }
+           ]
+       }
+   }
+
+   The following template is identical to the one shown previously, but
+   uses the "data-path" leaf to compress the "content" leaf's value.
+
+{
+    "ietf-config-templates:templates": {
+        "template": [
+            {
+                "name": "my-template",
+                "description": "...",
+                "data-path": "/my-yang-module:top-level-node/foo[key='*']/bar[key='b*']",
+                "content": {
+                    "my-yang-module:baz": [null]
+                }
+            }
+        ]
+    }
+}
+
+2.2.  Applying Templates
+
+   Once templates have been defined (see Section 2.1, they may be
+   applied (referenced) to the configuration where needed.  Templates
+   MUST be applied to have any effect on configuration.
+
+   The creation, modification, and deletion of references to templates
+   is achieved by network management operations on the <running>
+   datastore via YANG driven protocols such as NETCONF [RFC6241] and
+   RESTCONF [RFC8040].
+
+   Servers MUST validate templates at the time they are applied.
+   Validation is achieved by first fully expanding the templates (see
+   Section 2.3) and then performing normal YANG validation on the
+   expanded configuration.
+
+   The subsections below focus solely on how templates are applied,
+   without any consideration for how they are expanded.
+
+2.2.1.  Configuration Applying Templates
+
+   A server supporting templates MUST conceptually use the "apply-
+   templates" grouping, defined in the "ietf-config-templates" YANG
+   module, in every "container" and "list" node in the configuration,
+   excluding nodes defined by the "ietf-config-templates" YANG module
+   itself.
+
+   As seen in Section 4, the "apply-templates" grouping defines an
+   ordered-by user "leaf-list" called "apply-templates".  The "apply-
+   templates" leaf-list is of type "leafref" having a "path" pointing to
+   "/templates/template/name".  That is, it identifies a list of
+   templates to apply.
+
+   That it is a list, and not a scalar, enables more than one template
+   to be applied.  That the list is ordered enables subsequent templates
+   overriding values set by earlier templates.  The algorithm for
+   template expansion is discussed in Section 2.3.
+
+   The following example illustrates the configuration's root node
+   applying three templates.
+
+   {
+       "ietf-config-templates:templates": {
+           "template": [
+               {
+                   "name": "one",
+                   "content": {
+                       "my-yang-module:top-level-node": {
+                           "foo": 1
+                       }
+                   }
+               },
+               {
+                   "name": "two",
+                   "content": {
+                       "my-yang-module:top-level-node": {
+                           "foo": 2
+                       }
+                   }
+               },
+               {
+                   "name": "three",
+                   "content": {
+                       "my-yang-module:top-level-node": {
+                           "foo": 3
+                       }
+                   }
+               }
+           ]
+       },
+       "my-yang-module:apply-templates": [one, two, three]
+
+   }
+
+2.2.2.  Templates Applying Templates
+
+   The template's "content" anydata node contains configuration, and
+   therefore can apply templates like regular configuration.  It is that
+   templates can recursively apply templates that enables this enables
+   templates to be "hierarchal".
+
+   There MUST NOT be any circular chains of template applications.  For
+   example, if template "a" applies template "b", "b" cannot apply "a".
+
+   The following example illustrates the configuration's root node
+   applying a template that applies a template that applies a template.
+
+   {
+       "ietf-config-templates:templates": [
+           {
+               "name": "three",
+               "content": {
+                   "my-yang-module:top-level-node": {
+                       "foo": 3
+                   }
+               }
+           },
+           {
+               "name": "two",
+               "content": {
+                   "apply-templates": [three]
+               }
+           },
+           {
+               "name": "one",
+               "content": {
+                   "apply-templates": [two]
+               }
+           }
+       ],
+       "my-yang-module:apply-templates": [one]
+   }
+
+2.3.  Template Expansion
+
+   Templates MUST be expanded, sometimes called "flattened", in order to
+   produce a configuration that can be subject to YANG validation and
+   applied by the server.
+
+   Conceptually, template expansion is a generic (data-model
+   independent) pre-processor to a server's backend that knows nothing
+   about templates.  That said, a server wishing to optimize internal
+   memory usage to enable higher performance and scability may have a
+   backend that is template-aware.
+
+   This section presents an algorithm for how to expand templates.
+
+2.3.1.  Basic Rules
+
+   When a configuration template is applied to a node in the data tree,
+   it acts as if the configuration defined in the template is merged
+   with the configuration provided explicitly at the corresponding level
+   in the data tree, with the explicitly provided configuration taking
+   precedence.
+
+   The rules are as follows:
+
+   *  The value of a node in the expanded configuration is determined by
+      using precedence to decide where to take the value from.
+
+      -  Non-template configuration always has the highest precedence.
+
+      -  When templates are applied from multiple ancestors and/or self,
+         the innermost (furthest from root) applications takes
+         precedence.
+
+      -  When multiple templates are applied to a particular node, the
+         order of application (as indicated by the client when applying
+         the templates) determines the precedence within that node.
+
+      -  When a template configuring list elements uses wildcards, and
+         more than one matches, each match is applied in order, with the
+         contents being merged.
+
+   *  When a template configures nodes higher (closer to the root node)
+      in the configuration tree than where the template is applied, the
+      template's higher-level nodes are ignored.
+
+2.3.2.  Merging Notes
+
+   Merging configuration is a concept introduced in RFC 4741 without a
+   formal definition, which is provided in this section for templates.
+
+   Generally, when configuration C1 is merged into C2, nodes in C2 take
+   precedence over nodes in C1.  Details follow.
+
+   *  When "leaf" L1 is merged into a "leaf" L2, the L2 leaf is retained
+      (L1 is discarded).
+
+   *  When "anydata" A1 is merged into a "anydata" A2, the A2 anydata is
+      retained (A1 is discarded).
+
+   *  When "leaf-list" LL1 is merged into a "leaf-list" LL2, new values
+      from LL1 are added (in order) to the end of LL2.  Matching values
+      are discarded.
+
+   *  When "container" C1 is merged into "container" C2, all non-
+      matching descendant nodes are retained, and all matching
+      descendant nodes are recursively merged.
+
+   *  When "list" LL1 is merged into a "list" LL2, all non-matching
+      elements from LL1 are added (in order) to the end of LL2, and all
+      matching elements are recursively merged.
+
+   For "ordered-by user" lists/leaf-lists, postpending new values/
+   elements preserves the understanding that values/elements are
+   processed Left to Right (or Top to Bottom).  Thus, postpending
+   values/elements causes the less important configuration (C1) to be
+   processed after the more important configuration (C2).  This may not
+   be semantically accurate in all cases.  For instance, the merging of
+   two sorted lists of numbers should obstensibly be interleaved as
+   necessary to produce an ordered list of numbers.
+
+2.3.3.  Algorithm
+
+      |  Note: this section was written by AI by analysing an
+      |  implementation that passes all of the test vectors in
+      |  Appendix A.
+
+   This section describes an algorithm that implements the rules above.
+   The algorithm walks the configuration tree from the root, and, at
+   each node, merges the node's explicitly-provided configuration with
+   the configuration contributed by any applied templates.
+
+   The algorithm relies on the underlying YANG data model in order to
+   classify each node (as a "container", "list", "leaf", "leaf-list", or
+   "anydata") and to learn each list's key leaf(s), as the merging rules
+   differ per node type and cannot be inferred from the encoded data
+   alone.
+
+2.3.3.1.  Preparation
+
+   Before expansion begins:
+
+   1.  Index every template definition by its "name", so that an "apply-
+       templates" reference can be resolved to a template's content.
+
+   2.  Remove the template definitions from the configuration, as they
+       are not themselves part of the expanded (<intended>)
+       configuration.
+
+   Expansion then proceeds by processing the root node as a "container".
+
+2.3.3.2.  Collecting a Node's Sources (in Precedence Order)
+
+   At each container (including each list entry, which is a container),
+   the algorithm assembles an ordered list of "sources" that contribute
+   configuration to that location, ordered from highest precedence to
+   lowest:
+
+   1.  The node's explicitly-provided configuration (i.e., everything
+       except its "apply-templates" value) comes first.
+
+   2.  For each name in the node's "apply-templates" value, in the order
+       listed by the client, the template's content is resolved to this
+       location (see below) and appended.  Because a template's content
+       may itself apply further templates, each template's content is
+       processed recursively, so that templates applied by a template
+       rank below the template that applied them.
+
+   Processing the sources in this order realizes the precedence rules:
+   explicit configuration outranks templates, self-applied templates
+   outrank ancestor-applied templates, and, among templates applied at
+   the same node, earlier-listed templates outrank later ones.  Applying
+   a template that is already being applied further up the current chain
+   is a circular reference and is an error.
+
+2.3.3.3.  Resolving a Template to the Applied Location ("ignore above")
+
+   A template is authored as a full configuration subtree rooted at the
+   top of the data tree, but it may be applied deep within the tree.  To
+   find the content a template contributes at the location where it is
+   applied, the algorithm navigates from the template's root down the
+   same path (the sequence of container and list-entry steps) that leads
+   to the applied node.  A list-entry step matches a template entry by
+   comparing key values, honoring wildcards ("*" and "?") in the
+   template's keys.
+
+   If the template configures nothing at (or below) the applied
+   location, it contributes nothing.  Any nodes the template configures
+   above the applied location are simply never reached by this
+   navigation, which is how the "ignore above" rule is realized.
+
+2.3.3.4.  Merging the Sources
+
+   Once a location's sources have been collected (highest precedence
+   first), they are merged according to node type:
+
+   *  "container": The children of all sources are grouped by name,
+      preserving the order in which each name is first seen (i.e.,
+      highest-precedence first).  Each group is then merged recursively
+      according to that child's node type.
+
+   *  "leaf" and "anydata"/"anyxml": The value from the highest-
+      precedence source is kept; lower-precedence values are discarded.
+
+   *  "leaf-list": The higher-precedence values are kept, and any not-
+      yet-present values from lower-precedence sources are appended, in
+      order.  Duplicate values are discarded.
+
+   *  "list": Entries are matched by their key value(s).  Concrete (non-
+      wildcard) entries establish the set of resulting entries, in order
+      of first appearance.  A wildcard entry contributes only to
+      already- established (higher-precedence) entries that it matches;
+      when several wildcard entries match the same entry, the later ones
+      take precedence.  Each resulting entry is then merged recursively
+      as a container.
+
+3.  Protocol Query Parameters
+
+   This section defines query parameters that can be used with YANG-
+   driven protocols such as NETCONF [RFC6241] and RESTCONF [RFC8040].
+   For specific information regarding how these parameters are supported
+   in NETCONF and RESTCONF, please see "I-D.ietf-netmod-config-
+   templates-nc" and "I-D.ietf-netmod-config-templates-rc" respectively.
+
+3.1.  The "with-template-inheritance" Parameter
+
+      |  FIXME: An R24-comment suggest returning such annotations all
+      |  time - is that preferred?
+
+   When viewing configuration with templates expanded, it can sometimes
+   become confusing where certain values were set.  The "with-template-
+   inheritance" parameter can be passed into configuration-fetching
+   requests such as RESTCONF's GET or NETCONF's <get-data>.
+
+   When the "with-template-inheritance" parameter is passed, the
+   configuration returned is annotated with metadata indicating from
+   which template values were set from, if any.
+
+   The annotation is a string having a value following the pattern
+   'node-foo' was inherited from template 'template-bar'`.
+
+3.2.  The "with-templates-expanded" Parameter
+
+      |  This section applies only to servers that do not support NMDA.
+
+   For servers supporting NMDA, templates are always expanded when the
+   configuration is fetched from <intended>.
+
+   For servers that do not support NMDA, the "with-templates-expanded"
+   parameter can be passed into <running> configuration-fetching
+   requests such as RESTCONF's GET or NETCONF's <get-config>.
+
+   When the "with-templates-expanded" parameter is passed, the response
+   is the same as if the configuration had been expanded.
+
+3.3.  The "with-inactive-removed" Parameter
+
+      |  This section will be deleted.
+
+   This paramter is NOT related to the template solution.  It is a
+   parameter that could be defined by some future "draft-ietf-netmod-
+   inactive-config" I-D.
+
+   The reason for this section is to lay bare logical extensions to the
+   "with-template-expanded" parameter.  That is, we could end up with a
+   multiplicity of such parameters for servers that do not support NMDA
+   to simulate fetching config from <intended>.
+
+   Would a generic "get-intended" RPC for non-NMDA servers make more
+   sense?
+
+4.  The "ietf-config-templates" YANG Module
+
+4.1.  Data Model Overview
+
+   The following tree diagram [RFC8340] illustrates the "ietf-config-
+   templates" module:
+
+   module: ietf-config-templates
+     +--rw templates
+        +--rw template* [name]
+           +--rw name           string
+           +--rw description?   string
+           +--rw data-path?     yang:xpath1.0
+           +--rw content        <anydata>
+
+     grouping apply-templates:
+       +-- apply-templates*   -> /templates/template/name
+
+4.2.  YANG Module
+
+   <CODE BEGINS> file "ietf-config-templates@2026-07-03.yang"
+   module ietf-config-templates {
+     yang-version 1.1;
+     namespace "urn:ietf:params:xml:ns:yang:ietf-config-templates";
+     prefix yct;
+
+     import ietf-yang-types {
+       prefix yang;
+       reference
+         "RFC 6991: Common YANG Data Types";
+     }
+
+     organization
+       "IETF NETMOD (Network Modeling) Working Group";
+     contact
+       "WG Web:  https://datatracker.ietf.org/wg/netmod/
+        WG List: NETMOD <mailto:netmod@ietf.org>
+
+        Editor: Kent Watsen
+                <mailto:kent+ietf@watsen.net>
+        Editor: Qiufang Ma
+                <mailto:maqiufang1@huawei.com>
+        Editor: Deepak Rajaram
+                <mailto:deepak.rajaram@nokia.com>";
+
+     description
+       "This module defines a top-level 'templates' node, and an
+        'apply-templates' grouping.
+
+        Copyright (c) 2026 IETF Trust and the persons identified
+        as authors of the code. All rights reserved.
+
+        Redistribution and use in source and binary forms, with
+        or without modification, is permitted pursuant to, and
+        subject to the license terms contained in, the Revised
+        BSD License set forth in Section 4.c of the IETF Trust's
+        Legal Provisions Relating to IETF Documents
+        (https://trustee.ietf.org/license-info).
+
+        This version of this YANG module is part of RFC XXXX
+        (https://www.rfc-editor.org/info/rfcXXXX); see the RFC
+        itself for full legal notices.
+
+        The key words 'MUST', 'MUST NOT', 'REQUIRED', 'SHALL',
+        'SHALL NOT', 'SHOULD', 'SHOULD NOT', 'RECOMMENDED',
+        'NOT RECOMMENDED', 'MAY', and 'OPTIONAL' in this document
+        are to be interpreted as described in BCP 14 (RFC 2119)
+        (RFC 8174) when, and only when, they appear in all
+        capitals, as shown here.";
+
+      revision 2026-07-03 {
+        description
+          "Initial revision.";
+        reference
+          "RFC XXXX: YANG Templates";
+      }
+
+      list templates {
+        key name;
+        description
+          "The list of templates managed on this device.";
+        leaf name {
+          type string;
+          description
+            "The name of the template.";
+        }
+        leaf description {
+          type string;
+          description
+            "A textual description of the template.";
+        }
+        leaf data-path {
+          type yang:xpath1.0; // FIXME: should be YPath?
+          default "/";
+          description
+            "The path location in the server's data tree that the
+            ../content node is an instance of.  The data-path MUST
+            not begin with '/ietf-config-template:templates'.";
+        }
+        anydata content {
+          mandatory true;
+          description
+            "A subset of server configuration beginning at the
+             location identified by the ../data-path node.  All
+             top-level nodes MUST be namespace qualified.  When
+             ../data-path is '/', the content MUST NOT define
+             any nodes under '/ietf-config-template:templates'.";
+        }
+      }
+
+      grouping apply-templates {
+        description
+          "A grouping that is conceptually used (i.e., the 'uses'
+           statement) at every 'container' and 'list' node in the
+           configuration.";
+        leaf-list apply-templates {
+          type leafref {
+            path /yct:templates/yct:name;
+          }
+          ordered-by user;
+          description
+            "A user-ordered list of template references.";
+        }
+      }
+
+
+      // FIXME: augment "with-templates-expanded" into NETCONF RPCs, what about RESTCONF?
+
+
+   }
+   <CODE ENDS>
+
+5.  Operational Considerations
+
+5.1.  Human Oriented
+
+5.1.1.  Smaller Footprint
+
+   Configuration templates are designed to factor out repetititive
+   configuration to a single definition that is applied repetitively.
+   Use of templates therefore generally reduces the size of <running>.
+
+5.1.2.  Lower Cognative Load
+
+   Configuration templates enable a label (i.e., the template's name) to
+   be given for semantically related configuration, and then for that
+   label to be referenced where needed.  The additional structure
+   provided by the template solution generally improves readability and
+   understandability.
+
+5.2.  Machine Oriented
+
+5.2.1.  Scalability Concerns
+
+   Large numbers of templates and/or large configurations may have
+   performance issues during template expansion.  Such issues may be
+   improved by caching intermediate expansion results, trading CPU-time
+   for storage.
+
+5.2.2.  One to Many Implications
+
+   Configuration templates are designed to factor out configuration that
+   is applied repetitively, possibly a large number of times.  In some
+   applications, (e.g., a network device controller), a single change to
+   a single template could entail a potentially slow interaction with a
+   large number of external systems.
+
+6.  Security Considerations
+
+6.1.  Access Control
+
+   Editing configuration in a template MUST be authorized using the same
+   access control settings used for standard configuration.
+
+6.2.  The "ietf-config-templates" Module
+
+   This section is modelled after...FIXME.
+
+7.  IANA Considerations
+
+7.1.  The "IETF XML" Registry
+
+   This document registers the following URI in the "IETF XML Registry"
+   [RFC3688].
+
+           URI: urn:ietf:params:xml:ns:yang:ietf-config-templates
+           Registrant Contact: The IESG.
+           XML: N/A, the requested URI is an XML namespace.
+
+7.2.  The "YANG Module Names" Registry
+
+   This document registers the following YANG module in the "YANG Module
+   Names" registry [RFC6020].
+
+        name:               ietf-config-templates
+        namespace:          urn:ietf:params:xml:ns:yang:ietf-config-templates
+        prefix:             ct
+        maintained by IANA? N
+        reference:          RFC XXXX
+
+8.  References
+
+8.1.  Normative References
+
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997,
+              <https://www.rfc-editor.org/rfc/rfc2119>.
+
+   [RFC3688]  Mealling, M., "The IETF XML Registry", BCP 81, RFC 3688,
+              DOI 10.17487/RFC3688, January 2004,
+              <https://www.rfc-editor.org/rfc/rfc3688>.
+
+   [RFC6020]  Bjorklund, M., Ed., "YANG - A Data Modeling Language for
+              the Network Configuration Protocol (NETCONF)", RFC 6020,
+              DOI 10.17487/RFC6020, October 2010,
+              <https://www.rfc-editor.org/rfc/rfc6020>.
+
+   [RFC6241]  Enns, R., Ed., Bjorklund, M., Ed., Schoenwaelder, J., Ed.,
+              and A. Bierman, Ed., "Network Configuration Protocol
+              (NETCONF)", RFC 6241, DOI 10.17487/RFC6241, June 2011,
+              <https://www.rfc-editor.org/rfc/rfc6241>.
+
+   [RFC7950]  Bjorklund, M., Ed., "The YANG 1.1 Data Modeling Language",
+              RFC 7950, DOI 10.17487/RFC7950, August 2016,
+              <https://www.rfc-editor.org/rfc/rfc7950>.
+
+   [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
+              2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
+              May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
+
+   [RFC8342]  Bjorklund, M., Schoenwaelder, J., Shafer, P., Watsen, K.,
+              and R. Wilton, "Network Management Datastore Architecture
+              (NMDA)", RFC 8342, DOI 10.17487/RFC8342, March 2018,
+              <https://www.rfc-editor.org/rfc/rfc8342>.
+
+8.2.  Informative References
+
+   [I-D.ietf-netmod-system-config]
+              Ma, Q., Wu, Q., and C. Feng, "System-defined
+              Configuration", Work in Progress, Internet-Draft, draft-
+              ietf-netmod-system-config-20, 28 January 2026,
+              <https://datatracker.ietf.org/doc/html/draft-ietf-netmod-
+              system-config-20>.
+
+   [RFC7951]  Lhotka, L., "JSON Encoding of Data Modeled with YANG",
+              RFC 7951, DOI 10.17487/RFC7951, August 2016,
+              <https://www.rfc-editor.org/rfc/rfc7951>.
+
+   [RFC8040]  Bierman, A., Bjorklund, M., and K. Watsen, "RESTCONF
+              Protocol", RFC 8040, DOI 10.17487/RFC8040, January 2017,
+              <https://www.rfc-editor.org/rfc/rfc8040>.
+
+   [RFC8340]  Bjorklund, M. and L. Berger, Ed., "YANG Tree Diagrams",
+              BCP 215, RFC 8340, DOI 10.17487/RFC8340, March 2018,
+              <https://www.rfc-editor.org/rfc/rfc8340>.
+
+   [RFC9254]  Veillette, M., Ed., Petrov, I., Ed., Pelov, A., Bormann,
+              C., and M. Richardson, "Encoding of Data Modeled with YANG
+              in the Concise Binary Object Representation (CBOR)",
+              RFC 9254, DOI 10.17487/RFC9254, July 2022,
+              <https://www.rfc-editor.org/rfc/rfc9254>.
+
+Appendix A.  Test Vectors
+
+   This section provides normative vector tests for implementations.
+
+A.1.  Example YANG Module
+
+   This section presents a YANG module that is used by the vector tests.
+
+A.1.1.  Original
+
+   This is the original YANG module.
+
+   module my-yang-module {
+     yang-version 1.1;
+     namespace "urn:ietf:params:xml:ns:yang:my-yang-module";
+     prefix mym;
+
+     leaf leaf {
+       type string;
+     }
+
+     leaf-list leaf-list {
+       type string;
+     }
+
+     container container {
+       presence "so mandatory-leaf doesn't make mandatory-container";
+       leaf mandatory-leaf {
+         type string;
+         mandatory true;
+       }
+     }
+
+     list list {
+       key key;
+       leaf key {
+         type string;
+       }
+       leaf val {
+         type string;
+       }
+     }
+
+     anydata anydata;
+
+   }
+
+A.1.2.  Annotated
+
+   This is the original YANG module after it has been annotated with
+   uses "yct:apply-templates" statements, as required by Section 2.2.1.
+
+   module my-yang-module {
+     yang-version 1.1;
+     namespace "urn:ietf:params:xml:ns:yang:my-yang-module";
+     prefix mym;
+
+     import ietf-config-templates {
+       prefix yct;
+     }
+
+     uses "yct:apply-templates";
+
+     leaf leaf {
+       type string;
+     }
+
+     leaf-list leaf-list {
+       type string;
+     }
+
+     container container {
+       presence "so mandatory-leaf doesn't make mandatory-container";
+       leaf mandatory-leaf {
+         type string;
+         mandatory true;
+       }
+       uses "yct:apply-templates";
+     }
+
+     list list {
+       key key;
+       leaf key {
+         type string;
+       }
+       leaf val {
+         type string;
+       }
+       uses "yct:apply-templates";
+     }
+
+     anydata anydata;
+
+   }
+
+A.2.  Basic Tests
+
+A.2.1.  No Templates Applied
+
+   When the <running> datastore is:
+
+   {
+       "my-yang-module:leaf": "1",
+       "my-yang-module:leaf-list": ["1", "2", "3"],
+       "my-yang-module:container": {
+           "mandatory-leaf": "1"
+       },
+       "my-yang-module:list": [
+           {
+               "key": "foo",
+               "val": "1"
+           },
+           {
+               "key": "bar",
+               "val": "1"
+           },
+           {
+               "key": "baz",
+               "val": "1"
+           }
+       ],
+       "my-yang-module:anydata": {
+           "some-other-module:zero": 0
+       }
+   }
+
+   The <intended> datastore is:
+
+   {
+       "my-yang-module:leaf": "1",
+       "my-yang-module:leaf-list": ["1", "2", "3"],
+       "my-yang-module:container": {
+           "mandatory-leaf": "1"
+       },
+       "my-yang-module:list": [
+           {
+               "key": "foo",
+               "val": "1"
+           },
+           {
+               "key": "bar",
+               "val": "1"
+           },
+           {
+               "key": "baz",
+               "val": "1"
+           }
+       ],
+       "my-yang-module:anydata": {
+           "some-other-module:zero": 0
+       }
+   }
+
+A.2.2.  All Configuration in a Single Template
+
+   When the <running> datastore is:
+
+   {
+       "ietf-config-templates:templates": [
+           {
+               "name": "t1",
+               "content": {
+                   "my-yang-module:leaf": "1",
+                   "my-yang-module:leaf-list": ["1", "2", "3"],
+                   "my-yang-module:container": {
+                       "mandatory-leaf": "1"
+                   },
+                   "my-yang-module:list": [
+                       {
+                           "key": "foo",
+                           "val": "1"
+                       },
+                       {
+                           "key": "bar",
+                           "val": "1"
+                       },
+                       {
+                           "key": "baz",
+                           "val": "1"
+                       }
+                   ],
+                   "my-yang-module:anydata": {
+                       "some-other-module:zero": 0
+                   }
+               }
+           }
+       ],
+       "my-yang-module:apply-templates": ["t1"]
+
+   }
+
+   The <intended> datastore is:
+
+   {
+       "my-yang-module:leaf": "1",
+       "my-yang-module:leaf-list": ["1", "2", "3"],
+       "my-yang-module:container": {
+           "mandatory-leaf": "1"
+       },
+       "my-yang-module:list": [
+           {
+               "key": "foo",
+               "val": "1"
+           },
+           {
+               "key": "bar",
+               "val": "1"
+           },
+           {
+               "key": "baz",
+               "val": "1"
+           }
+       ],
+       "my-yang-module:anydata": {
+           "some-other-module:zero": 0
+       }
+   }
+
+A.2.3.  All Configuration in a Multiplicity of Templates
+
+   When the <running> datastore is:
+
+   {
+       "ietf-config-templates:templates": [
+           {
+               "name": "t1",
+               "content": {
+                   "my-yang-module:leaf": "1"
+               }
+           },
+           {
+               "name": "t2",
+               "content": {
+                   "my-yang-module:leaf-list": ["1", "2", "3"]
+               }
+           },
+           {
+               "name": "t3",
+               "content": {
+                   "my-yang-module:container": {
+                       "mandatory-leaf": "1"
+                   }
+               }
+           },
+           {
+               "name": "t4",
+               "content": {
+                   "my-yang-module:list": [
+                       {
+                           "key": "foo",
+                           "val": "1"
+                       },
+                       {
+                           "key": "bar",
+                           "val": "1"
+                       },
+                       {
+                           "key": "baz",
+                           "val": "1"
+                       }
+                   ]
+               }
+           },
+           {
+               "name": "t5",
+               "content": {
+                   "my-yang-module:anydata": {
+                       "some-other-module:zero": 0
+                   }
+               }
+           }
+       ],
+       "my-yang-module:apply-templates": ["t1", "t2", "t3", "t4", "t5"]
+
+   }
+
+   The <intended> datastore is:
+
+   {
+       "my-yang-module:leaf": "1",
+       "my-yang-module:leaf-list": ["1", "2", "3"],
+       "my-yang-module:container": {
+           "mandatory-leaf": "1"
+       },
+       "my-yang-module:list": [
+           {
+               "key": "foo",
+               "val": "1"
+           },
+           {
+               "key": "bar",
+               "val": "1"
+           },
+           {
+               "key": "baz",
+               "val": "1"
+           }
+       ],
+       "my-yang-module:anydata": {
+           "some-other-module:zero": 0
+       }
+   }
+
+A.3.  Empty Node Tests
+
+A.3.1.  Empty "apply-template" List
+
+   When the <running> datastore is:
+
+   {
+       "my-yang-module:apply-templates": []
+   }
+
+   The <intended> datastore is:
+
+   {
+   }
+
+A.3.2.  Empty Template Content
+
+   When the <running> datastore is:
+
+   {
+       "ietf-config-templates:templates": [
+           {
+               "name": "t1",
+               "content": {}
+           }
+       ],
+       "my-yang-module:apply-templates": ["t1"]
+   }
+
+   The <intended> datastore is:
+
+   {
+   }
+
+A.4.  Node "leaf" Tests
+
+A.4.1.  Hierarchal Precedence
+
+   When the <running> datastore is:
+
+   {
+       "ietf-config-templates:templates": [
+           {
+               "name": "t1",
+               "content": {
+                   "my-yang-module:leaf": "t1-1"
+               }
+           }
+       ],
+       "my-yang-module:apply-templates": ["t1"],
+       "my-yang-module:leaf": "1"
+   }
+
+   The <intended> datastore is:
+
+   {
+       "my-yang-module:leaf": "t1"
+   }
+
+A.4.2.  Ordered Precedence
+
+   When the <running> datastore is:
+
+   {
+       "ietf-config-templates:templates": [
+           {
+               "name": "t1",
+               "content": {
+                   "my-yang-module:leaf": "t1"
+               }
+           },
+           {
+               "name": "t2",
+               "content": {
+                   "my-yang-module:leaf": "t2"
+               }
+           },
+           {
+               "name": "t3",
+               "content": {
+                   "my-yang-module:leaf": "t3"
+               }
+           }
+       ],
+       "my-yang-module:apply-templates": ["t1", "t2", "t3"]
+   }
+
+   The <intended> datastore is:
+
+   {
+       "my-yang-module:leaf": "t1"
+   }
+
+A.5.  Node "leaf-list" Tests
+
+A.5.1.  Hierarchal Precedence
+
+   When the <running> datastore is:
+
+   {
+       "ietf-config-templates:templates": [
+           {
+               "name": "t1",
+               "content": {
+                   "my-yang-module:leaf-list": ["t1"]
+               }
+           }
+       ],
+       "my-yang-module:apply-templates": ["t1"],
+       "my-yang-module:leaf-list": ["1"]
+   }
+
+   The <intended> datastore is:
+
+   {
+       "my-yang-module:leaf-list": ["1", "t1"]
+   }
+
+A.5.2.  Ordered Precedence
+
+   When the <running> datastore is:
+
+   {
+       "ietf-config-templates:templates": [
+           {
+               "name": "t1",
+               "content": {
+                   "my-yang-module:leaf-list": "t1"
+               }
+           },
+           {
+               "name": "t2",
+               "content": {
+                   "my-yang-module:leaf-list": "t2"
+               }
+           },
+           {
+               "name": "t3",
+               "content": {
+                   "my-yang-module:leaf-list": "t3"
+               }
+           }
+       ],
+       "my-yang-module:apply-templates": ["t1", "t2", "t3"]
+   }
+
+   The <intended> datastore is:
+
+   {
+       "my-yang-module:leaf-list": ["t1", "t2", "t3"]
+   }
+
+A.6.  Node "container" Tests
+
+A.6.1.  Hierarchal Precedence
+
+   When the <running> datastore is:
+
+   {
+       "ietf-config-templates:templates": [
+           {
+               "name": "t1",
+               "content": {
+                   "my-yang-module:container": {
+                       "mandatory-leaf": "t1"
+                   }
+               }
+           }
+       ],
+       "my-yang-module:apply-templates": ["t1"],
+       "my-yang-module:container": {
+           "mandatory-leaf": "1"
+       }
+   }
+
+   The <intended> datastore is:
+
+   {
+       "my-yang-module:container": {
+           "mandatory-leaf": "1"
+       }
+   }
+
+A.6.2.  Ignore Above
+
+   When the <running> datastore is:
+
+   {
+       "ietf-config-templates:templates": [
+           {
+               "name": "t1",
+               "content": {
+                   "my-yang-module:leaf": "t1",
+                   "my-yang-module:leaf-list": ["t1", "t2", "t3"],
+                   "my-yang-module:container": {
+                       "mandatory-leaf": "t1"
+                   },
+                   "my-yang-module:list": [
+                       {
+                           "key": "foo",
+                           "val": "t1"
+                       },
+                       {
+                           "key": "bar",
+                           "val": "t1"
+                       }
+                   ],
+                   "my-yang-module:anydata": {
+                       "some-other-module:zero": 0
+                   }
+               }
+           }
+       ],
+       "my-yang-module:container": {
+           "apply-templates": ["t1"]
+       }
+   }
+
+   The <intended> datastore is:
+
+   {
+       "my-yang-module:container": {
+           "mandatory-leaf": "t1"
+       }
+   }
+
+A.6.3.  Ordered Precedence
+
+   When the <running> datastore is:
+
+   {
+       "ietf-config-templates:templates": [
+           {
+               "name": "t1",
+               "content": {
+                   "my-yang-module:container": {
+                       "mandatory-leaf": "t1"
+                   }
+               }
+           },
+           {
+               "name": "t2",
+               "content": {
+                   "my-yang-module:container": {
+                       "mandatory-leaf": "t2"
+                   }
+               }
+           },
+           {
+               "name": "t3",
+               "content": {
+                   "my-yang-module:container": {
+                       "mandatory-leaf": "t3"
+                   }
+               }
+           }
+       ],
+       "my-yang-module:apply-templates": ["t1", "t2", "t3"]
+   }
+
+   The <intended> datastore is:
+
+   {
+       "my-yang-module:container": {
+           "mandatory-leaf": "t1"
+       }
+   }
+
+A.7.  Node "list" Tests
+
+A.7.1.  Hierarchal Precedence
+
+   When the <running> datastore is:
+
+   {
+       "ietf-config-templates:templates": [
+           {
+               "name": "t1",
+               "content": {
+                   "my-yang-module:list": [
+                       {
+                           "key": "foo",
+                           "val": "t1"
+                       },
+                       {
+                           "key": "baz",
+                           "val": "t1"
+                       }
+                   ]
+               }
+           }
+       ],
+       "my-yang-module:apply-templates": ["t1"],
+       "my-yang-module:list": [
+           {
+               "key": "foo",
+               "val": "1"
+           },
+           {
+               "key": "bar",
+               "val": "1"
+           }
+       ]
+   }
+
+   The <intended> datastore is:
+
+   {
+       "my-yang-module:list": [
+           {
+               "key": "foo",
+               "val": "1"
+           },
+           {
+               "key": "bar",
+               "val": "1"
+           },
+           {
+               "key": "baz",
+               "val": "t1"
+           }
+       ]
+   }
+
+A.7.2.  Ignore Above
+
+   When the <running> datastore is:
+
+   {
+       "ietf-config-templates:templates": [
+           {
+               "name": "t1",
+               "content": {
+                   "my-yang-module:leaf": "t1",
+                   "my-yang-module:leaf-list": ["t1", "t2", "t3"],
+                   "my-yang-module:container": {
+                       "mandatory-leaf": "t1"
+                   },
+                   "my-yang-module:list": [
+                       {
+                           "key": "foo",
+                           "val": "t1"
+                       },
+                       {
+                           "key": "bar",
+                           "val": "t1"
+                       }
+                   ],
+                   "my-yang-module:anydata": {
+                       "some-other-module:zero": 0
+                   }
+               }
+           }
+       ],
+       "my-yang-module:list": [
+           {
+               "apply-templates": ["t1"],
+               "key": "foo"
+           }
+       ]
+   }
+
+   The <intended> datastore is:
+
+   {
+       "my-yang-module:list": [
+           {
+               "key": "foo",
+               "val": "t1"
+           }
+       ]
+   }
+
+A.7.3.  Ordered Precedence
+
+   When the <running> datastore is:
+
+   {
+       "ietf-config-templates:templates": [
+           {
+               "name": "t1",
+               "content": {
+                   "my-yang-module:list": [
+                       {
+                           "key": "foo",
+                           "val": "t1"
+                       }
+                   ]
+               }
+           },
+           {
+               "name": "t2",
+               "content": {
+                   "my-yang-module:list": [
+                       {
+                           "key": "foo",
+                           "val": "t2"
+                       }
+                   ]
+               }
+           },
+           {
+               "name": "t3",
+               "content": {
+                   "my-yang-module:list": [
+                       {
+                           "key": "foo",
+                           "val": "t3"
+                       }
+                   ]
+               }
+           }
+       ],
+       "my-yang-module:apply-templates": ["t1", "t2", "t3"]
+   }
+
+   The <intended> datastore is:
+
+   {
+       "my-yang-module:list": [
+           {
+               "key": "foo",
+               "val": "t1"
+           }
+       ]
+   }
+
+A.7.4.  Wildcards
+
+   When the <running> datastore is:
+
+   {
+       "ietf-config-templates:templates": [
+           {
+               "name": "t1",
+               "content": {
+                   "my-yang-module:list": [
+                       {
+                           "key": "*",
+                           "val": "t1-*"
+                       },
+                       {
+                           "key": "b*",
+                           "val": "t1-b*"
+                       },
+                       {
+                           "key": "?a?",
+                           "val": "t1-?a?"
+                       }
+                   ]
+               }
+           }
+       ],
+       "my-yang-module:apply-templates": ["t1"],
+       "my-yang-module:list": [
+           {
+               "key": "foo"
+           },
+           {
+               "key": "bar"
+           },
+           {
+               "key": "baz"
+           }
+       ]
+   }
+
+   The <intended> datastore is:
+
+   {
+       "my-yang-module:list": [
+           {
+               "key": "foo",
+               "val": "t1-*"
+           },
+           {
+               "key": "bar",
+               "val": "t1-?a?"
+           },
+           {
+               "key": "baz",
+               "val": "t1-?a?"
+           }
+       ]
+   }
+
+A.8.  Node "anydata" Tests
+
+A.8.1.  Hierarchal Precedence
+
+   When the <running> datastore is:
+
+   {
+       "ietf-config-templates:templates": [
+           {
+               "name": "t1",
+               "content": {
+                   "my-yang-module:anydata": {
+                       "some-t1-module:color": "red"
+                   }
+               }
+           }
+       ],
+       "my-yang-module:apply-templates": ["t1"],
+       "my-yang-module:anydata": {
+           "some-other-module:zero": 0
+       }
+   }
+
+   The <intended> datastore is:
+
+   {
+       "my-yang-module:anydata": {
+           "some-other-module:zero": 0
+       }
+   }
+
+A.8.2.  Ordered Precedence
+
+   When the <running> datastore is:
+
+   {
+       "ietf-config-templates:templates": [
+           {
+               "name": "t1",
+               "content": {
+                   "my-yang-module:anydata": {
+                       "some-t1-module:color": "red"
+                   }
+               }
+           },
+           {
+               "name": "t2",
+               "content": {
+                   "my-yang-module:anydata": {
+                       "some-t2-module:age": 23
+                   }
+               }
+           },
+           {
+               "name": "t3",
+               "content": {
+                   "my-yang-module:anydata": {
+                       "some-t3-module:planet": "earth"
+                   }
+               }
+           }
+       ],
+       "my-yang-module:apply-templates": ["t1", "t2", "t3"]
+   }
+
+   The <intended> datastore is:
+
+   {
+       "my-yang-module:anydata": {
+           "some-t1-module:color": "red"
+       }
+   }
+
+Appendix B.  Requirement Implementation Status
+
+   Note to the RFC Editor: Please remove this section before
+   publication.
+
+   This appendix tracks the status of requirements identified on the
+   [Template Requirements Issue Tracker([https://github.com/netmod-wg/
+   template-reqs/issues).
+
+   R1: Wherever a template-reference can occur, more than one template-
+   reference can occur (and they are applied) (https://github.com/
+   netmod-wg/template-reqs/issues/1)
+
+   *  discussed: strongly in favor
+
+   *  status: supported in document (done)
+
+   R2: Templates must be able to reference other templates (hierarchal
+   templates) (https://github.com/netmod-wg/template-reqs/issues/2)
+
+   *  discussed: originally a split opinion, subsequently supported.
+
+   *  status: supported in document (done)
+
+   R3: Templates must work with any YANG module (including augments and
+   deviations) (https://github.com/netmod-wg/template-reqs/issues/3)
+
+   *  discussed: strongly in favor
+
+   *  status: supported in document (done)
+
+   R4: Template syntax must be validated when defined (not only when
+   used) (https://github.com/netmod-wg/template-reqs/issues/4)
+
+   *  discussed: originally a split opinion, subsequently supported.
+
+   *  status: supported in document (done)
+
+   R5: Wherever a template-reference can occur, it must be possible to
+   delete nodes from the template (https://github.com/netmod-wg/
+   template-reqs/issues/5)
+
+   *  discussed: mildly NOT in favor
+
+   *  unsure if opposed to idea or to doing it in a first release.
+
+   *  status: not supported in document (done)
+
+   R6: Local-config overrides template-config (https://github.com/
+   netmod-wg/template-reqs/issues/6)
+
+   *  discussed: strongly in favor
+
+   *  status: supported in document (done)
+
+   R7: Templates are persistent (living templates) modifications to them
+   are automatically applied to all consumers (https://github.com/
+   netmod-wg/template-reqs/issues/7)
+
+   *  discussed: strongly in favor
+
+   *  status: supported in document (done)
+
+   R8: Support basic programmatic elements in templates
+   (https://github.com/netmod-wg/template-reqs/issues/8)
+
+   *  discussed: strongly opposed (but Joe Clarke later said he would've
+      voted in favor)
+
+   *  unsure if opposed to idea or to doing it in a first release.
+
+   *  status: NOT supported in document (discuss more?)
+
+   R9: It must be possible to constrain which nodes can be template-
+   consumers (https://github.com/netmod-wg/template-reqs/issues/9)
+
+   *  discussed: strongly in favor
+
+   *  really? how can it be important?
+
+   *  status: NOT supported in document (discuss more first?)
+
+   R10: For living templates, the configuration with both unexpanded and
+   expanded templates is able to be returned (https://github.com/netmod-
+   wg/template-reqs/issues/10)
+
+   *  discussed: strongly in favor (with jstern's refinement)
+
+   *  status: supported in document (done)
+
+   R11: Possibility to reorder some user-ordered list/leaf-list entries
+   defined in a template (https://github.com/netmod-wg/template-reqs/
+   issues/11)
+
+   *  discussed: strongly opposed
+
+   *  status: not supported in document (done)
+
+   R12: The <running> datastore contains the unexpanded template
+   (https://github.com/netmod-wg/template-reqs/issues/12)
+
+   *  discussed: strongly in favor
+
+   *  status: supported in document (done)
+
+   R13: For NMDA, the <intended> datastore returns the expanded template
+   (https://github.com/netmod-wg/template-reqs/issues/13)
+
+   *  discussed: strongly in favor
+
+   *  status: supported in document (done)
+
+   R14: Off-box template-expansion of <running> containing templates
+   must be possible (potentially enabling off-box validation)
+   (https://github.com/netmod-wg/template-reqs/issues/14)
+
+   *  discussed: strongly in favor
+
+   *  status: supported in document (done)
+
+   R15: For NMDA, the <intended> datastore returns the unexpanded
+   templates (https://github.com/netmod-wg/template-reqs/issues/15)
+
+   *  discussed: mostly opposed
+
+   *  status: supported in document (done)
+
+   R16: Common data nodes (https://github.com/netmod-wg/template-reqs/
+   issues/16)
+
+   *  never discussed: this requirement is closed in GitHub
+
+   *  status: not supported in document (done)
+
+   R17: For NMDA, The <operational> datastore returns unexpanded
+   template config (depends on #15) (https://github.com/netmod-wg/
+   template-reqs/issues/17)
+
+   *  discussed: mostly opposed
+
+   *  status: not supported in document (done)
+
+   R18: Support limited-regex in template-config for template-consumer
+   application (https://github.com/netmod-wg/template-reqs/issues/18)
+
+   *  discussed: strongly in favor
+
+   *  status: supported in document (done)
+
+   R19: When multiple templates are applied to a node, a precedence
+   order must be defined (either ascending or descending)
+   (https://github.com/netmod-wg/template-reqs/issues/19)
+
+   *  discussed: strongly in favor
+
+   *  status: supported in document (done)
+
+   R20: When templates are applied at multiple ancestor nodes, the
+   innermost (closest) template takes precedence. (https://github.com/
+   netmod-wg/template-reqs/issues/20)
+
+   *  discussed: mostly in favor
+
+   *  status: supported in document (done)
+
+   R21: The solution enables non-nmda servers to return the expanded
+   data (https://github.com/netmod-wg/template-reqs/issues/21)
+
+   *  discussed: strongly in favor
+
+   *  status: supported in document (but does it make sense?)
+
+   R22: Method to exclude templates applied at ancestor nodes
+   (https://github.com/netmod-wg/template-reqs/issues/22)
+
+   *  never discussed
+
+   *  status: needs to be discussed (will schedule an Interim meeting)
+
+   R23: Clarify the ability to apply a template at the datastore root
+   node '/' (https://github.com/netmod-wg/template-reqs/issues/23)
+
+   *  never discussed
+
+   *  status: needs to be discussed (will schedule an Interim meeting)
+
+   R24: Metadata annotation to determine which template a node was
+   applied from (https://github.com/netmod-wg/template-reqs/issues/24)
+
+   *  never discussed
+
+   *  supported in document via "with-template-inheritance"?
+
+   *  an R24-comment suggest returning such annotations all time - is
+      that preferred?
+
+   *  status: needs to be discussed (will schedule an Interim meeting)
+
+   R25: Misaligned module template name (https://github.com/netmod-wg/
+   template-reqs/issues/25)
+
+   *  never discussed
+
+   *  status: needs to be discussed (will schedule an Interim meeting)
+
+   R26: Seems a typo in this example (https://github.com/netmod-wg/
+   template-reqs/issues/26)
+
+   *  never discussed
+
+   *  status: needs to be discussed (will schedule an Interim meeting)
+
+   R27: Adding an example for this might help (https://github.com/
+   netmod-wg/template-reqs/issues/27)
+
+   *  never discussed
+
+   *  status: needs to be discussed (will schedule an Interim meeting)
+
+   R28: Good to have apply-groups-except equivalent feature as in Junos
+   (https://github.com/netmod-wg/template-reqs/issues/28)
+
+   *  never discussed
+
+   *  status: needs to be discussed (will schedule an Interim meeting)
+
+   R29: Provide the ability to see the expanded view of configuration
+   (https://github.com/netmod-wg/template-reqs/issues/29)
+
+   *  never discussed
+
+   *  status: needs to be discussed (will schedule an Interim meeting)
+
+   R30: Can the template be applied to a leaf/leaf-list?
+   (https://github.com/netmod-wg/template-reqs/issues/30)
+
+   *  never discussed
+
+   *  status: needs to be discussed (will schedule an Interim meeting)
+
+Acknowledgments
+
+   The author would like to thank Lou Berger, Jason Sterne, Kent Watsen,
+   and Robert Wilton for comments and contributions made during interim
+   meetings.
+
+   The author would like to acknowledge the following drafts and
+   presenters for kick-starting discussions on Yang Templates:
+
+   *  draft-ma-netmod-yang-config-template-00
+
+   *  draft-rajaram-netmod-yang-cfg-template-framework-00
+
+   *  draft-wills-netmod-yang-templates-00
+
+   *  Jan Lindblad
+
+Contributors
+
+   Robert Wills
+   Cisco
+   United Kingdom
+   Email: rowills@cisco.com
+
+
+   Qin Wu
+   Huawei
+   101 Software Avenue, Yuhua District
+   Jiangsu
+   210012
+   China
+   Email: bill.wu@huawei.com
+
+
+Authors' Addresses
+
+   Kent Watsen
+   Watsen Networks
+   Email: kent+ietf@watsen.net
+
+
+   Qiufang Ma
+   Huawei
+   101 Software Avenue, Yuhua District
+   Jiangsu
+   210012
+   China
+   Email: maqiufang1@huawei.com
+
+
+   Deepak Rajaram
+   Nokia
+   India
+   Email: deepak.rajaram@nokia.com
